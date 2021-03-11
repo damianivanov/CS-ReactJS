@@ -1,4 +1,14 @@
 const express = require('express');
+const dotenvt = require('dotenv');
+const mongoose = require('mongoose');
+dotenvt.config();
+
+
+mongoose.connect(
+    process.env.DB_CONNECT,
+    { useNewUrlParser: true },
+    () => console.log("Connected to db")
+)
 const app = express()
 const users = [{ name: "Damian", age: 22 }]
 
