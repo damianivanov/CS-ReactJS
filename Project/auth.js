@@ -5,9 +5,10 @@ const mongoose = require('./mongoose');
 const jwt = require('jsonwebtoken');
 const {registerValidation,loginValidation} = require('./validation');
 const { json } = require('body-parser');
+const verify = require('./verifyToken');
 
 router.post('/register', async (req, res) => {
-    const {error} = registerValidation(req.body);
+    const {error} = registerValidation.validateAsync(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     //Check if user is in the database 
@@ -51,5 +52,8 @@ router.post('/login', async (req,res)=>{
     res.header('auth-token',token).send(token);
 });
 
+router.post('/logout',verify,(req,res) =>{
+    res.removeHeader('auth-token');
+})
 
 module.exports = router;
