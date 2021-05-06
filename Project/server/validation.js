@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const regiserValidation = data => {
+const registerValidation = data => {
     const schema = Joi.object({
         firstName: Joi.string().min(6),
         lastName: Joi.string().min(6),
@@ -18,5 +18,5 @@ const loginValidation = data => {
     });
     return schema.validate(data);
 }
-module.exports.registerValidation = regiserValidation;
+module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
