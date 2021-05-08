@@ -11,13 +11,44 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import {useStyles} from './Nav.styles'
+import { Paper, Switch } from '@material-ui/core'
+import { useStyles } from './Nav.styles'
+import NightsStayIcon from '@material-ui/icons/NightsStay';
+import WbSunnyIcon from '@material-ui/icons/WbSunny';
+import yellow from '@material-ui/core/colors/yellow';
+import purple from '@material-ui/core/colors/purple'; 
+import blueGrey from '@material-ui/core/colors/blueGrey'
+import { withStyles } from '@material-ui/core/styles';
 
-export default function PrimarySearchAppBar() {
+function Nav(props) {
+  function changeTheme() {
+    if (props.darkMode){
+      props.setDarkMode(false)
+    } else {
+      props.setDarkMode(true)
+    }
+  }
+  const themeIcon = props.darkMode ? <WbSunnyIcon size={50} /> : <NightsStayIcon align='center' size={50} />;
+  const themeSwitchColor = props.darkMode ? blueGrey[800] : yellow[500]
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
+  const PurpleSwitch = withStyles({
+    switchBase: {
+      color: themeSwitchColor,
+      '&$checked': {
+        color: themeSwitchColor+1,
+      },
+      '&$checked + $track': {
+        backgroundColor: themeSwitchColor+2,
+      },
+    },
+    checked: {},
+    track: {},
+  })(Switch);
+  
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -96,58 +127,65 @@ export default function PrimarySearchAppBar() {
   );
 
   return (
-    <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Project Manager Tool
+    <Paper>
+      <div className={classes.grow}>
+        <AppBar position="static" className={classes.appbar}>
+          <Toolbar> 
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="open drawer"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography className={classes.title} variant="h6" noWrap>
+              Project Manager Tool
           </Typography>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={2} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={1} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </div>
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              <IconButton aria-label="show 4 new mails" color="inherit">
+                <Badge badgeContent={2} color="secondary">
+                  <MailIcon />
+                </Badge>
+              </IconButton>
+              <IconButton aria-label="show 17 new notifications" color="inherit">
+                <Badge badgeContent={1} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <Switch checked={!props.darkMode} onChange={changeTheme} color="default"/>
+              <IconButton>{themeIcon}</IconButton>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {renderMobileMenu}
+        {renderMenu}
+      </div>
+    </Paper>
   );
 }
+
+export default Nav;
+
