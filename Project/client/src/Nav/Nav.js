@@ -11,44 +11,30 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Paper, Switch } from '@material-ui/core'
+import { Paper, Switch, Icon } from '@material-ui/core'
 import { useStyles } from './Nav.styles'
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import yellow from '@material-ui/core/colors/yellow';
-import purple from '@material-ui/core/colors/purple'; 
+import purple from '@material-ui/core/colors/purple';
 import blueGrey from '@material-ui/core/colors/blueGrey'
 import { withStyles } from '@material-ui/core/styles';
 
 function Nav(props) {
   function changeTheme() {
-    if (props.darkMode){
+    if (props.darkMode) {
       props.setDarkMode(false)
     } else {
       props.setDarkMode(true)
     }
   }
-  const themeIcon = props.darkMode ? <WbSunnyIcon size={50} /> : <NightsStayIcon align='center' size={50} />;
+  const themeIcon = props.darkMode ? <WbSunnyIcon/> : <NightsStayIcon/>;
   const themeSwitchColor = props.darkMode ? blueGrey[800] : yellow[500]
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-  const PurpleSwitch = withStyles({
-    switchBase: {
-      color: themeSwitchColor,
-      '&$checked': {
-        color: themeSwitchColor+1,
-      },
-      '&$checked + $track': {
-        backgroundColor: themeSwitchColor+2,
-      },
-    },
-    checked: {},
-    track: {},
-  })(Switch);
-  
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -123,6 +109,10 @@ function Nav(props) {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+      <MenuItem  >
+        <Switch checked={!props.darkMode} onChange={changeTheme} color="default" />
+      {themeIcon}
+      </MenuItem>
     </Menu>
   );
 
@@ -130,7 +120,7 @@ function Nav(props) {
     <Paper>
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
-          <Toolbar> 
+          <Toolbar>
             <IconButton
               edge="start"
               className={classes.menuButton}
@@ -154,8 +144,8 @@ function Nav(props) {
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
-              <Switch checked={!props.darkMode} onChange={changeTheme} color="default"/>
-              <IconButton>{themeIcon}</IconButton>
+              <Switch checked={!props.darkMode} onChange={changeTheme} color="default" />
+              {themeIcon}
               <IconButton
                 edge="end"
                 aria-label="account of current user"

@@ -1,6 +1,7 @@
 import { fade, makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
+  
   grow: {
     flexGrow: 1,
   },
@@ -55,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
+    alignItems: 'center',
   },
   sectionMobile: {
     display: 'flex',
