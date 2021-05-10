@@ -11,14 +11,11 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Paper, Switch, Icon } from '@material-ui/core'
+import { Paper, Switch } from '@material-ui/core'
 import { useStyles } from './Nav.styles'
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import yellow from '@material-ui/core/colors/yellow';
-import purple from '@material-ui/core/colors/purple';
-import blueGrey from '@material-ui/core/colors/blueGrey'
-import { withStyles } from '@material-ui/core/styles';
 
 function Nav(props) {
   function changeTheme() {
@@ -28,9 +25,8 @@ function Nav(props) {
       props.setDarkMode(true)
     }
   }
-  const themeIcon = props.darkMode ? <WbSunnyIcon/> : <NightsStayIcon/>;
-  const themeSwitchColor = props.darkMode ? blueGrey[800] : yellow[500]
-
+  const themeIcon = props.darkMode ? <NightsStayIcon style={{color:"#212021"}}/> : <WbSunnyIcon style={{color:yellow[500]}}/>
+  
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -125,8 +121,7 @@ function Nav(props) {
               edge="start"
               className={classes.menuButton}
               color="inherit"
-              aria-label="open drawer"
-            >
+              aria-label="open drawer">
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>

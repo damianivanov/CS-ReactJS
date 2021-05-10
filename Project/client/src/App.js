@@ -17,6 +17,8 @@ function App() {
       <Paper style={{ height: "100hv" }}>
         <Nav darkMode={darkMode} setDarkMode={setDarkMode}/>
         <Typography variant="h1">Hello World</Typography>
+
+        <span></span>
       </Paper>
     </ThemeProvider>
   );
