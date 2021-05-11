@@ -2,6 +2,8 @@ require('dotenv').config()
 const express = require('express');
 const app = express();
 const cors = require('cors');
+
+const mongoose = require('./mongoose');
 const nodemailer = require("nodemailer");
 const authRoute = require('./auth')
 const router = require('./profile')
@@ -46,7 +48,7 @@ app.post('/captcha', function (req, res) {
     if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
         return res.json({ "responseError": "something goes to wrong" });
     }
-    const secretKey = reCAPTCHA_SECRET_KEY ;
+    const secretKey = reCAPTCHA_SECRET_KEY;
 
     const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.socket.remoteAddress;
 
