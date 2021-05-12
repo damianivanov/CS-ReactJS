@@ -1,37 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { registerValidation, loginValidation } = require('./validation');
-const verify = require('./verifyToken');
-const verifyRole = require('./verifyRole');
-const User = require('./Models/User');
-
-router.get('/users',verify,verifyRole.isAdmin,async (req,res) => {
-    const allUsers = await User.find();
-    return res.status(200).send(allUsers);
-})
-router.post('/',verify,verifyRole.isAdmin,async (req,res) => {
-    const { error } = await registerValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-    
-    const user = await User.findOne({ $or:[ {username: req.body.username}, {email: req.body.email} ]});
-    if (user) return res.status(400).send('User already exists');   
-
-    const newUser = new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-        role: req.body.role ? req.body.role : 'basic'
-    })
-    try {
-        const savedUser = await newUser.save();
-        res.status(201).send({ user: savedUser.id });
-    } catch (error) {
-        res.status(401).send(error);
-    }
-})
+const { registerValidation, loginValidation } = require('../validation');
+const auth = require('../verifyToken');
+const verifyRole = require('../verifyRole');
+const User = require('../Models/User');
 
 router.post('/register', async (req, res) => {
     const { error } = await registerValidation(req.body);
@@ -81,9 +54,9 @@ router.post('/login', async (req, res) => {
         { expiresIn: "7d" });
     res.header('auth-token', token).status(200).send(token);
 });
-router.post('/logout',verify, (req, res) => {
+router.post('/logout', auth, (req, res) => {
     res.removeHeader('auth-token');
-    console.log('Logged Out')
+    return res.status(200).send('Logged Out')
 })
 
 module.exports = router;

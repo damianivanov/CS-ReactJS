@@ -5,13 +5,15 @@ const cors = require('cors');
 
 const mongoose = require('./mongoose');
 const nodemailer = require("nodemailer");
-const authRoute = require('./auth')
+const authRoute = require('./routes/auth')
+const usersRoute = require('./routes/users')
 const router = require('./profile')
 
 app.use(cors())
 app.use(express.json())
 app.use('/api', authRoute)
 app.use('/api/profile', router)
+app.use('/api/users', usersRoute)
 
 
 let transporter = nodemailer.createTransport({

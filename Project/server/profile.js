@@ -1,10 +1,10 @@
 const verify = require('./verifyToken');
 const router = require('express').Router();
 
-router.get('/posts',verify,(req,res)=>{
+router.get('/posts', verify, (req, res) => {
     res.json({
-        posts:{
-            title:"asdasd",
+        posts: {
+            title: "asdasd",
             description: "des"
         }
     })
