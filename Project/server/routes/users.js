@@ -11,7 +11,7 @@ router.get('/', auth, verifyRole.isAdmin, async (req, res) => {
     return res.status(200).send(allUsers);
 })
 
-router.post('/', auth,verifyRole.isAdmin, async (req, res) => {
+router.post('/', auth, verifyRole.isAdmin, async (req, res) => {
     const { error } = await registerValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -57,12 +57,12 @@ router.patch('/:userId', auth, async (req, res) => {
 
     const user = await User.findOne({ id: userId });
     if (!user) return res.status(400).send("The user doesn't exists")
-    if(user.deleted) return res.status(400).send("The user is already deleted")
+    if (user.deleted) return res.status(400).send("The user is already deleted")
 
     const token = req.header('auth-token');
     const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    if (verified.role === ROLES.ROLES.ADMIN || userId === verified.userId) {    
-        const savedUser = await User.findOneAndUpdate({id:userId},req.body,{new:true});
+    if (verified.role === ROLES.ROLES.ADMIN || userId === verified.userId) {
+        const savedUser = await User.findOneAndUpdate({ id: userId }, req.body, { new: true });
         return res.status(200).send(savedUser);
     }
     else {
@@ -76,12 +76,12 @@ router.delete('/:userId', auth, async (req, res) => {
     const user = await User.findOne({ id: userId });
     if (!user) return res.status(400).send("The user doesn't exists")
 
-    if(user.deleted) return res.status(400).send("The user is already deleted")
+    if (user.deleted) return res.status(400).send("The user is already deleted")
 
     const token = req.header('auth-token');
     const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    if (verified.role === ROLES.ROLES.ADMIN|| userId === verified.userIid) {    
-        user.deletedDate=Date.now();
+    if (verified.role === ROLES.ROLES.ADMIN || userId === verified.userIid) {
+        user.deletedDate = Date.now();
         await user.save();
         return res.send(200).send(`user ${user.username} was deleted`)
     }

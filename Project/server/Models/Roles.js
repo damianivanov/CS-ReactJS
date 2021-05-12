@@ -4,6 +4,6 @@ const ROLES = {
     MANAGER: 'manager'
 }
 
-module.exports ={
-     ROLES 
+module.exports = {
+    ROLES
 }

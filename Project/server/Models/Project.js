@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
 const projectSchema = new mongoose.Schema({
-    name: { 
-        type:String,
+    name: {
+        type: String,
         required: true
     },
-    managerId:{
-        type:String.prototype,
+    managerId: {
+        type: String.prototype,
         required: true
     },
     projectId: {
@@ -15,7 +15,7 @@ const projectSchema = new mongoose.Schema({
         reuqired: true,
         unique: true
     },
-    description:{
+    description: {
         type: String,
         max: 4096
     },
@@ -25,10 +25,10 @@ const projectSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    tasksId:{
+    tasksId: {
         type: [String]
     },
-    team:{
+    team: {
         type: [String]
     }
 },

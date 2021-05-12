@@ -2,29 +2,29 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
 const taskSchema = new mongoose.Schema({
-    taskId:{
+    taskId: {
         type: String,
         reuqired: true,
         default: uuidv4(),
         unique: true
     },
-    projectId:{
+    projectId: {
         type: String,
         reuqired: true,
     },
-    assignorId:{
+    assignorId: {
         type: String,
         required: true,
     },
-    assigneeId:{
+    assigneeId: {
         type: String,
         reuqired: true,
     },
-    label: { 
+    label: {
         type: String,
         max: 256
     },
-    description:{
+    description: {
         type: String,
         max: 4096
     },
@@ -32,23 +32,23 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    subTasks:{
+    subTasks: {
         type: [Task]
     },
-    taskResult:{
+    taskResult: {
         type: String
     },
-    startDate:{
-        type:Date,
+    startDate: {
+        type: Date,
         default: Date.now(),
     },
-    dueDate:{
+    dueDate: {
         type: Date
     }
 },
-{
-    timestamps: true,
-})
+    {
+        timestamps: true,
+    })
 
 const Task = mongoose.model('Task', taskShema);
 module.exports = Task;

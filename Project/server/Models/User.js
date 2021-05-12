@@ -55,17 +55,17 @@ const userSchema = new mongoose.Schema({
     type: [String],
   },
   role: {
-     type: String,
-     default: 'basic',
+    type: String,
+    default: 'basic',
   },
-  deleted:{
+  deleted: {
     type: Boolean,
     default: false
   }
 },
-{
+  {
     timestamps: true,
-})
+  })
 
 userSchema.pre('save', async function (next) {
   try {
