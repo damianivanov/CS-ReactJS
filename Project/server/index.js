@@ -10,7 +10,7 @@ const router = require('./profile')
 
 app.use(cors())
 app.use(express.json())
-app.use('/api/user', authRoute)
+app.use('/api', authRoute)
 app.use('/api/profile', router)
 
 
