@@ -11,7 +11,7 @@ router.get('/', auth, verifyRole.isAdmin, async (req, res) => {
     return res.status(200).send(allUsers);
 })
 
-router.post('/', auth, async (req, res) => {
+router.post('/', auth,verifyRole.isAdmin, async (req, res) => {
     const { error } = await registerValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -51,21 +51,43 @@ router.get('/:userId', auth, async (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 })
+router.patch('/:userId', auth, async (req, res) => {
+    const { userId } = req.params;
+    if (!userId) return res.status(400).send('Invalid UserID');
 
-router.post('/:userId', auth, async (req, res) => {
-    // const { userId } = req.params;
-    // if (!userId) return res.status(400).send('Invalid UserID');
+    const user = await User.findOne({ id: userId });
+    if (!user) return res.status(400).send("The user doesn't exists")
+    if(user.deleted) return res.status(400).send("The user is already deleted")
 
-    // const user = await User.findOne({ id: userId });
-    // if (!user) return res.status(400).send("The user doesn't exists")
-
-    // const token = req.header('auth-token');
-    // const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    // if (verifyRole.isAdmin || userId === verified.id) {
-    //     return res.status(200).send(user);
-    // }
-    // else {
-    //     return res.status(401).send('Unauthorized');
-    // }
+    const token = req.header('auth-token');
+    const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
+    if (verified.role === ROLES.ROLES.ADMIN || userId === verified.userId) {    
+        const savedUser = await User.findOneAndUpdate({id:userId},req.body,{new:true});
+        return res.status(200).send(savedUser);
+    }
+    else {
+        return res.status(401).send('Unauthorized');
+    }
 })
+router.delete('/:userId', auth, async (req, res) => {
+    const { userId } = req.params;
+    if (!userId) return res.status(400).send('Invalid UserID');
+
+    const user = await User.findOne({ id: userId });
+    if (!user) return res.status(400).send("The user doesn't exists")
+
+    if(user.deleted) return res.status(400).send("The user is already deleted")
+
+    const token = req.header('auth-token');
+    const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
+    if (verified.role === ROLES.ROLES.ADMIN|| userId === verified.userIid) {    
+        user.deletedDate=Date.now();
+        await user.save();
+        return res.send(200).send(`user ${user.username} was deleted`)
+    }
+    else {
+        return res.status(401).send('Unauthorized');
+    }
+})
+
 module.exports = router;

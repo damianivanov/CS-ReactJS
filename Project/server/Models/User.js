@@ -57,6 +57,10 @@ const userSchema = new mongoose.Schema({
   role: {
      type: String,
      default: 'basic',
+  },
+  deleted:{
+    type: Boolean,
+    default: false
   }
 },
 {

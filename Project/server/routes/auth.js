@@ -44,6 +44,7 @@ router.post('/login', async (req, res) => {
 
     const user = await User.findOne({ username: username })
     if (!user) return res.status(400).send('There is no registered user with this username');
+    if(user.deleted) return res.status(400).send('This user has been deleted');
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(400).send('Wrong password');
