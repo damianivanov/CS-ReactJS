@@ -7,13 +7,13 @@ const mongoose = require('./mongoose');
 const nodemailer = require("nodemailer");
 const authRoute = require('./routes/auth')
 const usersRoute = require('./routes/users')
-const router = require('./profile')
+const projectsRoute = require('./routes/projects')
 
 app.use(cors())
 app.use(express.json())
 app.use('/api', authRoute)
-app.use('/api/profile', router)
 app.use('/api/users', usersRoute)
+app.use('/api/projects', projectsRoute)
 
 
 let transporter = nodemailer.createTransport({
@@ -28,12 +28,12 @@ let transporter = nodemailer.createTransport({
     },
 });
 
-app.post("/send", function (req, res) {
+app.post("/api/send", function (req, res) {
     let mailOptions = {
-        from: "test@gmail.com",
-        to: process.env.EMAIL,
-        subject: "Nodemailer API",
-        text: "Hi from your nodemailer API",
+        from: process.env.EMAIL,
+        to: "damian.ivanovv@gmail.com",
+        subject: req.subject,
+        text: req.text,
     };
 
     transporter.sendMail(mailOptions, function (err, data) {

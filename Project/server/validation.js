@@ -1,9 +1,10 @@
 const Joi = require('joi');
+const Project = require('./Models/Project');
 
 const registerValidation = data => {
     const schema = Joi.object({
-        firstName: Joi.string().min(6),
-        lastName: Joi.string().min(6),
+        firstName: Joi.string().min(1),
+        lastName: Joi.string().min(1),
         username: Joi.string().min(3).required(),
         email: Joi.string().email().lowercase().required().min(6),
         password: Joi.string().min(6).required(),
@@ -19,6 +20,17 @@ const loginValidation = data => {
     });
     return schema.validate(data);
 }
+const projectValidation = data => {
+    const schema = Joi.object({
+        name: Joi.string().min(3).required(),
+        managerId: Joi.string().min(36).max(36).required(),
+        description: Joi.string().optional(),
+        tasksId: Joi.array().items(Joi.string().min(36).max(36)).optional(),
+        team: Joi.array().items(Joi.string().min(36).max(36)).optional(),
+    });
+    return schema.validate(data);
+}
 
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
+module.exports.projectValidation = projectValidation;

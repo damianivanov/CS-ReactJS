@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
+const id = uuidv4();
 const projectSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        min: 3,
+        max: 128,
     },
     managerId: {
         type: String.prototype,
@@ -13,6 +16,7 @@ const projectSchema = new mongoose.Schema({
     projectId: {
         type: String,
         reuqired: true,
+        default: id,
         unique: true
     },
     description: {
@@ -21,7 +25,7 @@ const projectSchema = new mongoose.Schema({
     },
     invitationCode: {
         type: String,
-        default: projectId.substring(2, 8),
+        default: id.substring(2, 8),
         unique: true,
         required: true
     },
@@ -30,6 +34,10 @@ const projectSchema = new mongoose.Schema({
     },
     team: {
         type: [String]
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
 },
     {

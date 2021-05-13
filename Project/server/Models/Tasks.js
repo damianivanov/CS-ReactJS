@@ -44,6 +44,9 @@ const taskSchema = new mongoose.Schema({
     },
     dueDate: {
         type: Date
+    },
+    deleted: {
+        default: false
     }
 },
     {
