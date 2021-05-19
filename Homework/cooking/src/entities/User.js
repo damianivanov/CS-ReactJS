@@ -1,10 +1,9 @@
 import { nanoid } from "nanoid";
-const bcrypt = require("bcrypt");
 const maleAvatar = "../../public/male-avatar.png";
 const femaleAvatar = "../../public/woman-avatar.png";
 
 class User {
-  constructor(
+   constructor(
     fullname,
     username,
     password,
@@ -17,8 +16,7 @@ class User {
     this.id = nanoid();
     this.fullname = fullname;
     this.username = username;
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(password, salt);
+    this.password = password;
     this.gender = gender; // 1-male 0-female
     this.role = role;
     if (photo === "") this.photo = gender ? maleAvatar : femaleAvatar;
@@ -29,5 +27,4 @@ class User {
   }
   
 }
-
 module.exports = User;

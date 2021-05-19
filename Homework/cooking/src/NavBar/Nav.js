@@ -1,23 +1,29 @@
 import React from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import Badge from "@material-ui/core/Badge";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
+import {
+  Menu,
+  Button,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Badge,
+  MenuItem,
+  Paper,
+} from "@material-ui/core";
+import { useStyles } from "./Nav.styles";
+import yellow from "@material-ui/core/colors/yellow";
+import Toggle from "react-toggle";
+import "./Toggle.css";
+import { Link } from "react-router-dom";
+
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
-import { Paper, Switch } from "@material-ui/core";
-import { useStyles } from "./Nav.styles";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
-import yellow from "@material-ui/core/colors/yellow";
-import Toggle from "react-toggle";
-import "./Toggle.css";
+import FastfoodIcon from "@material-ui/icons/Fastfood";
 
 function Nav(props) {
   function changeTheme() {
@@ -27,16 +33,38 @@ function Nav(props) {
       props.setDarkMode(true);
     }
   }
-  const themeIcon = props.darkMode ? (
-    <NightsStayIcon style={{ color: "#212021" }} />
-  ) : (
-    <WbSunnyIcon style={{ color: yellow[500] }} />
-  );
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const toggler = (
+    <Toggle
+      defaultChecked={!props.darkMode}
+      icons={{
+        unchecked: (
+          <NightsStayIcon
+            style={{
+              color: "white",
+              fontSize: 17,
+              position: "relative",
+              bottom: "0.15em",
+            }}
+          />
+        ),
+        checked: (
+          <WbSunnyIcon
+            style={{
+              color: yellow[500],
+              fontSize: 17,
+              position: "relative",
+              bottom: "0.15em",
+            }}
+          />
+        ),
+      }}
+      onChange={changeTheme}
+    />
+  );
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -112,12 +140,7 @@ function Nav(props) {
         <p>Profile</p>
       </MenuItem>
       <MenuItem>
-        <Switch
-          checked={!props.darkMode}
-          onChange={changeTheme}
-          color="default"
-        />
-        {themeIcon}
+        <div style={{ marginLeft: 10 }}>{toggler}</div>
       </MenuItem>
     </Menu>
   );
@@ -135,9 +158,13 @@ function Nav(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography className={classes.title} variant="h4" noWrap>
-              Cooking Recipes
-            </Typography>
+            <IconButton>
+              <Link to="/" style={{ color: "white", textDecoration: "none" }}>
+                <Typography className={classes.title} variant="h5" noWrap>
+                  <FastfoodIcon p={2} /> Cooking Recipes
+                </Typography>
+              </Link>
+            </IconButton>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton aria-label="show 4 new mails" color="inherit">
@@ -153,31 +180,33 @@ function Nav(props) {
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
-              <Toggle
-                defaultChecked={!props.darkMode}
-                justifyContent="center"
-                icons={{
-                  checked: (
-                    <NightsStayIcon
-                      style={{
-                        color: "#212021",
-                        fontSize: 17,
-                      }}
-                    />
-                  ),
-                  unchecked: (
-                    <WbSunnyIcon
-                      style={{
-                        color: yellow[500],
-                        fontSize: 17,
-                      }}
-                    />
-                  ),
-                }}
-                onChange={changeTheme}
-              />
-              {/* <Switch checked={!props.darkMode} onChange={changeTheme} color="default" /> */}
-              {/* {themeIcon} */}
+              {toggler}
+              <Button
+                size="medium"
+                variant="contained"
+                color="secondary"
+                className={classes.margin}
+                style={{marginLeft:"5px"}}
+              >
+                <Link
+                  to="/login"
+                  style={{color: "white", textDecoration: "none" }}
+                > Login
+                </Link>
+              </Button>
+              <Button
+                size="medium"
+                variant="contained"
+                color="secondary"
+                className={classes.margin}
+                style={{marginLeft:"5px"}}
+              >
+                <Link
+                  to="/register"
+                  style={{color: "white", textDecoration: "none" }}
+                > Register
+                </Link>
+              </Button>
               <IconButton
                 edge="end"
                 aria-label="account of current user"

@@ -14,7 +14,6 @@ function App() {
     },
   });
   return (
-    <Router>
     <ThemeProvider theme={theme}>
       <Paper style={{ height: "100hv" }}>
         <Nav darkMode={darkMode} setDarkMode={setDarkMode}/>
@@ -22,7 +21,6 @@ function App() {
         <span></span>
       </Paper>
     </ThemeProvider>
-    </Router>
   );
 }
 

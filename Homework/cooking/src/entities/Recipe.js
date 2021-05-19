@@ -22,15 +22,7 @@ class Recipe {
     this.keywords = keywords;
     this.shareDate = Date.now();
     this.lastModified = Date.now();
-
-}
-async function (password) {
-    try {
-      return await bcrypt.compare(password, this.password)
-    } catch (error) {
-      throw error
-    }
   }
-
 }
+
 module.exports = Recipe;
