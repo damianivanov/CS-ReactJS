@@ -1,24 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import Nav from '../src/NavBar/Nav';
+import "./App.css";
+import React, { useState } from "react";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { Paper,Typography} from "@material-ui/core";
+import { Router } from "react-router-dom";
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const theme = createMuiTheme({
+    palette: {
+      type: darkMode ? "dark" : "light",
+    },
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <ThemeProvider theme={theme}>
+        <Paper style={{ height: "100hv" }}>
+          <Nav darkMode={darkMode} setDarkMode={setDarkMode} />
+          <Typography variant="h3" noWrap gutterBottom> Hello World</Typography>
+        </Paper>
+      </ThemeProvider>
   );
 }
 
