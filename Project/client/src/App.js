@@ -3,6 +3,7 @@ import './App.css'
 import React, { useState } from 'react'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { Paper, Typography } from '@material-ui/core';
+import Router from 'react-router-dom'
 
 
 function App() {
@@ -13,14 +14,15 @@ function App() {
     },
   });
   return (
+    <Router>
     <ThemeProvider theme={theme}>
       <Paper style={{ height: "100hv" }}>
         <Nav darkMode={darkMode} setDarkMode={setDarkMode}/>
         <Typography variant="h1">Hello World</Typography>
-
         <span></span>
       </Paper>
     </ThemeProvider>
+    </Router>
   );
 }
 
