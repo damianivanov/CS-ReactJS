@@ -66,12 +66,12 @@ export default function Login() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to="/" variant="body2">
+              <Link to="/" variant="body2" style={{ color: "#f50057"}}>
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link to="/register" variant="body2">
+              <Link to="/register" variant="body2" style={{ color: "#f50057"}}>
                 Sign Up
               </Link>
             </Grid>
