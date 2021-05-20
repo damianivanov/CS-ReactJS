@@ -14,6 +14,7 @@ import { useStyles } from "./Nav.styles";
 import yellow from "@material-ui/core/colors/yellow";
 import Toggle from "react-toggle";
 import "./Toggle.css";
+import { logOut } from "../services/userService";
 import { Link } from "react-router-dom";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -34,9 +35,11 @@ function Nav(props) {
     }
   }
 
+  
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
   const toggler = (
     <Toggle
       defaultChecked={!props.darkMode}
@@ -63,8 +66,10 @@ function Nav(props) {
         ),
       }}
       onChange={changeTheme}
+      
     />
   );
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -85,6 +90,12 @@ function Nav(props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  function onLogOut(){
+    props.setSigned(false)
+    logOut()
+    handleMenuClose()
+  }
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -98,6 +109,8 @@ function Nav(props) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={onLogOut}>Sign Out</MenuItem>
+
     </Menu>
   );
 
@@ -144,7 +157,48 @@ function Nav(props) {
       </MenuItem>
     </Menu>
   );
+  
+  const noUser = (
+    <React.Fragment>
+      <Button
+        size="medium"
+        variant="contained"
+        color="secondary"
+        className={classes.margin}
+        style={{ marginLeft: "5px" }}
+      >
+        <Link to="/login" style={{ color: "white", textDecoration: "none" }}>
+          {" "}
+          Login
+        </Link>
+      </Button>
+      <Button
+        size="medium"
+        variant="contained"
+        color="secondary"
+        className={classes.margin}
+        style={{ marginLeft: "5px" }}
+      >
+        <Link to="/register" style={{ color: "white", textDecoration: "none" }}>
+          {" "}
+          Register
+        </Link>
+      </Button>
+    </React.Fragment>
+  );
+  const signedUser = (
+      <IconButton
+        edge="end"
+        aria-label="account of current user"
+        aria-controls={menuId}
+        aria-haspopup="true"
+        onClick={handleProfileMenuOpen}
+        color="inherit"
+      >
+        <AccountCircle />
+      </IconButton>
 
+  );
   return (
     <Paper>
       <div className={classes.grow}>
@@ -181,43 +235,9 @@ function Nav(props) {
                 </Badge>
               </IconButton>
               {toggler}
-              <Button
-                size="medium"
-                variant="contained"
-                color="secondary"
-                className={classes.margin}
-                style={{marginLeft:"5px"}}
-              >
-                <Link
-                  to="/login"
-                  style={{color: "white", textDecoration: "none" }}
-                > Login
-                </Link>
-              </Button>
-              <Button
-                size="medium"
-                variant="contained"
-                color="secondary"
-                className={classes.margin}
-                style={{marginLeft:"5px"}}
-              >
-                <Link
-                  to="/register"
-                  style={{color: "white", textDecoration: "none" }}
-                > Register
-                </Link>
-              </Button>
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+              {props.signed ? signedUser : noUser}
             </div>
+
             <div className={classes.sectionMobile}>
               <IconButton
                 aria-label="show more"

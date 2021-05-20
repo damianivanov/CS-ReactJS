@@ -6,8 +6,9 @@ import React, { useState } from "react";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
+import {activeUser} from './services/userService'
 function App() {
+  const [signed, setSigned]= useState(activeUser);
   const [darkMode, setDarkMode] = useState(false);
   const theme = createMuiTheme({
     palette: {
@@ -20,11 +21,11 @@ function App() {
     <Router>
       <ThemeProvider theme={theme}>
         <Paper height="100%">
-          <Nav darkMode={darkMode} setDarkMode={setDarkMode} />
+          <Nav darkMode={darkMode} setDarkMode={setDarkMode} signed={signed} setSigned={setSigned}/>
 
           <Switch>
             <Route path="/login">
-              <Login />
+              <Login setSigned={setSigned} />
             </Route>
             <Route path="/register">
               <Register />

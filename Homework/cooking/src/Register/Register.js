@@ -10,6 +10,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Redirect, withRouter } from "react-router-dom";
+import {insertUser} from '../services/userService';
 
 class Register extends React.Component {
   constructor(props) {
@@ -93,8 +94,8 @@ class Register extends React.Component {
   formSubmit(e) {
     e.preventDefault();
     if (this.handleValidation()) {
+      insertUser(this.state.fields)
       this.props.history.push("/");
-      console.log(this.state.fields);
       <Redirect to="/" />;
     }
   }

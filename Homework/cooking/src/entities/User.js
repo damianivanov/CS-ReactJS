@@ -2,16 +2,16 @@ import { nanoid } from "nanoid";
 const maleAvatar = "../../public/male-avatar.png";
 const femaleAvatar = "../../public/woman-avatar.png";
 
-class User {
-   constructor(
+export class User {
+  constructor(
     fullname,
     username,
     password,
     gender,
-    role,
+    role = "user",
     photo = "",
-    bio,
-    status
+    bio = "",
+    status = "active"
   ) {
     this.id = nanoid();
     this.fullname = fullname;
@@ -25,6 +25,4 @@ class User {
     this.registerDate = Date.now();
     this.lastModified = Date.now();
   }
-  
 }
-module.exports = User;
