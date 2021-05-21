@@ -1,15 +1,19 @@
 import Nav from "../src/NavBar/Nav";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
+import Recipes from "./Recipes/Recipes";
+import Dashboard from "./Dashboard/Dashboard";
 import "./App.css";
 import React, { useState } from "react";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import {activeUser} from './services/userService'
+import { activeUser } from "./services/userService";
+import {activeDarkMode} from './services/darkMode'
+
 function App() {
-  const [signed, setSigned]= useState(activeUser);
-  const [darkMode, setDarkMode] = useState(false);
+  const [signed, setSigned] = useState(activeUser);
+  const [darkMode, setDarkMode] = useState(activeDarkMode);
   const theme = createMuiTheme({
     palette: {
       type: darkMode ? "dark" : "light",
@@ -20,9 +24,13 @@ function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        <Paper height="100%">
-          <Nav darkMode={darkMode} setDarkMode={setDarkMode} signed={signed} setSigned={setSigned}/>
-
+        <Paper style={{ height: "100vh" }}>
+          <Nav
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+            signed={signed}
+            setSigned={setSigned}
+          />
           <Switch>
             <Route path="/login">
               <Login setSigned={setSigned} />
@@ -30,8 +38,14 @@ function App() {
             <Route path="/register">
               <Register />
             </Route>
+            <Route path="/recipes">
+              <Recipes signed={signed} />
+            </Route>
+            <Route path="/dashboard">
+              <Dashboard />
+            </Route>
             <Route exact path="/">
-              <Home />
+              <Dashboard />
             </Route>
           </Switch>
         </Paper>
@@ -39,8 +53,4 @@ function App() {
     </Router>
   );
 }
-function Home() {
-  return <h2>Home</h2>;
-}
-
 export default App;

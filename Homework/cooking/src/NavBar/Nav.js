@@ -6,7 +6,6 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  Badge,
   MenuItem,
   Paper,
 } from "@material-ui/core";
@@ -15,26 +14,28 @@ import yellow from "@material-ui/core/colors/yellow";
 import Toggle from "react-toggle";
 import "./Toggle.css";
 import { logOut } from "../services/userService";
-import { Link } from "react-router-dom";
+import { Link, useHistory,useLocation,Redirect } from "react-router-dom";
 
-import MenuIcon from "@material-ui/icons/Menu";
+import {deactivateDarkMode,activateDarkMode} from '../services/darkMode';
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 
-function Nav(props) {
+export default function Nav(props) {
+  const [linkColor,setColor]=React.useState("black")
   function changeTheme() {
     if (props.darkMode) {
       props.setDarkMode(false);
+      deactivateDarkMode();
+      setColor("black")
     } else {
       props.setDarkMode(true);
+      activateDarkMode()
+      setColor("white")
     }
   }
-
   
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -66,7 +67,6 @@ function Nav(props) {
         ),
       }}
       onChange={changeTheme}
-      
     />
   );
 
@@ -85,79 +85,46 @@ function Nav(props) {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-
+  
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
-  function onLogOut(){
-    props.setSigned(false)
-    logOut()
-    handleMenuClose()
+  
+  let history = useHistory();
+  let location = useLocation();
+  
+  function onLogOut() {
+    props.setSigned(false);
+    logOut();
+    let { from } = location.state || { from: { pathname: "/" } };
+    history.replace(from);
+    history.push("/login")
+    handleMenuClose();
   }
-
+  
+  function onDashboard(){
+    <Redirect to="/dashboard"/>
+    handleMenuClose();
+  }
+  
+  
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
+    anchorEl={anchorEl}
+    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+    id={menuId}
+    keepMounted
+    transformOrigin={{ vertical: "top", horizontal: "right" }}
+    open={isMenuOpen}
+    onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={onLogOut}>Sign Out</MenuItem>
-
     </Menu>
   );
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-      <MenuItem>
-        <div style={{ marginLeft: 10 }}>{toggler}</div>
-      </MenuItem>
-    </Menu>
-  );
-  
   const noUser = (
     <React.Fragment>
       <Button
@@ -187,6 +154,10 @@ function Nav(props) {
     </React.Fragment>
   );
   const signedUser = (
+    <React.Fragment>
+      <Button style={{ margin: "2px" }} >
+        <Link to="/dashboard" style={{ color: 'white', textDecoration: "none" }}>Dashboard</Link>
+      </Button>
       <IconButton
         edge="end"
         aria-label="account of current user"
@@ -197,21 +168,75 @@ function Nav(props) {
       >
         <AccountCircle />
       </IconButton>
-
+    </React.Fragment>
   );
+  const noUserMenu = (
+    [
+      <MenuItem
+        size="medium"
+        variant="contained"
+        color="secondary"
+        className={classes.margin}
+        style={{ marginLeft: "5px" }}
+      >
+        <Link to="/login" style={{ color: linkColor, textDecoration: "none" }}>
+          {" "}
+          Login
+        </Link>
+      </MenuItem>
+      ,
+      <MenuItem
+        size="medium"
+        variant="contained"
+        color="secondary"
+        className={classes.margin}
+        style={{ marginLeft: "5px" }}
+      >
+        <Link to="/register" style={{ color: linkColor, textDecoration: "none" }}>
+          {" "}
+          Register
+        </Link>
+      </MenuItem>
+      ]
+  );
+  const signedUserMenu = (
+    [
+      <MenuItem>
+      <Link to="/dashboard" style={{ color: linkColor, textDecoration: "none" }}>
+        Dashboard
+      </Link>
+      </MenuItem>,
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>,
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>,
+      <MenuItem onClick={onLogOut}>Sign Out</MenuItem>]
+  );
+
+  const mobileMenuId = "primary-search-account-menu-mobile";
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+
+        {props.signed ? signedUserMenu : noUserMenu}
+      <div container style={{ marginLeft: "16px" }}>
+        {toggler}
+      </div>
+
+    </Menu>
+  );
+
+
   return (
     <Paper>
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="open drawer"
-            >
-              <MenuIcon />
-            </IconButton>
             <IconButton>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 <Typography className={classes.title} variant="h5" noWrap>
@@ -221,20 +246,8 @@ function Nav(props) {
             </IconButton>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={2} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-label="show 17 new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={1} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
               {toggler}
+
               {props.signed ? signedUser : noUser}
             </div>
 
@@ -257,5 +270,3 @@ function Nav(props) {
     </Paper>
   );
 }
-
-export default Nav;
