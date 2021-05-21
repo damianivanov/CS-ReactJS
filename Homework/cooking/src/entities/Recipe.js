@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 
-class Recipe {
+export class Recipe {
   constructor(
     userId,
     name,
@@ -25,4 +25,3 @@ class Recipe {
   }
 }
 
-module.exports = Recipe;
