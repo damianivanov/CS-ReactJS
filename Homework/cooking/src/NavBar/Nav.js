@@ -14,7 +14,7 @@ import yellow from "@material-ui/core/colors/yellow";
 import Toggle from "react-toggle";
 import "./Toggle.css";
 import { logOut } from "../services/userService";
-import { Link, useHistory,useLocation,Redirect } from "react-router-dom";
+import { Link, useHistory,useLocation } from "react-router-dom";
 
 import {deactivateDarkMode,activateDarkMode} from '../services/darkMode';
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -101,12 +101,7 @@ export default function Nav(props) {
     history.push("/login")
     handleMenuClose();
   }
-  
-  function onDashboard(){
-    <Redirect to="/dashboard"/>
-    handleMenuClose();
-  }
-  
+
   
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -153,10 +148,16 @@ export default function Nav(props) {
       </Button>
     </React.Fragment>
   );
+
   const signedUser = (
     <React.Fragment>
-      <Button style={{ margin: "2px" }} >
-        <Link to="/dashboard" style={{ color: 'white', textDecoration: "none" }}>Dashboard</Link>
+      <Button style={{ margin: "2px" }}>
+        <Link
+          to="/dashboard"
+          style={{ color: "white", textDecoration: "none" }}
+        >
+          Dashboard
+        </Link>
       </Button>
       <IconButton
         edge="end"
@@ -170,46 +171,46 @@ export default function Nav(props) {
       </IconButton>
     </React.Fragment>
   );
-  const noUserMenu = (
-    [
-      <MenuItem
-        size="medium"
-        variant="contained"
-        color="secondary"
-        className={classes.margin}
-        style={{ marginLeft: "5px" }}
+
+  const noUserMenu = [
+    <MenuItem
+      size="medium"
+      variant="contained"
+      color="secondary"
+      className={classes.margin}
+      style={{ marginLeft: "5px" }}
+    >
+      <Link to="/login" style={{ color: linkColor, textDecoration: "none" }}>
+        {" "}
+        Login
+      </Link>
+    </MenuItem>,
+    <MenuItem
+      size="medium"
+      variant="contained"
+      color="secondary"
+      className={classes.margin}
+      style={{ marginLeft: "5px" }}
+    >
+      <Link to="/register" style={{ color: linkColor, textDecoration: "none" }}>
+        {" "}
+        Register
+      </Link>
+    </MenuItem>,
+  ];
+  const signedUserMenu = [
+    <MenuItem>
+      <Link
+        to="/dashboard"
+        style={{ color: linkColor, textDecoration: "none" }}
       >
-        <Link to="/login" style={{ color: linkColor, textDecoration: "none" }}>
-          {" "}
-          Login
-        </Link>
-      </MenuItem>
-      ,
-      <MenuItem
-        size="medium"
-        variant="contained"
-        color="secondary"
-        className={classes.margin}
-        style={{ marginLeft: "5px" }}
-      >
-        <Link to="/register" style={{ color: linkColor, textDecoration: "none" }}>
-          {" "}
-          Register
-        </Link>
-      </MenuItem>
-      ]
-  );
-  const signedUserMenu = (
-    [
-      <MenuItem>
-      <Link to="/dashboard" style={{ color: linkColor, textDecoration: "none" }}>
         Dashboard
       </Link>
-      </MenuItem>,
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>,
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>,
-      <MenuItem onClick={onLogOut}>Sign Out</MenuItem>]
-  );
+    </MenuItem>,
+    <MenuItem onClick={handleMenuClose}>Profile</MenuItem>,
+    <MenuItem onClick={handleMenuClose}>My account</MenuItem>,
+    <MenuItem onClick={onLogOut}>Sign Out</MenuItem>,
+  ];
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (

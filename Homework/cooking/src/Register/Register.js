@@ -15,10 +15,10 @@ import {insertUser} from '../services/userService';
 class Register extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      fields: {},
-      errors: {},
-    };
+      this.state = {
+        fields: {},
+        errors: {},
+      };
   }
 
   handleValidation() {
