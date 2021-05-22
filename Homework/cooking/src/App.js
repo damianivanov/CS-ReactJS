@@ -3,13 +3,15 @@ import Login from "./Login/Login";
 import Register from "./Register/Register";
 import Dashboard from "./Dashboard/Dashboard";
 import AddRecipe from "./AddRecipe/AddRecipe";
+import Recipe from './helperComponents/recipeHelper'
 import "./App.css";
 import React, { useState } from "react";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { Paper } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { activeUser } from "./services/userService";
 import {activeDarkMode} from './services/darkMode'
+import { getAllRecipes } from "./services/recipesService";
+
 
 function App() {
   const [signed, setSigned] = useState(activeUser);
@@ -45,6 +47,7 @@ function App() {
               <Dashboard />
             </Route>
             <Route exact path="/">
+              <h1>Home</h1>
             </Route>
           </Switch>
         {/* </Paper> */}

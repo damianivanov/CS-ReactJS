@@ -5,18 +5,18 @@ export class Recipe {
     userId,
     user,
     name,
-    short_descrption,
+    short_description,
     time,
     ingredients,
-    photo,
     description,
+    photo,
     keywords=[]
   ) {
     this.id = nanoid();
     this.userId = userId;
     this.user=user;
     this.name = name;
-    this.short_descrption = short_descrption;
+    this.short_description = short_description;
     this.time = time;
     this.ingredients = ingredients;
     this.photo = photo;

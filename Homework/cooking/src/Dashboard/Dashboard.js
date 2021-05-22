@@ -1,57 +1,125 @@
-import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
-import { getAllRecipes } from '../services/recipesService';
-import { CssBaseline } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
+import * as React from "react";
+import { filterRecipes } from "../services/recipesService";
+import { TextField,CssBaseline,Grid,Button } from "@material-ui/core";
+import GridList from '@material-ui/core/GridList';
+import {makeStyles} from '@material-ui/core'
+import ChipInput from "material-ui-chip-input";
+import Recipe from '../helperComponents/recipeHelper'
 
-// const columns = [
-//   { field: 'name' },
-//   { field: 'time', type: 'number' },
-//   { field: 'username', type: 'string' },
-//   { field: 'shareDate', type: 'date'}
-// ];
-
-// const rows = getAllRecipes
-
-// const sortModel = [
-//   {
-//     field: 'shareDate',
-//     sort: 'desc',
-//   },
-// ];
-
-// filterModel={{
-//     items: [
-//       { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
-//     ],
-//   }}
-
-const columns = [
-  { field: 'firstName', headerName: 'First name', width: 150 },
-  { field: 'lastName', headerName: 'Last name', width: 150 },
-];
-
-const rows = getAllRecipes
-// const rows = [
-//   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-//   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-//   { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-//   { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-//   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-//   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-//   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-//   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-//   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-// ];
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    margin: '20px'
+    // backgroundColor: theme.palette.background.paper,
+  },
+  gridList: {
+    flexWrap: 'nowrap',
+    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    transform: 'translateZ(0)',
+  },
+  title: {
+    color: theme.palette.primary.light,
+  },
+  titleBar: {
+    background:
+      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+  },
+}));
 
 export default function Dashboard() {
+  const [user,setUser] = React.useState("")
+  const classes = useStyles();
+  const [keywords,setKeywords] = React.useState([])
+  let recipes = filterRecipes(user,keywords);
+const content = (
+  <div className={classes.root}>
+  <GridList className={classes.gridList} cols={2.5}>
+    {recipes.map((recipe) => (
+      <Recipe props={recipe} style={{margin:"5px"}}/>
+    ))}
+  </GridList>
+  </div>
+);
+ 
+//  function formSubmit(e) {
+//     e.preventDefault();
+//     if (user!==""||keywords.length>0) {
+//       filterRecipes(user,keywords);
+//     }
+//   }
+
+  function handleChange(field, e) {
+    if(field==="keywords"){
+      let newElement = e[e.length-1]
+      if(keywords.indexOf(newElement) === -1) {
+        setKeywords([...keywords,newElement]);
+    }
+  }
+    else{
+      setUser(e.target.value);
+    }
+  }
+
+  function handleDeleteChip(keyword) {
+    setKeywords(
+      keywords.filter(function (item) {
+        return item !== keyword;
+      })
+    )
+  }
+  
   return (
     <React.Fragment>
-      <CssBaseline/>
-<Typography>Hello</Typography>
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5} checkboxSelection />
-    </div>
-</React.Fragment>
+      <CssBaseline />
+      <form
+        style={{ padding: "10px" }}
+        // onSubmit={formSubmit.bind(this)}
+        autoComplete="off"
+      >
+        <Grid container spacing={2}>
+
+          <Grid item xs={2} style={{ paddingTop: "0px" }}>
+            <ChipInput
+              fullWidth
+              label="Keywords"
+              value={keywords}
+              onChange={handleChange.bind(this, "keywords")}
+              onDelete={(chip, index) => handleDeleteChip(chip, index)}
+            />
+          </Grid>
+
+          <Grid item xs={2} >
+            <TextField
+              name="user"
+              label="Posted by..."
+              fullWidth
+              id="user"
+              value={user}
+              onChange={handleChange.bind(this, "user")}
+            />
+          </Grid>
+
+          {/* <Grid item xs={2}>
+            <Button
+              item
+              xs={1}
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: "10px" }}
+            >
+              Filter
+            </Button>
+          </Grid> */}
+
+        </Grid>
+      </form>
+    
+    {content}
+
+    </React.Fragment>
   );
 }

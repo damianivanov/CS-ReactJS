@@ -38,10 +38,24 @@ export function checkRecipe(data) {
   return currentrecipe;
 }
 
-export function sortByDateDesc(){
-  let recipes = getAllRecipes();
+export function sortByDateDesc(recipes){
+  let tmpRecipes = recipes;
   recipes.sort(function(a,b){
     return new Date(b.date) - new Date(a.date);
   });
   return recipes
+}
+
+export function filterRecipes(user,keywords){
+  let recipes = getAllRecipes();
+  if(user!==""){
+    recipes = recipes.filter(recipe => recipe.user === user);
+  }
+  if(keywords.length>0)
+  {
+    recipes = recipes.filter((recipe) =>
+      keywords.every((keyword) => recipe.keywords.includes(keyword))
+    );
+  }
+  return sortByDateDesc(recipes);
 }

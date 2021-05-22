@@ -238,7 +238,7 @@ export default function Nav(props) {
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
-            <IconButton>
+            <IconButton style={{borderRadius:"2%"}}>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 <Typography className={classes.title} variant="h5" noWrap>
                   <FastfoodIcon p={2} /> Cooking Recipes

@@ -43,9 +43,6 @@ class AddRecipe extends React.Component {
       errors["time"] = "Time should be more than 0 minutes ";
     }
     
-
-    //confirm password
-    
     this.setState({ errors: errors });
     return formIsValid;
   }
@@ -60,9 +57,18 @@ class AddRecipe extends React.Component {
   }
 
   handleChange(field, e) {
-    let fields = this.state.fields;
-    fields[field] = e.target.value;
-    this.setState(fields);
+    if(field==="keywords"){
+      let fields = this.state.fields;
+      fields[field]=e;
+      this.setState(fields)
+    }
+    else{
+
+      let fields = this.state.fields;
+      fields[field] = e.target.value;
+      this.setState(fields);
+    }
+    console.log(this.state)
   }
 
   handleAddChip(keyword) {
@@ -71,6 +77,7 @@ class AddRecipe extends React.Component {
     })
     console.log("Opa",this.state)
   }
+  
   handleDeleteChip(keyword) {
     this.setState(
       this.state.fields.keywords.filter(function (item) {
@@ -91,7 +98,7 @@ class AddRecipe extends React.Component {
         <form
           style={{ padding: "10px" }}
           onSubmit={this.formSubmit.bind(this)}
-          autocomplete="off"
+          autoComplete="off"
         >
           <Grid container spacing={2}>
             
@@ -146,11 +153,8 @@ class AddRecipe extends React.Component {
                 fullWidth
                 label="Keywords"
                 value={this.state.fields.keywords}
-                onAdd={(keyword) => this.handleAddChip(keyword)}
-                onDelete={(keyword, index) =>
-                  this.handleDeleteChip(keyword, index)
-                }    
-              />
+                onChange={this.handleChange.bind(this, "keywords")} 
+                />
             </Grid>
           
             <Grid item xs={12}>
