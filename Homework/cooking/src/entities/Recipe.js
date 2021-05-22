@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 export class Recipe {
   constructor(
     userId,
+    user,
     name,
     short_descrption,
     time,
@@ -13,6 +14,7 @@ export class Recipe {
   ) {
     this.id = nanoid();
     this.userId = userId;
+    this.user=user;
     this.name = name;
     this.short_descrption = short_descrption;
     this.time = time;

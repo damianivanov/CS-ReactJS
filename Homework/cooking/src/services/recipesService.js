@@ -1,9 +1,11 @@
 import { Recipe } from "../entities/Recipe";
-export async function insertRecipe(data) {  
+
+export function insertRecipe(data) {  
 const user = JSON.parse(localStorage.getItem("user"));
   let recipes = getAllRecipes();
   const recipe = new Recipe(
     user.id,
+    user.username,
     data.name,
     data.short_description,
     data.time,

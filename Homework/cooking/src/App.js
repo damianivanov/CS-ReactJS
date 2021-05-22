@@ -2,7 +2,7 @@ import Nav from "../src/NavBar/Nav";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
 import Recipes from "./Recipes/Recipes";
-import Dashboard from "./Dashboard/Dashboard";
+import AddRecipe from "./AddRecipe/AddRecipe";
 import "./App.css";
 import React, { useState } from "react";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
@@ -42,10 +42,9 @@ function App() {
               <Recipes signed={signed} />
             </Route>
             <Route path="/dashboard">
-              <Dashboard />
+              <AddRecipe />
             </Route>
             <Route exact path="/">
-              <Dashboard />
             </Route>
           </Switch>
         </Paper>
