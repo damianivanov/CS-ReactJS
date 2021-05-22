@@ -11,8 +11,8 @@ const user = JSON.parse(localStorage.getItem("user"));
     data.time,
     data.ingredients,
     data.description,
-    data.keywords,
-    data.photo
+    data.photo,
+    data.keywords
   );
   recipes.push(recipe);
   localStorage.setItem("recipes", JSON.stringify(recipes));
@@ -36,4 +36,12 @@ export function checkRecipe(data) {
     }
   });
   return currentrecipe;
+}
+
+export function sortByDateDesc(){
+  let recipes = getAllRecipes();
+  recipes.sort(function(a,b){
+    return new Date(b.date) - new Date(a.date);
+  });
+  return recipes
 }

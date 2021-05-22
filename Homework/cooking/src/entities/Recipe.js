@@ -10,7 +10,7 @@ export class Recipe {
     ingredients,
     photo,
     description,
-    keywords
+    keywords=[]
   ) {
     this.id = nanoid();
     this.userId = userId;

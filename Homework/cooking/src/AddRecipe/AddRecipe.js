@@ -26,15 +26,15 @@ class AddRecipe extends React.Component {
       }
     }
 
-    if (fields["short_descrption"].length > 256) {
+    if (fields["short_description"].length > 256) {
       formIsValid = false;
-      errors["short_descrption"] =
+      errors["short_description"] =
         "Short description should be less than 256 characters";
     }
 
-    if (fields["descrption"].length > 2048) {
+    if (fields["description"].length > 2048) {
       formIsValid = false;
-      errors["descrption"] =
+      errors["description"] =
         "Description should be less than 2048 characters";
     }
 
@@ -45,13 +45,7 @@ class AddRecipe extends React.Component {
     
 
     //confirm password
-
-      if (fields["confirm password"] !== fields["password"]) {
-        formIsValid = false;
-        errors["confirm password"] = "Passwords doesn't match";
-      }
-
-
+    
     this.setState({ errors: errors });
     return formIsValid;
   }
@@ -72,7 +66,10 @@ class AddRecipe extends React.Component {
   }
 
   handleAddChip(keyword) {
-    this.setState(this.state.fields.keywords.push(keyword));
+    this.setState({ 
+      keywords: [...this.state.fields.keywords,keyword]
+    })
+    console.log("Opa",this.state)
   }
   handleDeleteChip(keyword) {
     this.setState(
@@ -83,7 +80,7 @@ class AddRecipe extends React.Component {
   }
   render() {
     return (
-      <Container component="main" maxWidth="xs" a>
+      <Container component="main" maxWidth="xs" style={{height:"100%"}}>
         <CssBaseline />
         <Typography
           component="h1"
@@ -120,13 +117,13 @@ class AddRecipe extends React.Component {
                 fullWidth
                 multiline
                 rows={4}
-                id="short Description"
+                id="short description"
                 label="Short description"
                 name="short description"
-                value={this.state.short_descrption}
-                onChange={this.handleChange.bind(this, "short_descrption")}
-                error={this.state.errors["short_descrption"]}
-                helperText={this.state.errors["short_descrption"]}
+                value={this.state.short_description}
+                onChange={this.handleChange.bind(this, "short_description")}
+                error={this.state.errors["short_description"]}
+                helperText={this.state.errors["short_description"]}
               />
             </Grid>
             <Grid item xs={12}>
@@ -148,9 +145,7 @@ class AddRecipe extends React.Component {
               <ChipInput
                 fullWidth
                 label="Keywords"
-                value={this.state.keywords}
-                // onKeyDown={(e) => { if (e.code === 9) 
-                //   e.preventDefault() }}
+                value={this.state.fields.keywords}
                 onAdd={(keyword) => this.handleAddChip(keyword)}
                 onDelete={(keyword, index) =>
                   this.handleDeleteChip(keyword, index)
@@ -168,16 +163,16 @@ class AddRecipe extends React.Component {
                 id="Description"
                 label="Description"
                 name="description"
-                value={this.state.descriptipon}
-                onChange={this.handleChange.bind(this, "descrption")}
-                error={this.state.errors["descrption"]}
-                helperText={this.state.errors["descrption"]}
+                value={this.state.fields.description}
+                onChange={this.handleChange.bind(this, "description")}
+                error={this.state.errors["description"]}
+                helperText={this.state.errors["description"]}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <Input
                 id="time"
-                value={this.state.time}
+                value={this.state.fields.time}
                 required
                 onChange={this.handleChange.bind(this, "time")}
                 endAdornment={
@@ -190,7 +185,7 @@ class AddRecipe extends React.Component {
             <Grid item xs={12} sm={9}>
               <Input
                 id="url"
-                value={this.state.photo}
+                value={this.state.fields.photo}
                 required
                 fullWidth
                 label="Photo URL"

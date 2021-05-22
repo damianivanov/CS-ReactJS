@@ -1,7 +1,7 @@
 import Nav from "../src/NavBar/Nav";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
-import Recipes from "./Recipes/Recipes";
+import Dashboard from "./Dashboard/Dashboard";
 import AddRecipe from "./AddRecipe/AddRecipe";
 import "./App.css";
 import React, { useState } from "react";
@@ -24,7 +24,7 @@ function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        <Paper style={{ height: "100vh" }}>
+        {/* <Paper style={{ height: "100vh" }}> */}
           <Nav
             darkMode={darkMode}
             setDarkMode={setDarkMode}
@@ -39,15 +39,15 @@ function App() {
               <Register />
             </Route>
             <Route path="/recipes">
-              <Recipes signed={signed} />
+              <AddRecipe signed={signed} />
             </Route>
             <Route path="/dashboard">
-              <AddRecipe />
+              <Dashboard />
             </Route>
             <Route exact path="/">
             </Route>
           </Switch>
-        </Paper>
+        {/* </Paper> */}
       </ThemeProvider>
     </Router>
   );
