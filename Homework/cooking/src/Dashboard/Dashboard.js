@@ -1,5 +1,11 @@
 import React from "react";
-import { Button, CssBaseline, GridList, Grid,Container } from "@material-ui/core";
+import {
+  Button,
+  CssBaseline,
+  GridList,
+  Grid,
+  Container,ButtonGroup
+} from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 
@@ -8,7 +14,10 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     justifyContent: "space-around",
     overflow: "hidden",
-    margin: "20px",
+    margin: "10px",
+    flexDirection: 'column',
+    alignItems: 'start',
+  
     // backgroundColor: theme.palette.background.paper,
   },
   gridList: {
@@ -23,49 +32,57 @@ const useStyles = makeStyles((theme) => ({
     background:
       "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
   },
-}));
+  button: {
+    margin:"5px"
+  },
+  Link:{
+    color: "white", textDecoration: "none"
+  }
+})
+);
 
 export default function Dashboard() {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <CssBaseline /> 
+      <CssBaseline />
       {/* <Container component="main" style={{justifyContent:"flex-start"}}> */}
       <div className={classes.root}>
-        <GridList xs >
+          <ButtonGroup
+            color="primary"
+            aria-label="outlined primary button group"
+          >
 
-          <Grid >
-            <Button variant="contained" color="secondary" xs={2}>
-              <Link
-                to="/recipes"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                Post Recipe
-              </Link>
-            </Button>
-          </Grid>
-          <Grid >
-            <Button variant="contained" color="secondary">
-              <Link
-                to="/recent"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-               Recent Recipes
-              </Link>
-            </Button>
-          </Grid>
-          <Grid >
-            <Button variant="contained" color="secondary">
-              <Link
-                to="/"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                Post Recipe
-              </Link>
-            </Button>
-          </Grid>
-        
-        </GridList>
+              <Button variant="contained" color="secondary" xs={2} className={classes.button}>
+                <Link
+                  to="/addrecipe"
+                  className={classes.Link}
+                >
+                  Post Recipe
+                </Link>
+              </Button>
+
+              <Button variant="contained" color="secondary" className={classes.button}>
+                <Link
+                  to="/recent"
+                  className={classes.Link}
+                >
+                  Recent Recipes
+                </Link>
+              </Button>
+
+              <Button variant="contained" color="secondary" className={classes.button}>
+                <Link to="/recipes" className={classes.Link}>
+                  All Recipes
+                </Link>
+              </Button>
+
+              <Button variant="contained" color="secondary" className={classes.button}>
+                <Link to="/" className={classes.Link}>
+                  All Users
+                </Link>
+              </Button>
+          </ButtonGroup>
       </div>
       {/* </Container> */}
     </React.Fragment>

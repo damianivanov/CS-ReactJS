@@ -56,11 +56,12 @@ export default function Recipe({props}) {
         }
         title={props.name}
         subheader={`By: ${props.user} on  ${new Date(props.shareDate).toLocaleDateString()}`}
-        
+        fontWeight="fontWeightBold"
       />
       <CardMedia
         className={classes.media}
         image={props.photo}
+        style={{backgroundSize: 'contain'}}
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
@@ -68,7 +69,7 @@ export default function Recipe({props}) {
         </Typography>
       </CardContent>
       <Box p={1} >
-        <Typography variant="h7"> keywords: {props.keywords.join(" ")} </Typography>
+        <Typography variant="h7"> keywords: {props.keywords.join(" , ")} </Typography>
       </Box>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">

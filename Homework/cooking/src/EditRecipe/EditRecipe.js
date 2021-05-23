@@ -3,19 +3,21 @@ import ImageBackground from 'react'
 import { TextField, Input, InputAdornment,Typography,Container,CssBaseline,Grid,Button,CardAction,Card,CardActionArea,CardContent,CardActions,CardMedia  } from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
 import { withRouter } from "react-router-dom";
-import { insertRecipe } from "../services/recipesService";
+import { editRecipe, getRecipe } from "../services/recipesService";
 
-class AddRecipe extends React.Component {
+class EditRecipe extends React.Component {
   constructor(props) {
     super(props);
+    console.log(getRecipe(props.match.params.id));
     this.state = {
-      fields: {},
+      fields: getRecipe(props.match.params.id),
+      test: "t",
       errors: {},
     };
   }
 
   handleValidation() {
-    let fields = this.state;
+    let fields = this.state.fields;
     let errors = {};
     let formIsValid = true;
 
@@ -51,8 +53,7 @@ class AddRecipe extends React.Component {
   formSubmit(e) {
     e.preventDefault();
     if (this.handleValidation()) {
-      insertRecipe(this.state.fields);
-      
+      editRecipe(this.state.fields);
     }
   }
 
@@ -127,7 +128,7 @@ class AddRecipe extends React.Component {
                   id="short description"
                   label="Short description"
                   name="short description"
-                  value={this.state.short_description}
+                  value={this.state.fields["short_description"]}
                   onChange={this.handleChange.bind(this, "short_description")}
                   error={this.state.errors["short_description"]}
                   helperText={this.state.errors["short_description"]}
@@ -141,7 +142,7 @@ class AddRecipe extends React.Component {
                   name="ingredients"
                   label="Ingredients"
                   id="ingredients"
-                  value={this.state.ingredients}
+                  value={this.state.fields["ingredients"]}
                   onChange={this.handleChange.bind(this, "ingredients")}
                   error={this.state.errors["ingredients"]}
                   helperText={this.state.errors["ingredients"]}
@@ -207,12 +208,13 @@ class AddRecipe extends React.Component {
               color="primary"
               style={{ marginTop: "10px" }}
             >
-              Post
+              Save Changes
             </Button>
+            <Button href="/" color="secondary"> Cancel</Button>
           </form>
         </Container>
       </React.Fragment>
     );
   }
 }
-export default withRouter(AddRecipe);
+export default withRouter(EditRecipe);

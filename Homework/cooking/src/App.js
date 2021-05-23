@@ -9,7 +9,10 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { activeUser } from "./services/userService";
 import {activeDarkMode} from './services/darkMode'
-import Recent from "./recentRecipes/recentRecipes";
+import Recent from './RecentRecipes/RecentRecipes'
+import RecipeList from "./RecipeList/RecipeList";
+import { CssBaseline } from "@material-ui/core";
+import EditRecipe from "./EditRecipe/EditRecipe";
 
 
 function App() {
@@ -32,6 +35,7 @@ function App() {
             signed={signed}
             setSigned={setSigned}
           />
+          <CssBaseline/>
           <Switch>
             <Route path="/login">
               <Login setSigned={setSigned} />
@@ -39,7 +43,7 @@ function App() {
             <Route path="/register">
               <Register />
             </Route>
-            <Route path="/recipes">
+            <Route path="/addrecipe">
               <AddRecipe signed={signed} />
             </Route>
             <Route path="/dashboard">
@@ -48,8 +52,12 @@ function App() {
             <Route path="/recent">
               <Recent/>
             </Route>
+            <Route  path="/recipes/edit/:id" component={EditRecipe}>
+            </Route> 
+            <Route  path="/recipes" component={RecipeList}>
+            </Route>
             <Route exact path="/">
-              <h1>Home</h1>
+
             </Route>
           </Switch>
         {/* </Paper> */}

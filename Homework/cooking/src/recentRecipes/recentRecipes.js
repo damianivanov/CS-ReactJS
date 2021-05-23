@@ -29,19 +29,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Recent() {
-  const [user,setUser] = React.useState("")
   const classes = useStyles();
+  const [user,setUser] = React.useState("")
   const [keywords,setKeywords] = React.useState([])
+
   let recipes = filterRecipes(user,keywords).slice(0, 10); 
-const content = (
-  <div className={classes.root}>
-  <GridList className={classes.gridList} cols={2.5}>
-    {recipes.map((recipe) => (
-      <Recipe props={recipe} style={{margin:"5px"}}/>
-    ))}
-  </GridList>
-  </div>
-);
+  
+  const content = (
+    <div className={classes.root}>
+      <GridList className={classes.gridList} cols={2.5}>
+        {recipes.map((recipe) => (
+          <Recipe props={recipe} style={{ margin: "5px" }} />
+        ))}
+      </GridList>
+    </div>
+  );
  
 //  function formSubmit(e) {
 //     e.preventDefault();

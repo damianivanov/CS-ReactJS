@@ -8,6 +8,7 @@ import {
   Typography,
   MenuItem,
   Paper,
+  CssBaseline,
 } from "@material-ui/core";
 import { useStyles } from "./Nav.styles";
 import yellow from "@material-ui/core/colors/yellow";
@@ -153,7 +154,7 @@ export default function Nav(props) {
       <Button style={{ margin: "2px" }}>
         <Link
           to="/dashboard"
-          style={{ color: "white", textDecoration: "none" }}
+          style={{ color: linkColor, textDecoration: "none" }}
         >
           Dashboard
         </Link>
@@ -231,6 +232,7 @@ export default function Nav(props) {
 
   return (
     <Paper>
+      <CssBaseline/>
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
