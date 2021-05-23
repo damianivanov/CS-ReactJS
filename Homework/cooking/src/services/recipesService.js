@@ -39,7 +39,6 @@ export function checkRecipe(data) {
 }
 
 export function sortByDateDesc(recipes){
-  let tmpRecipes = recipes;
   recipes.sort(function(a,b){
     return new Date(b.date) - new Date(a.date);
   });

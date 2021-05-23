@@ -14,9 +14,9 @@ import yellow from "@material-ui/core/colors/yellow";
 import Toggle from "react-toggle";
 import "./Toggle.css";
 import { logOut } from "../services/userService";
-import { Link, useHistory,useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
-import {deactivateDarkMode,activateDarkMode} from '../services/darkMode';
+import { deactivateDarkMode, activateDarkMode } from "../services/darkMode";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
@@ -24,19 +24,19 @@ import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 
 export default function Nav(props) {
-  const [linkColor,setColor]=React.useState("black")
+  const [linkColor, setColor] = React.useState("black");
   function changeTheme() {
     if (props.darkMode) {
       props.setDarkMode(false);
       deactivateDarkMode();
-      setColor("black")
+      setColor("black");
     } else {
       props.setDarkMode(true);
-      activateDarkMode()
-      setColor("white")
+      activateDarkMode();
+      setColor("white");
     }
   }
-  
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -85,34 +85,33 @@ export default function Nav(props) {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-  
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  
+
   let history = useHistory();
   let location = useLocation();
-  
+
   function onLogOut() {
     props.setSigned(false);
     logOut();
     let { from } = location.state || { from: { pathname: "/" } };
     history.replace(from);
-    history.push("/login")
+    history.push("/login");
     handleMenuClose();
   }
 
-  
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
-    anchorEl={anchorEl}
-    anchorOrigin={{ vertical: "top", horizontal: "right" }}
-    id={menuId}
-    keepMounted
-    transformOrigin={{ vertical: "top", horizontal: "right" }}
-    open={isMenuOpen}
-    onClose={handleMenuClose}
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
@@ -223,22 +222,19 @@ export default function Nav(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-
-        {props.signed ? signedUserMenu : noUserMenu}
+      {props.signed ? signedUserMenu : noUserMenu}
       <div container style={{ marginLeft: "16px" }}>
         {toggler}
       </div>
-
     </Menu>
   );
-
 
   return (
     <Paper>
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
-            <IconButton style={{borderRadius:"2%"}}>
+            <IconButton style={{ borderRadius: "2%" }}>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 <Typography className={classes.title} variant="h5" noWrap>
                   <FastfoodIcon p={2} /> Cooking Recipes

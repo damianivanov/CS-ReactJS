@@ -3,14 +3,13 @@ import Login from "./Login/Login";
 import Register from "./Register/Register";
 import Dashboard from "./Dashboard/Dashboard";
 import AddRecipe from "./AddRecipe/AddRecipe";
-import Recipe from './helperComponents/recipeHelper'
 import "./App.css";
 import React, { useState } from "react";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { activeUser } from "./services/userService";
 import {activeDarkMode} from './services/darkMode'
-import { getAllRecipes } from "./services/recipesService";
+import Recent from "./recentRecipes/recentRecipes";
 
 
 function App() {
@@ -45,6 +44,9 @@ function App() {
             </Route>
             <Route path="/dashboard">
               <Dashboard />
+            </Route>
+            <Route path="/recent">
+              <Recent/>
             </Route>
             <Route exact path="/">
               <h1>Home</h1>
