@@ -49,3 +49,30 @@ export function logOut() {
 export function activeUser(){
     return (localStorage.getItem("user") !== null) 
 }
+
+export function getActiveUser(){
+  if(activeUser()){
+    return JSON.parse(localStorage.getItem("user"))
+  }
+}
+
+export function deleteUser(id){
+let users = getAllUser()
+users = users.filter((user) => user.id !== id);
+localStorage.setItem("users", JSON.stringify(users));
+}
+
+export function editUser(data){
+deleteUser(data.id)
+data.lastModified=Date.now()
+insertUser(data)
+if(getActiveUser().id===data.id){
+  localStorage.setItem('user', JSON.parse(data))
+}
+}
+
+export function getUser(id){
+  const users = getAllUser()
+  const user = users.find(user => user.id===id)
+  return user
+}

@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
-  },
-  Link:{
-    color: "white", textDecoration: "none"
   }
 }));
 export { useStyles }

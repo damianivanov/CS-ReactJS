@@ -27,17 +27,6 @@ export function getAllRecipes() {
   return JSON.parse(localStorage.getItem("recipes"));
 }
 
-// export function checkRecipe(data) {
-//   let recipes = getAllRecipes();
-//   let currentrecipe = null;
-//   recipes.forEach((recipe) => {
-//     if (recipe.recipename === data.recipename) {
-//       currentrecipe = recipe;
-//     }
-//   });
-//   return currentrecipe;
-// }
-
 function sortByDateDesc(recipes) {
   recipes.sort(function (a, b) {
     return new Date(b.date) - new Date(a.date);
@@ -73,6 +62,5 @@ export function editRecipe(data){
 export function getRecipe(id){
   const recipes = getAllRecipes()
   const recipe =  recipes.find(recipe => recipe.id === id)
-  console.log("Service",recipe)
   return recipe
 }

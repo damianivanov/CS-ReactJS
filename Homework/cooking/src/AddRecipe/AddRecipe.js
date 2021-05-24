@@ -1,6 +1,5 @@
 import React from "react";
-import ImageBackground from 'react'
-import { TextField, Input, InputAdornment,Typography,Container,CssBaseline,Grid,Button,CardAction,Card,CardActionArea,CardContent,CardActions,CardMedia  } from "@material-ui/core";
+import { TextField, Input, InputAdornment,Typography,Container,CssBaseline,Grid,Button} from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
 import { withRouter } from "react-router-dom";
 import { insertRecipe } from "../services/recipesService";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { filterRecipes } from "../services/recipesService";
-import { TextField,CssBaseline,Grid,Button } from "@material-ui/core";
+import { TextField,CssBaseline,Grid } from "@material-ui/core";
 import GridList from '@material-ui/core/GridList';
 import {makeStyles} from '@material-ui/core'
 import ChipInput from "material-ui-chip-input";

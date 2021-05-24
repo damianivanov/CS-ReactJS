@@ -1,6 +1,5 @@
 import React from "react";
-import ImageBackground from 'react'
-import { TextField, Input, InputAdornment,Typography,Container,CssBaseline,Grid,Button,CardAction,Card,CardActionArea,CardContent,CardActions,CardMedia  } from "@material-ui/core";
+import { TextField, Input, InputAdornment,Typography,Container,CssBaseline,Grid,Button } from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
 import { withRouter } from "react-router-dom";
 import { editRecipe, getRecipe } from "../services/recipesService";
@@ -209,7 +208,7 @@ class EditRecipe extends React.Component {
             >
               Save Changes
             </Button>
-            <Button href="/" color="secondary"> Cancel</Button>
+            <Button href="/recipes" color="secondary"> Cancel</Button>
           </form>
         </Container>
       </React.Fragment>

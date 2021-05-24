@@ -17,7 +17,7 @@ import "./Toggle.css";
 import { logOut } from "../services/userService";
 import { Link, useHistory, useLocation } from "react-router-dom";
 
-import { deactivateDarkMode, activateDarkMode } from "../services/darkMode";
+import { deactivateDarkMode, activateDarkMode, activeDarkMode } from "../services/darkMode";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
@@ -25,7 +25,8 @@ import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 
 export default function Nav(props) {
-  const [linkColor, setColor] = React.useState("black");
+  const [linkColor, setColor] = React.useState(activeDarkMode ? "white" : "black");
+
   function changeTheme() {
     if (props.darkMode) {
       props.setDarkMode(false);
@@ -198,6 +199,7 @@ export default function Nav(props) {
       </Link>
     </MenuItem>,
   ];
+  
   const signedUserMenu = [
     <MenuItem>
       <Link
