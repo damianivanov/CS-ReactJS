@@ -52,7 +52,7 @@ class AddRecipe extends React.Component {
     e.preventDefault();
     if (this.handleValidation()) {
       insertRecipe(this.state.fields);
-      
+      this.props.history.push("/recipes");
     }
   }
 

@@ -11,7 +11,6 @@ class EditRecipe extends React.Component {
     console.log(getRecipe(props.match.params.id));
     this.state = {
       fields: getRecipe(props.match.params.id),
-      test: "t",
       errors: {},
     };
   }
@@ -54,6 +53,7 @@ class EditRecipe extends React.Component {
     e.preventDefault();
     if (this.handleValidation()) {
       editRecipe(this.state.fields);
+      this.props.history.push("/recipes");
     }
   }
 
@@ -203,7 +203,6 @@ class EditRecipe extends React.Component {
             </Grid>
             <Button
               type="submit"
-              fullWidth
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
