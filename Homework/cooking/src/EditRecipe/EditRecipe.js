@@ -1,15 +1,24 @@
 import React from "react";
-import { TextField, Input, InputAdornment,Typography,Container,CssBaseline,Grid,Button } from "@material-ui/core";
+import {
+  TextField,
+  Input,
+  InputAdornment,
+  Typography,
+  Container,
+  CssBaseline,
+  Grid,
+  Button,
+} from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { editRecipe, getRecipe } from "../services/recipesService";
 
 class EditRecipe extends React.Component {
   constructor(props) {
     super(props);
-    console.log(getRecipe(props.match.params.id));
+    const recipe=getRecipe(props.match.params.id);
     this.state = {
-      fields: getRecipe(props.match.params.id),
+      fields: recipe,
       errors: {},
     };
   }
@@ -35,15 +44,14 @@ class EditRecipe extends React.Component {
 
     if (fields["description"].length > 2048) {
       formIsValid = false;
-      errors["description"] =
-        "Description should be less than 2048 characters";
+      errors["description"] = "Description should be less than 2048 characters";
     }
 
     if (fields["time"] < 0) {
       formIsValid = false;
       errors["time"] = "Time should be more than 0 minutes ";
     }
-    
+
     this.setState({ errors: errors });
     return formIsValid;
   }
@@ -55,33 +63,39 @@ class EditRecipe extends React.Component {
       this.props.history.push("/recipes");
     }
   }
+  handleCancel() {
+    this.props.history.push("/recipes");
+  }
 
   handleChange(field, e) {
     if(field==="keywords"){
-      let fields = this.state.fields;
-      fields[field]=e;
-      this.setState(fields)
+      const lastElement = e[e.length-1]
+      const arr = [...this.state.fields.keywords, lastElement]
+      this.setState((prevState) => ({
+        fields: {
+          ...prevState.fields,
+          [field]: arr
+        },
+      }));
     }
     else{
-
-      let fields = this.state.fields;
-      fields[field] = e.target.value;
-      this.setState(fields);
+      this.setState((prevState) => ({
+        fields: {
+          ...prevState.fields,
+          [field]: e.target.value,
+        },
+      }));
     }
   }
 
-  handleAddChip(keyword) {
-    this.setState({ 
-      keywords: [...this.state.fields.keywords,keyword]
-    })
-  }
-  
-  handleDeleteChip(keyword) {
-    this.setState(
-      this.state.fields.keywords.filter(function (item) {
-        return item !== keyword;
-      })
-    );
+
+  handleDeleteChip(keyword,index) {
+    this.setState((state) => ({
+      fields: {
+        ...state.fields,
+        keywords: state.fields.keywords.filter((word) => word !== keyword)
+      },
+    }));
   }
 
   render() {
@@ -94,7 +108,7 @@ class EditRecipe extends React.Component {
         >
           <CssBaseline />
           <Typography component="h1" variant="h4" align="center">
-            Add Recipe
+            Edit Recipe
           </Typography>
           <form
             style={{ padding: "20px" }}
@@ -151,8 +165,9 @@ class EditRecipe extends React.Component {
                 <ChipInput
                   fullWidth
                   label="Keywords"
-                  value={this.state.fields.keywords}
+                  value={this.state.fields["keywords"]}
                   onChange={this.handleChange.bind(this, "keywords")}
+                  onDelete={this.handleDeleteChip.bind(this)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -165,7 +180,7 @@ class EditRecipe extends React.Component {
                   id="Description"
                   label="Description"
                   name="description"
-                  value={this.state.fields.description}
+                  value={this.state.fields["description"]}
                   onChange={this.handleChange.bind(this, "description")}
                   error={this.state.errors["description"]}
                   helperText={this.state.errors["description"]}
@@ -174,7 +189,7 @@ class EditRecipe extends React.Component {
               <Grid item xs={12} sm={3}>
                 <Input
                   id="time"
-                  value={this.state.fields.time}
+                  value={this.state.fields["time"]}
                   required
                   onChange={this.handleChange.bind(this, "time")}
                   endAdornment={
@@ -200,15 +215,27 @@ class EditRecipe extends React.Component {
                 />
               </Grid>
             </Grid>
+
+            <Grid container direction="row" justify="space-between" alignItems="center">
             <Button
+              item
               type="submit"
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
-            >
+              >
               Save Changes
             </Button>
-            <Button href="/recipes" color="secondary"> Cancel</Button>
+            <Button
+              item
+              variant="contained"
+              color="secondary"
+              onClick={this.handleCancel.bind(this)}
+              style={{ marginTop: "10px" }}
+              >
+              Cancel
+            </Button>
+              </Grid>
           </form>
         </Container>
       </React.Fragment>

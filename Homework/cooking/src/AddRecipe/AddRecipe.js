@@ -14,7 +14,7 @@ class AddRecipe extends React.Component {
   }
 
   handleValidation() {
-    let fields = this.state;
+    let fields = this.state.fields;
     let errors = {};
     let formIsValid = true;
 
@@ -57,30 +57,31 @@ class AddRecipe extends React.Component {
 
   handleChange(field, e) {
     if(field==="keywords"){
-      let fields = this.state.fields;
-      fields[field]=e;
-      this.setState(fields)
+      this.setState((prevState) => ({
+        fields: {
+          ...prevState.fields,
+          [field]: e,
+        },
+      }));
     }
     else{
-
-      let fields = this.state.fields;
-      fields[field] = e.target.value;
-      this.setState(fields);
+      this.setState((prevState) => ({
+        fields: {
+          ...prevState.fields,
+          [field]: e.target.value,
+        },
+      }));
     }
   }
 
-  handleAddChip(keyword) {
-    this.setState({ 
-      keywords: [...this.state.fields.keywords,keyword]
-    })
-  }
   
-  handleDeleteChip(keyword) {
-    this.setState(
-      this.state.fields.keywords.filter(function (item) {
-        return item !== keyword;
-      })
-    );
+  handleDeleteChip(keyword,index) {
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        keywords: prevState.fields.keywords.filter((word) => word !== keyword)
+      },
+    }));
   }
 
   render() {
@@ -126,7 +127,7 @@ class AddRecipe extends React.Component {
                   id="short description"
                   label="Short description"
                   name="short description"
-                  value={this.state.short_description}
+                  value={this.state.fields["short_description"]}
                   onChange={this.handleChange.bind(this, "short_description")}
                   error={this.state.errors["short_description"]}
                   helperText={this.state.errors["short_description"]}
@@ -140,7 +141,7 @@ class AddRecipe extends React.Component {
                   name="ingredients"
                   label="Ingredients"
                   id="ingredients"
-                  value={this.state.ingredients}
+                  value={this.state.fields["ingredients"]}
                   onChange={this.handleChange.bind(this, "ingredients")}
                   error={this.state.errors["ingredients"]}
                   helperText={this.state.errors["ingredients"]}
@@ -150,8 +151,9 @@ class AddRecipe extends React.Component {
                 <ChipInput
                   fullWidth
                   label="Keywords"
-                  value={this.state.fields.keywords}
+                  value={this.state.fields["keywords"]}
                   onChange={this.handleChange.bind(this, "keywords")}
+                  onDelete={this.handleDeleteChip.bind(this)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -164,7 +166,7 @@ class AddRecipe extends React.Component {
                   id="Description"
                   label="Description"
                   name="description"
-                  value={this.state.fields.description}
+                  value={this.state.fields["description"]}
                   onChange={this.handleChange.bind(this, "description")}
                   error={this.state.errors["description"]}
                   helperText={this.state.errors["description"]}
@@ -173,7 +175,7 @@ class AddRecipe extends React.Component {
               <Grid item xs={12} sm={3}>
                 <Input
                   id="time"
-                  value={this.state.fields.time}
+                  value={this.state.fields["time"]}
                   required
                   onChange={this.handleChange.bind(this, "time")}
                   endAdornment={
@@ -186,7 +188,7 @@ class AddRecipe extends React.Component {
               <Grid item xs={12} sm={9}>
                 <Input
                   id="url"
-                  value={this.state.fields.photo}
+                  value={this.state.fields["photo"]}
                   required
                   fullWidth
                   label="Photo URL"

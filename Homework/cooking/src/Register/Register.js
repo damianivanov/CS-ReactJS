@@ -10,15 +10,15 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Redirect, withRouter } from "react-router-dom";
-import {insertUser} from '../services/userService';
+import { insertUser } from "../services/userService";
 
 class Register extends React.Component {
   constructor(props) {
     super(props);
-      this.state = {
-        fields: {},
-        errors: {},
-      };
+    this.state = {
+      fields: {},
+      errors: {},
+    };
   }
 
   handleValidation() {
@@ -94,22 +94,27 @@ class Register extends React.Component {
   formSubmit(e) {
     e.preventDefault();
     if (this.handleValidation()) {
-      insertUser(this.state.fields)
+      insertUser(this.state.fields);
       this.props.history.push("/");
       <Redirect to="/" />;
     }
   }
 
   handleChange(field, e) {
-    let fields = this.state.fields;
-    fields[field] = e.target.value;
-    this.setState( fields );
+    // const tmpfields = this.state.fields;
+    // tmpfields[field] = e.target.value;
+    // this.setState( tmpfields);
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        [field]: e.target.value,
+      },
+    }));
   }
 
   render() {
     return (
       <Container component="main" maxWidth="xs">
-
         <CssBaseline />
         <Typography component="h1" variant="h4" align="center" p={5}>
           Sign up
