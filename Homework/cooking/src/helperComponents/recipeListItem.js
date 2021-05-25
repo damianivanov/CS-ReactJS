@@ -1,13 +1,7 @@
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {
-  makeStyles,
-  Typography,
-  Box,
-  Avatar,
-  Button,
-} from "@material-ui/core";
+import { makeStyles, Typography, Box, Avatar, Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -15,10 +9,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import ListItem from "@material-ui/core/ListItem";
 import { Link } from "react-router-dom";
-import { deleteRecipe } from "../services/recipesService";
+import { deleteRecipe, getAllRecipes } from "../services/recipesService";
+import { useHistory } from "react-router-dom";
 
 export default function RecipeListItem(props) {
   let recipe = props.recipe;
+  let history = useHistory();
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -40,11 +36,12 @@ export default function RecipeListItem(props) {
       margin: "20px",
     },
     avatar: {
-      height: "150px",
-      width: "150px",
+      height: "100px",
+      width: "100px",
       backgroundSize: "containt",
     },
   }));
+
   const classes = useStyles();
   return (
     <ListItem>
@@ -89,6 +86,8 @@ export default function RecipeListItem(props) {
           <Button
             onClick={() => {
               deleteRecipe(recipe.id);
+              props.setRecipes(getAllRecipes);
+              history.push("/recipes");
               setOpen(false);
             }}
             color="primary"

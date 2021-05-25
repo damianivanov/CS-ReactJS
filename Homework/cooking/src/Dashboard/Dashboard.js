@@ -9,11 +9,11 @@ import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    justifyContent: "center",
     flexWrap: "wrap",
-    justifyContent: "space-around",
+    display:"flex",
     overflow: "hidden",
     margin: "10px",
-    flexDirection: 'column',
     alignItems: 'start',
   
     // backgroundColor: theme.palette.background.paper,
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
       "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
   },
   button: {
-    margin:"5px"
+    padding:"10px"
   },
   Link:{
     color: "white", textDecoration: "none"
@@ -42,12 +42,11 @@ export default function Dashboard() {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <CssBaseline />
-      {/* <Container component="main" style={{justifyContent:"flex-start"}}> */}
+      <CssBaseline />     
       <div className={classes.root}>
           <ButtonGroup
             color="primary"
-            aria-label="outlined primary button group"
+            aria-label="secondary button group"
           >
 
               <Button variant="contained" color="secondary" xs={2} className={classes.button}>
@@ -75,13 +74,12 @@ export default function Dashboard() {
               </Button>
 
               <Button variant="contained" color="secondary" className={classes.button}>
-                <Link to="/" className={classes.Link}>
+                <Link to="/users" className={classes.Link}>
                   All Users
                 </Link>
               </Button>
           </ButtonGroup>
       </div>
-      {/* </Container> */}
     </React.Fragment>
   );
 }

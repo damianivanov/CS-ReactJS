@@ -10,7 +10,7 @@ import {
   Button,
 } from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { editRecipe, getRecipe } from "../services/recipesService";
 
 class EditRecipe extends React.Component {

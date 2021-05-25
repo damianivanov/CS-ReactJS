@@ -4,19 +4,29 @@ var bcrypt = require("bcryptjs");
 export async function insertUser(data) {
   let users = getAllUser();
   var salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(data.password, salt);
+  let hashedPassword =data.password
+  if(!hashedPassword.match(/^\$2[ayb]\$/)){
+    hashedPassword = bcrypt.hashSync(data.password, salt);
+  }
   const user = new User(
+    data.id,
     data.fullname,
     data.username,
     hashedPassword,
-    data.gender
+    data.gender,
+    data.role,
+    data.photo,
+    data.bio,
+    data.status,
+    data.shareDate,
+    data.lastModified
   );
   users.push(user);
   localStorage.setItem("users", JSON.stringify(users));
 }
 
 export function getAllUser() {
-  if (localStorage.getItem("users") == null)
+  if (localStorage.getItem("users") === null)
     localStorage.setItem("users", JSON.stringify([]));
   return JSON.parse(localStorage.getItem("users"));
 }
@@ -67,7 +77,7 @@ deleteUser(data.id)
 data.lastModified=Date.now()
 insertUser(data)
 if(getActiveUser().id===data.id){
-  localStorage.setItem('user', JSON.parse(data))
+  localStorage.setItem('user', JSON.stringify(data))
 }
 }
 
@@ -76,3 +86,4 @@ export function getUser(id){
   const user = users.find(user => user.id===id)
   return user
 }
+//crossorigin,userId,Refactor

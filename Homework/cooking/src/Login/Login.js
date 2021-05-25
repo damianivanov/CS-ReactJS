@@ -87,7 +87,7 @@ export default function Login(props) {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="/" variant="body2" style={{ color: "#f50057" }}>
+                <Link to="/forgotPassword" variant="body2" className={classes.Link} >
                   Forgot password?
                 </Link>
               </Grid>
@@ -95,7 +95,7 @@ export default function Login(props) {
                 <Link
                   to="/register"
                   variant="body2"
-                  style={{ color: "#f50057" }}
+                 className={classes.Link}
                 >
                   Sign Up
                 </Link>

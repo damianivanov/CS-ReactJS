@@ -22,7 +22,7 @@ export function insertRecipe(data) {
 }
 
 export function getAllRecipes() {
-  if (localStorage.getItem("recipes") == null)
+  if (localStorage.getItem("recipes") === null)
     localStorage.setItem("recipes", JSON.stringify([]));
   return JSON.parse(localStorage.getItem("recipes"));
 }

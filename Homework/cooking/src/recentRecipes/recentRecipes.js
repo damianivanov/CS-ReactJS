@@ -38,7 +38,7 @@ export default function Recent() {
   const content = (
     <div className={classes.root}>
       <GridList className={classes.gridList} cols={2.5}>
-        {recipes.map((recipe) => (
+        {recipes.map((recipe,i) => (
           <Recipe props={recipe} style={{ margin: "5px" }} />
         ))}
       </GridList>

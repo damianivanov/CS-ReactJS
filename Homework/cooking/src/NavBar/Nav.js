@@ -16,8 +16,11 @@ import Toggle from "react-toggle";
 import "./Toggle.css";
 import { logOut } from "../services/userService";
 import { Link, useHistory, useLocation } from "react-router-dom";
-
-import { deactivateDarkMode, activateDarkMode, activeDarkMode } from "../services/darkMode";
+import {
+  deactivateDarkMode,
+  activateDarkMode,
+  activeDarkMode,
+} from "../services/darkMode";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
@@ -25,7 +28,9 @@ import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 
 export default function Nav(props) {
-  const [linkColor, setColor] = React.useState(activeDarkMode ? "white" : "black");
+  const [linkColor, setColor] = React.useState(
+    activeDarkMode ? "white" : "black"
+  );
 
   function changeTheme() {
     if (props.darkMode) {
@@ -155,7 +160,7 @@ export default function Nav(props) {
       <Button style={{ margin: "2px" }}>
         <Link
           to="/dashboard"
-          style={{ color: linkColor, textDecoration: "none" }}
+          style={{ color: "white", textDecoration: "none" }}
         >
           Dashboard
         </Link>
@@ -199,7 +204,7 @@ export default function Nav(props) {
       </Link>
     </MenuItem>,
   ];
-  
+
   const signedUserMenu = [
     <MenuItem>
       <Link
@@ -234,7 +239,7 @@ export default function Nav(props) {
 
   return (
     <Paper>
-      <CssBaseline/>
+      <CssBaseline />
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
@@ -248,7 +253,6 @@ export default function Nav(props) {
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               {toggler}
-
               {props.signed ? signedUser : noUser}
             </div>
 
