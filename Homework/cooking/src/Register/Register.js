@@ -100,9 +100,6 @@ class Register extends React.Component {
   }
 
   handleChange(field, e) {
-    // const tmpfields = this.state.fields;
-    // tmpfields[field] = e.target.value;
-    // this.setState( tmpfields);
     this.setState((prevState) => ({
       fields: {
         ...prevState.fields,

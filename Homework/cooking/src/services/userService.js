@@ -4,8 +4,8 @@ var bcrypt = require("bcryptjs");
 export async function insertUser(data) {
   let users = getAllUser();
   var salt = bcrypt.genSaltSync(10);
-  let hashedPassword =data.password
-  if(!hashedPassword.match(/^\$2[ayb]\$/)){
+  let hashedPassword = data.password;
+  if (!hashedPassword.match(/^\$2[ayb]\$/)) {
     hashedPassword = bcrypt.hashSync(data.password, salt);
   }
   const user = new User(
@@ -33,14 +33,13 @@ export function getAllUser() {
 
 export function checkUser(data) {
   let users = getAllUser();
-  let currentUser=null;
+  let currentUser = null;
   users.forEach((user) => {
     if (
       user.username === data.username &&
       bcrypt.compareSync(data.password, user.password)
     ) {
-        currentUser=user
-
+      currentUser = user;
     }
   });
   return currentUser;
@@ -52,38 +51,38 @@ export function login(user) {
 }
 
 export function logOut() {
-    if (localStorage.getItem("user") != null)
-    localStorage.removeItem("user");
+  if (localStorage.getItem("user") != null) localStorage.removeItem("user");
 }
 
-export function activeUser(){
-    return (localStorage.getItem("user") !== null) 
+export function activeUser() {
+  return localStorage.getItem("user") !== null;
 }
 
-export function getActiveUser(){
-  if(activeUser()){
-    return JSON.parse(localStorage.getItem("user"))
+export function getActiveUser() {
+  if (activeUser()) {
+    return JSON.parse(localStorage.getItem("user"));
   }
 }
 
-export function deleteUser(id){
-let users = getAllUser()
-users = users.filter((user) => user.id !== id);
-localStorage.setItem("users", JSON.stringify(users));
+export function deleteUser(id) {
+  let users = getAllUser();
+  users = users.filter((user) => user.id !== id);
+  localStorage.setItem("users", JSON.stringify(users));
 }
 
-export function editUser(data){
-deleteUser(data.id)
-data.lastModified=Date.now()
-insertUser(data)
-if(getActiveUser().id===data.id){
-  localStorage.setItem('user', JSON.stringify(data))
-}
+export function editUser(data) {
+  deleteUser(data.id);
+  data.lastModified = Date.now();
+  insertUser(data);
+  if (getActiveUser().id === data.id) {
+    localStorage.setItem("user", JSON.stringify(data));
+  }
 }
 
-export function getUser(id){
-  const users = getAllUser()
-  const user = users.find(user => user.id===id)
-  return user
+export function getUser(id) {
+  const users = getAllUser();
+  const user = users.find((user) => user.id === id);
+  return user;
 }
-//crossorigin,userId,Refactor
+
+//Refactor

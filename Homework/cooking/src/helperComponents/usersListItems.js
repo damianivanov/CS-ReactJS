@@ -1,13 +1,7 @@
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {
-  makeStyles,
-  Typography,
-  Box,
-  Avatar,
-  Button,
-} from "@material-ui/core";
+import { makeStyles, Typography, Box, Avatar, Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -48,17 +42,14 @@ export default function UserListItem(props) {
   const classes = useStyles();
   return (
     <ListItem>
-        <CssBaseline/>
-      <Avatar
-        aria-label="recipe"
-        className={classes.avatar}
-        src={user.photo}
-      />
+      <CssBaseline />
+      <Avatar aria-label="avatar" className={classes.avatar} src={user.photo} />
 
       <Box component="span" m={1}>
         <Typography variant="h5">
-          {user.fullname}(<b>{user.username}</b>) Last Modified{" "}
-          <b>{new Date(user.lastModified).toLocaleDateString()}</b>
+          {user.fullname}(<b>{user.username}</b>) / Last Modified:{" "}
+          <b>{new Date(user.lastModified).toLocaleDateString()}</b> /
+          {user.role.toUpperCase()}/{user.gender ? "Male" : "Female"}
         </Typography>
       </Box>
 

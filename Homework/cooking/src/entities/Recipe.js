@@ -25,7 +25,7 @@ export class Recipe {
     this.photo = photo;
     this.description = description;
     this.keywords = keywords;
-    this.shareDate = shareDate === 0 ? Date.now() : shareDate ;
+    this.shareDate = shareDate === 0 ? Date.now() : shareDate;
     this.lastModified = lastModified === 0 ? Date.now() : lastModified;
   }
 }

@@ -19,7 +19,11 @@ class EditUser extends React.Component {
   constructor(props) {
     super(props);
     const user = getUser(props.match.params.userId);
-    user.photo=""
+    user.photo = user.photo.includes(
+      user.gender ? "public/male-avatar.png" : "public/woman-avatar.png"
+    )
+      ? ""
+      : user.photo;
     this.state = {
       fields: user,
       errors: {},
@@ -31,14 +35,7 @@ class EditUser extends React.Component {
     let errors = {};
     let formIsValid = true;
 
-    //fullname
-
-    if (typeof fields.name !== "undefined") {
-      if (!fields.name.length > 80) {
-        errors["name"] = "The name should be less than 80 characters";
-      }
-    }
-
+    //bio
     if (fields["bio"].length > 512) {
       formIsValid = false;
       errors["bio"] = "Bio should be less than 512 characters";
@@ -117,7 +114,6 @@ class EditUser extends React.Component {
             onSubmit={this.formSubmit.bind(this)}
             autoComplete="off"
           >
-
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -202,21 +198,21 @@ class EditUser extends React.Component {
                   <MenuItem value={"suspended"}>Suspended</MenuItem>
                   <MenuItem value={"deactivated"}>Deactivated</MenuItem>
                 </Select>
-                </Grid>
-              <Grid item xs={12} sm={6} style={{marginTop:"15px"}}>
-                  <Input
-                    id="url"
-                    value={this.state.fields["photo"]}
-                    fullWidth
-                    label="Photo URL"
-                    endAdornment={
-                      <InputAdornment position="end">URL</InputAdornment>
-                    }
-                    onChange={this.handleChange.bind(this, "photo")}
-                    error={this.state.errors["photo"]}
-                    helperText={this.state.errors["photo"]}
-                  />
-                </Grid>        
+              </Grid>
+              <Grid item xs={12} sm={6} style={{ marginTop: "15px" }}>
+                <Input
+                  id="url"
+                  value={this.state.fields["photo"]}
+                  fullWidth
+                  label="Photo URL"
+                  endAdornment={
+                    <InputAdornment position="end">URL</InputAdornment>
+                  }
+                  onChange={this.handleChange.bind(this, "photo")}
+                  error={this.state.errors["photo"]}
+                  helperText={this.state.errors["photo"]}
+                />
+              </Grid>
             </Grid>
 
             <Grid

@@ -16,7 +16,7 @@ import { editRecipe, getRecipe } from "../services/recipesService";
 class EditRecipe extends React.Component {
   constructor(props) {
     super(props);
-    const recipe=getRecipe(props.match.params.id);
+    const recipe = getRecipe(props.match.params.id);
     this.state = {
       fields: recipe,
       errors: {},
@@ -68,17 +68,16 @@ class EditRecipe extends React.Component {
   }
 
   handleChange(field, e) {
-    if(field==="keywords"){
-      const lastElement = e[e.length-1]
-      const arr = [...this.state.fields.keywords, lastElement]
+    if (field === "keywords") {
+      const lastElement = e[e.length - 1];
+      const arr = [...this.state.fields.keywords, lastElement];
       this.setState((prevState) => ({
         fields: {
           ...prevState.fields,
-          [field]: arr
+          [field]: arr,
         },
       }));
-    }
-    else{
+    } else {
       this.setState((prevState) => ({
         fields: {
           ...prevState.fields,
@@ -88,12 +87,11 @@ class EditRecipe extends React.Component {
     }
   }
 
-
-  handleDeleteChip(keyword,index) {
+  handleDeleteChip(keyword, index) {
     this.setState((state) => ({
       fields: {
         ...state.fields,
-        keywords: state.fields.keywords.filter((word) => word !== keyword)
+        keywords: state.fields.keywords.filter((word) => word !== keyword),
       },
     }));
   }
@@ -216,26 +214,31 @@ class EditRecipe extends React.Component {
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justify="space-between" alignItems="center">
-            <Button
-              item
-              type="submit"
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "10px" }}
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Button
+                item
+                type="submit"
+                variant="contained"
+                color="primary"
+                style={{ marginTop: "10px" }}
               >
-              Save Changes
-            </Button>
-            <Button
-              item
-              variant="contained"
-              color="secondary"
-              onClick={this.handleCancel.bind(this)}
-              style={{ marginTop: "10px" }}
+                Save Changes
+              </Button>
+              <Button
+                item
+                variant="contained"
+                color="secondary"
+                onClick={this.handleCancel.bind(this)}
+                style={{ marginTop: "10px" }}
               >
-              Cancel
-            </Button>
-              </Grid>
+                Cancel
+              </Button>
+            </Grid>
           </form>
         </Container>
       </React.Fragment>

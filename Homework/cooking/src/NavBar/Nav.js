@@ -14,7 +14,7 @@ import { useStyles } from "./Nav.styles";
 import yellow from "@material-ui/core/colors/yellow";
 import Toggle from "react-toggle";
 import "./Toggle.css";
-import { logOut } from "../services/userService";
+import { getActiveUser, logOut } from "../services/userService";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import {
   deactivateDarkMode,
@@ -31,6 +31,7 @@ export default function Nav(props) {
   const [linkColor, setColor] = React.useState(
     activeDarkMode ? "white" : "black"
   );
+  const [user, setUser] = React.useState(getActiveUser);
 
   function changeTheme() {
     if (props.darkMode) {

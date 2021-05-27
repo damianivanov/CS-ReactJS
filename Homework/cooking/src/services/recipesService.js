@@ -53,14 +53,14 @@ export function deleteRecipe(id) {
   localStorage.setItem("recipes", JSON.stringify(recipes));
 }
 
-export function editRecipe(data){
+export function editRecipe(data) {
   deleteRecipe(data.id);
-  data.lastModified=Date.now();
+  data.lastModified = Date.now();
   insertRecipe(data);
 }
 
-export function getRecipe(id){
-  const recipes = getAllRecipes()
-  const recipe =  recipes.find(recipe => recipe.id === id)
-  return recipe
+export function getRecipe(id) {
+  const recipes = getAllRecipes();
+  const recipe = recipes.find((recipe) => recipe.id === id);
+  return recipe;
 }

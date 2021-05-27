@@ -51,7 +51,7 @@ function App() {
           <Route path="/recipes" component={RecipeList} />
           <Route path="/users" component={UserList} />
           <Route path="/forgotPassword" component={forgotPassword}></Route>
-          <Route exact path="/"></Route>
+          <Route exact path="/" component={Dashboard}></Route>
         </Switch>
       </ThemeProvider>
     </Router>

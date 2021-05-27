@@ -1,5 +1,14 @@
 import React from "react";
-import { TextField, Input, InputAdornment,Typography,Container,CssBaseline,Grid,Button} from "@material-ui/core";
+import {
+  TextField,
+  Input,
+  InputAdornment,
+  Typography,
+  Container,
+  CssBaseline,
+  Grid,
+  Button,
+} from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
 import { withRouter } from "react-router-dom";
 import { insertRecipe } from "../services/recipesService";
@@ -34,15 +43,14 @@ class AddRecipe extends React.Component {
 
     if (fields["description"].length > 2048) {
       formIsValid = false;
-      errors["description"] =
-        "Description should be less than 2048 characters";
+      errors["description"] = "Description should be less than 2048 characters";
     }
 
     if (fields["time"] < 0) {
       formIsValid = false;
       errors["time"] = "Time should be more than 0 minutes ";
     }
-    
+
     this.setState({ errors: errors });
     return formIsValid;
   }
@@ -56,15 +64,14 @@ class AddRecipe extends React.Component {
   }
 
   handleChange(field, e) {
-    if(field==="keywords"){
+    if (field === "keywords") {
       this.setState((prevState) => ({
         fields: {
           ...prevState.fields,
           [field]: e,
         },
       }));
-    }
-    else{
+    } else {
       this.setState((prevState) => ({
         fields: {
           ...prevState.fields,
@@ -74,12 +81,11 @@ class AddRecipe extends React.Component {
     }
   }
 
-  
-  handleDeleteChip(keyword,index) {
+  handleDeleteChip(keyword, index) {
     this.setState((prevState) => ({
       fields: {
         ...prevState.fields,
-        keywords: prevState.fields.keywords.filter((word) => word !== keyword)
+        keywords: prevState.fields.keywords.filter((word) => word !== keyword),
       },
     }));
   }

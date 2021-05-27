@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   Link: {
-    color: "#f50057"
-  }
+    color: "#f50057",
+  },
 }));
 export { useStyles };
