@@ -1,10 +1,10 @@
 import * as React from "react";
-import { filterRecipes } from "../services/recipesService";
+import { filterRecipes } from "../../services/recipesService";
 import { TextField, CssBaseline, Grid } from "@material-ui/core";
 import GridList from "@material-ui/core/GridList";
 import { makeStyles } from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
-import Recipe from "../helperComponents/recipeItem";
+import Recipe from "./RecipeItem";
 
 const useStyles = makeStyles((theme) => ({
   root: {

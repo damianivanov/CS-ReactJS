@@ -11,13 +11,14 @@ import {
 } from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
 import { withRouter } from "react-router-dom";
-import { insertRecipe } from "../services/recipesService";
+import { editRecipe, getRecipe } from "../../services/recipesService";
 
-class AddRecipe extends React.Component {
+class EditRecipe extends React.Component {
   constructor(props) {
     super(props);
+    const recipe = getRecipe(props.match.params.id);
     this.state = {
-      fields: {},
+      fields: recipe,
       errors: {},
     };
   }
@@ -26,7 +27,8 @@ class AddRecipe extends React.Component {
     let fields = this.state.fields;
     let errors = {};
     let formIsValid = true;
-
+    const urlRegex =
+      /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/;
     //fullname
 
     if (typeof fields.name !== "undefined") {
@@ -51,6 +53,11 @@ class AddRecipe extends React.Component {
       errors["time"] = "Time should be more than 0 minutes ";
     }
 
+    if (!fields["photo"].match(urlRegex)) {
+      formIsValid = false;
+      errors["photo"] = "Invalid URL";
+    }
+
     this.setState({ errors: errors });
     return formIsValid;
   }
@@ -58,17 +65,22 @@ class AddRecipe extends React.Component {
   formSubmit(e) {
     e.preventDefault();
     if (this.handleValidation()) {
-      insertRecipe(this.state.fields);
+      editRecipe(this.state.fields);
       this.props.history.push("/recipes");
     }
+  }
+  handleCancel() {
+    this.props.history.push("/recipes");
   }
 
   handleChange(field, e) {
     if (field === "keywords") {
+      const lastElement = e[e.length - 1];
+      const arr = [...this.state.fields.keywords, lastElement];
       this.setState((prevState) => ({
         fields: {
           ...prevState.fields,
-          [field]: e,
+          [field]: arr,
         },
       }));
     } else {
@@ -82,10 +94,10 @@ class AddRecipe extends React.Component {
   }
 
   handleDeleteChip(keyword, index) {
-    this.setState((prevState) => ({
+    this.setState((state) => ({
       fields: {
-        ...prevState.fields,
-        keywords: prevState.fields.keywords.filter((word) => word !== keyword),
+        ...state.fields,
+        keywords: state.fields.keywords.filter((word) => word !== keyword),
       },
     }));
   }
@@ -100,7 +112,7 @@ class AddRecipe extends React.Component {
         >
           <CssBaseline />
           <Typography component="h1" variant="h4" align="center">
-            Add Recipe
+            Edit Recipe
           </Typography>
           <form
             style={{ padding: "20px" }}
@@ -194,7 +206,7 @@ class AddRecipe extends React.Component {
               <Grid item xs={12} sm={9}>
                 <Input
                   id="url"
-                  value={this.state.fields["photo"]}
+                  value={this.state.fields.photo}
                   required
                   fullWidth
                   label="Photo URL"
@@ -207,19 +219,36 @@ class AddRecipe extends React.Component {
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "10px" }}
+
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
             >
-              Post
-            </Button>
+              <Button
+                item
+                type="submit"
+                variant="contained"
+                color="primary"
+                style={{ marginTop: "10px" }}
+              >
+                Save Changes
+              </Button>
+              <Button
+                item
+                variant="contained"
+                color="secondary"
+                onClick={this.handleCancel.bind(this)}
+                style={{ marginTop: "10px" }}
+              >
+                Cancel
+              </Button>
+            </Grid>
           </form>
         </Container>
       </React.Fragment>
     );
   }
 }
-export default withRouter(AddRecipe);
+export default withRouter(EditRecipe);

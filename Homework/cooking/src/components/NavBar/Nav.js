@@ -14,13 +14,13 @@ import { useStyles } from "./Nav.styles";
 import yellow from "@material-ui/core/colors/yellow";
 import Toggle from "react-toggle";
 import "./Toggle.css";
-import { getActiveUser, logOut } from "../services/userService";
+import { logOut } from "../../services/userService";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import {
   deactivateDarkMode,
   activateDarkMode,
   activeDarkMode,
-} from "../services/darkMode";
+} from "../../services/darkMode";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
@@ -31,8 +31,6 @@ export default function Nav(props) {
   const [linkColor, setColor] = React.useState(
     activeDarkMode ? "white" : "black"
   );
-  const [user, setUser] = React.useState(getActiveUser);
-
   function changeTheme() {
     if (props.darkMode) {
       props.setDarkMode(false);

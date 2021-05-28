@@ -1,16 +1,18 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { TextField } from "@material-ui/core";
+import {
+  TextField,
+  CssBaseline,
+  Button,
+  Grid,
+  Typography,
+  Container,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 import { Link } from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 import { withRouter } from "react-router-dom";
-import { insertUser } from "../services/userService";
+import { insertUser } from "../../services/userService";
 
 class Register extends React.Component {
   constructor(props) {

@@ -11,14 +11,13 @@ import {
 } from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
 import { withRouter } from "react-router-dom";
-import { editRecipe, getRecipe } from "../services/recipesService";
+import { insertRecipe } from "../../services/recipesService";
 
-class EditRecipe extends React.Component {
+class AddRecipe extends React.Component {
   constructor(props) {
     super(props);
-    const recipe = getRecipe(props.match.params.id);
     this.state = {
-      fields: recipe,
+      fields: {},
       errors: {},
     };
   }
@@ -59,22 +58,17 @@ class EditRecipe extends React.Component {
   formSubmit(e) {
     e.preventDefault();
     if (this.handleValidation()) {
-      editRecipe(this.state.fields);
+      insertRecipe(this.state.fields);
       this.props.history.push("/recipes");
     }
-  }
-  handleCancel() {
-    this.props.history.push("/recipes");
   }
 
   handleChange(field, e) {
     if (field === "keywords") {
-      const lastElement = e[e.length - 1];
-      const arr = [...this.state.fields.keywords, lastElement];
       this.setState((prevState) => ({
         fields: {
           ...prevState.fields,
-          [field]: arr,
+          [field]: e,
         },
       }));
     } else {
@@ -88,10 +82,10 @@ class EditRecipe extends React.Component {
   }
 
   handleDeleteChip(keyword, index) {
-    this.setState((state) => ({
+    this.setState((prevState) => ({
       fields: {
-        ...state.fields,
-        keywords: state.fields.keywords.filter((word) => word !== keyword),
+        ...prevState.fields,
+        keywords: prevState.fields.keywords.filter((word) => word !== keyword),
       },
     }));
   }
@@ -106,7 +100,7 @@ class EditRecipe extends React.Component {
         >
           <CssBaseline />
           <Typography component="h1" variant="h4" align="center">
-            Edit Recipe
+            Add Recipe
           </Typography>
           <form
             style={{ padding: "20px" }}
@@ -200,7 +194,7 @@ class EditRecipe extends React.Component {
               <Grid item xs={12} sm={9}>
                 <Input
                   id="url"
-                  value={this.state.fields.photo}
+                  value={this.state.fields["photo"]}
                   required
                   fullWidth
                   label="Photo URL"
@@ -213,36 +207,19 @@ class EditRecipe extends React.Component {
                 />
               </Grid>
             </Grid>
-
-            <Grid
-              container
-              direction="row"
-              justify="space-between"
-              alignItems="center"
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: "10px" }}
             >
-              <Button
-                item
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{ marginTop: "10px" }}
-              >
-                Save Changes
-              </Button>
-              <Button
-                item
-                variant="contained"
-                color="secondary"
-                onClick={this.handleCancel.bind(this)}
-                style={{ marginTop: "10px" }}
-              >
-                Cancel
-              </Button>
-            </Grid>
+              Post
+            </Button>
           </form>
         </Container>
       </React.Fragment>
     );
   }
 }
-export default withRouter(EditRecipe);
+export default withRouter(AddRecipe);

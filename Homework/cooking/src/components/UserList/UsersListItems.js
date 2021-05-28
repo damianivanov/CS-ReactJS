@@ -9,7 +9,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import ListItem from "@material-ui/core/ListItem";
 import { Link } from "react-router-dom";
-import { deleteUser } from "../services/userService";
+import { deleteUser } from "../../services/userService";
 import { CssBaseline } from "@material-ui/core";
 
 export default function UserListItem(props) {

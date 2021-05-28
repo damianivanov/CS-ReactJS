@@ -1,16 +1,21 @@
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { makeStyles, Typography, Box, Avatar, Button } from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import ListItem from "@material-ui/core/ListItem";
-import { Link } from "react-router-dom";
-import { deleteRecipe, getAllRecipes } from "../services/recipesService";
-import { useHistory } from "react-router-dom";
+import {
+  makeStyles,
+  Typography,
+  Box,
+  Avatar,
+  Button,
+  ListItem,
+  DialogTitle,
+  DialogContentText,
+  DialogContent,
+  DialogActions,
+  Dialog,
+} from "@material-ui/core";
+import { Link,useHistory } from "react-router-dom";
+import { deleteRecipe, getAllRecipes } from "../../services/recipesService";
 
 export default function RecipeListItem(props) {
   let recipe = props.recipe;

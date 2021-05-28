@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { getAllUser } from "../services/userService";
+import { getAllUser } from "../../services/userService";
 import { CssBaseline } from "@material-ui/core";
 import List from "@material-ui/core/List";
-import UserListItem from "../helperComponents/usersListItems";
+import UserListItem from "./UsersListItems";
 export default function UserList() {
   let Allusers = getAllUser();
   const [users] = useState(Allusers);

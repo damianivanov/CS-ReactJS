@@ -1,20 +1,20 @@
-import Nav from "../src/NavBar/Nav";
-import Login from "./Login/Login";
-import Register from "./Register/Register";
-import Dashboard from "./Dashboard/Dashboard";
-import AddRecipe from "./AddRecipe/AddRecipe";
 import "./App.css";
+import Nav from "../src/components/NavBar/Nav";
+import Login from "./components/Login/Login";
+import Register from "./components/Register/Register";
+import Dashboard from "./components/Dashboard/Dashboard";
+import AddRecipe from "./components/AddRecipe/AddRecipe";
+import Recent from "./components/RecentRecipes/RecentRecipes";
+import RecipeList from "./components/RecipeList/RecipeList";
+import UserList from "./components/UserList/UserList";
+import EditRecipe from "./components/EditRecipe/EditRecipe";
+import EditUser from "./components/EditUser/EditUser";
 import React, { useState } from "react";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { activeUser } from "./services/userService";
 import { activeDarkMode } from "./services/darkMode";
-import Recent from "./RecentRecipes/RecentRecipes";
-import RecipeList from "./RecipeList/RecipeList";
-import UserList from "./UserList/UserList";
 import { CssBaseline } from "@material-ui/core";
-import EditRecipe from "./EditRecipe/EditRecipe";
-import EditUser from "./EditUser/EditUser";
 
 function App() {
   const [signed, setSigned] = useState(activeUser);

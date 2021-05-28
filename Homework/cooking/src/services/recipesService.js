@@ -29,7 +29,7 @@ export function getAllRecipes() {
 
 function sortByDateDesc(recipes) {
   recipes.sort(function (a, b) {
-    return new Date(b.date) - new Date(a.date);
+    return new Date(b.shareDate) - new Date(a.shareDate);
   });
   return recipes;
 }

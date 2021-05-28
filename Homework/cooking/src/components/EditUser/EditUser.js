@@ -13,7 +13,7 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
-import { editUser, getUser } from "../services/userService";
+import { editUser, getUser } from "../../services/userService";
 
 class EditUser extends React.Component {
   constructor(props) {

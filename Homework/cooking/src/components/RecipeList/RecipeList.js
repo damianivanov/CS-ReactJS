@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { getAllRecipes } from "../services/recipesService";
+import { getAllRecipes } from "../../services/recipesService";
 import { CssBaseline } from "@material-ui/core";
 import List from "@material-ui/core/List";
-import RecipeListItem from "../helperComponents/recipeListItem";
+import RecipeListItem from "./RecipeListItem";
 
 export default function RecipeList() {
   const [recipes, setRecipes] = useState(getAllRecipes());
