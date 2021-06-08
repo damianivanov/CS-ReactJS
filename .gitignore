@@ -2,3 +2,4 @@ node_modules
 demos
 .env
 .DS_Store
+yarn.lock
