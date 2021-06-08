@@ -1,9 +1,7 @@
 const ROLES = {
-    ADMIN: 'admin',
-    BASIC: 'basic',
-    MANAGER: 'manager'
-}
+  3: "admin",
+  2: "manager",
+  1: "basic",
+};
 
-module.exports = {
-    ROLES
-}
+module.exports = { ROLES };

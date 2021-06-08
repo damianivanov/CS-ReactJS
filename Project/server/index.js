@@ -8,9 +8,14 @@ const nodemailer = require("nodemailer");
 const authRoute = require('./routes/auth')
 const usersRoute = require('./routes/users')
 const projectsRoute = require('./routes/projects')
+const sendErrorResponse = require('./utils').sendErrorResponse;
 
-app.use(cors())
-app.use(express.json())
+const corsOptions = {
+    origin: 'http://localhost:3000', // react server
+}
+app.use(cors(corsOptions))
+app.use(express.json({limit: '50mb'}));
+app.use(express.static('public'))
 app.use('/api', authRoute)
 app.use('/api/users', usersRoute)
 app.use('/api/projects', projectsRoute)
@@ -63,6 +68,11 @@ app.post('/captcha', function (req, res) {
         res.json({ "responseSuccess": "Sucess" });
     });
 });
+
+app.use(function (err, req, res, next) {
+    console.error(err.stack)
+    sendErrorResponse(req, res, 500, `Server error: ${err.message}`, err);
+})
 
 app.listen(3000, () => {
     console.log('server started')
