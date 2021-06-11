@@ -38,7 +38,7 @@ function App() {
         <CssBaseline />
         <Switch>
           <Route path="/login">
-            <Login setSigned={setSigned} />{" "}
+            <Login setSigned={setSigned} />
           </Route>
           <Route path="/register" component={Register} />
           <Route path="/addrecipe">

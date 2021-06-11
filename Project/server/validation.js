@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const Project = require('./Models/Project');
 
 const registerValidation = data => {
     const schema = Joi.object({

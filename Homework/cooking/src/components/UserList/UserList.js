@@ -1,19 +1,32 @@
-import React, { useState } from "react";
-import { getAllUser } from "../../services/userService";
+import React, { useState,useEffect } from "react";
+import { getAllUsers } from "../../services/userService";
 import { CssBaseline } from "@material-ui/core";
 import List from "@material-ui/core/List";
 import UserListItem from "./UsersListItems";
+
 export default function UserList() {
-  let Allusers = getAllUser();
-  const [users] = useState(Allusers);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getAllUsers();
+      setUsers(response);
+    };
+    fetchData();
+  }, []);
+  const usersList = (
+    <List>
+      {users.map((user) => (
+        <UserListItem key={user._id} user={user}></UserListItem>
+      ))}
+    </List>
+  );
   return (
     <div>
       <CssBaseline />
-      <List>
-        {users.map((user) => (
-          <UserListItem user={user}></UserListItem>
-        ))}
-      </List>
+      <div>
+        {usersList}
+      </div>
     </div>
   );
 }

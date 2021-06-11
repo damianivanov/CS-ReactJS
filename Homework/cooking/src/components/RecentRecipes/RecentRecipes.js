@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "20px",
   },
   gridList: {
-    flexWrap: "nowrap",
+    flexWrap: "wrap",
     transform: "translateZ(0)",
   },
   title: {
@@ -42,7 +42,7 @@ export default function Recent() {
       </GridList>
     </div>
   );
-
+  
   function handleChange(field, e) {
     if (field === "keywords") {
       let newElement = e[e.length - 1];

@@ -13,19 +13,13 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
-import { editUser, getUser } from "../../services/userService";
+import { editUser } from "../../services/userService";
 
 class EditUser extends React.Component {
-  constructor(props) {
+ constructor(props) {
     super(props);
-    const user = getUser(props.match.params.userId);
-    user.photo = user.photo.includes(
-      user.gender ? "public/male-avatar.png" : "public/woman-avatar.png"
-    )
-      ? ""
-      : user.photo;
     this.state = {
-      fields: user,
+      fields: {},
       errors: {},
     };
   }

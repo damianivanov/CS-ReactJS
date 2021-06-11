@@ -39,6 +39,7 @@ export default function UserListItem(props) {
       backgroundSize: "containt",
     },
   }));
+
   const classes = useStyles();
   return (
     <ListItem>
@@ -48,7 +49,7 @@ export default function UserListItem(props) {
       <Box component="span" m={1}>
         <Typography variant="h5">
           {user.fullname}(<b>{user.username}</b>) / Last Modified:{" "}
-          <b>{new Date(user.lastModified).toLocaleDateString()}</b> /
+          <b>{new Date(user.createdAt).toLocaleDateString()}</b> /
           {user.role.toUpperCase()}/{user.gender ? "Male" : "Female"}
         </Typography>
       </Box>
@@ -79,8 +80,8 @@ export default function UserListItem(props) {
           </Button>
 
           <Button
-            onClick={() => {
-              deleteUser(user.id);
+            onClick={async () => {
+              await deleteUser(user._id);
               setOpen(false);
             }}
             color="primary"

@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
-import { insertUser } from "../../services/userService";
+import { registerUser } from "../../services/userService";
 
 class Register extends React.Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class Register extends React.Component {
       errors: {},
     };
   }
-
+  
   handleValidation() {
     let fields = this.state.fields;
     let errors = {};
@@ -93,13 +93,21 @@ class Register extends React.Component {
     return formIsValid;
   }
 
-  formSubmit(e) {
+  async formSubmit(e) {
     e.preventDefault();
     if (this.handleValidation()) {
-      insertUser(this.state.fields);
-      this.props.history.push("/login");
+      let result = await registerUser(this.state.fields)
+      if (result.status===201){
+        this.props.history.push("/login");
+      }
+      else{
+        let errors={}
+        errors["confirm password"] = result.error;
+        this.setState({ errors: errors });
+      }
+      };
     }
-  }
+  
 
   handleChange(field, e) {
     this.setState((prevState) => ({

@@ -1,8 +1,9 @@
 import { User } from "../entities/User";
+import * as api from "./api";
+
 var bcrypt = require("bcryptjs");
 
 export async function insertUser(data) {
-  let users = getAllUser();
   var salt = bcrypt.genSaltSync(10);
   let hashedPassword = data.password;
   if (!hashedPassword.match(/^\$2[ayb]\$/)) {
@@ -21,41 +22,62 @@ export async function insertUser(data) {
     data.shareDate,
     data.lastModified
   );
-  users.push(user);
-  localStorage.setItem("users", JSON.stringify(users));
+  try {
+    const token = getJWT()
+    const {data}  = await api.updateUser(user,user._id,{ "auth-token": token });
+    return data;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
-export function getAllUser() {
-  if (localStorage.getItem("users") === null)
-    localStorage.setItem("users", JSON.stringify([]));
-  return JSON.parse(localStorage.getItem("users"));
+export async function registerUser(data) {
+  try {
+    delete data["confirm password"]
+    const res = await api.registerUser(data);
+    return res;
+  } catch (error) {
+    console.log(error.message);
+    return {error:error.message}
+  }
+}
+export async function getAllUsers() {
+  try {
+    const token = getJWT()
+    const {data}  = await api.fetchUsers({ "auth-token": token });
+    return data;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
-export function checkUser(data) {
-  let users = getAllUser();
-  let currentUser = null;
-  users.forEach((user) => {
-    if (
-      user.username === data.username &&
-      bcrypt.compareSync(data.password, user.password)
-    ) {
-      currentUser = user;
-    }
-  });
-  return currentUser;
+function checkJWT() {
+  return localStorage.getItem("userInfo") !== null;
 }
 
-export function login(user) {
-  if (localStorage.getItem("user") == null)
-    localStorage.setItem("user", JSON.stringify(user));
+function getJWT() {
+  return localStorage.getItem("userInfo");
+}
+
+function setJWT(token) {
+  if (!checkJWT()) localStorage.setItem("userInfo", token);
+}
+
+export async function login(user) {
+  try {
+    const signed = await api.loginUser(user);
+    setJWT(signed.data);
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 export function logOut() {
-  if (localStorage.getItem("user") != null) localStorage.removeItem("user");
+  localStorage.removeItem("userInfo");
 }
 
 export function activeUser() {
-  return localStorage.getItem("user") !== null;
+  return localStorage.getItem("userInfo") !== null;
 }
 
 export function getActiveUser() {
@@ -64,10 +86,14 @@ export function getActiveUser() {
   }
 }
 
-export function deleteUser(id) {
-  let users = getAllUser();
-  users = users.filter((user) => user.id !== id);
-  localStorage.setItem("users", JSON.stringify(users));
+export async function deleteUser(id) {
+  try {
+    const token = getJWT()
+    const res  = await api.deleteUser(id,{ "auth-token": token });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 export function editUser(data) {
@@ -79,10 +105,14 @@ export function editUser(data) {
   }
 }
 
-export function getUser(id) {
-  const users = getAllUser();
-  const user = users.find((user) => user.id === id);
-  return user;
+export async function getUser(id) {
+  try {
+    const token = getJWT()
+    const res  = await api.getUser(id,{ "auth-token": token });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 //Refactor

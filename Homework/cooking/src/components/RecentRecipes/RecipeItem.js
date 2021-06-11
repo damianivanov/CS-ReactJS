@@ -57,7 +57,7 @@ export default function Recipe({ props }) {
         }
         title={props.name}
         subheader={`By: ${props.user} on  ${new Date(
-          props.shareDate
+          props.createdAt
         ).toLocaleDateString()}`}
         fontWeight="fontWeightBold"
       />

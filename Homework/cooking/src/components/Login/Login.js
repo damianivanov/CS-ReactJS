@@ -9,7 +9,7 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import { checkUser, login } from "../../services/userService";
+import { login } from "../../services/userService";
 import { Redirect, useHistory, useLocation, Link } from "react-router-dom";
 
 export default function Login(props) {
@@ -22,9 +22,8 @@ export default function Login(props) {
 
   function formSubmit(e) {
     e.preventDefault();
-    let user = checkUser({ username: username, password: password });
+    let user = login({ username: username, password: password });
     if (user) {
-      login(user);
       props.setSigned(true);
       let { from } = location.state || { from: { pathname: "/" } };
       history.replace(from);
