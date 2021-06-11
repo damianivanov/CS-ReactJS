@@ -24,7 +24,7 @@ export default function Login(props) {
     e.preventDefault();
     const user = activeUser()
     if (!user) {
-      login(user);
+      login({username,password});
       props.setSigned(true);
       let { from } = location.state || { from: { pathname: "/" } };
       history.replace(from);

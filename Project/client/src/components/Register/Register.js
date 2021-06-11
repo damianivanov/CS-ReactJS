@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
-import { insertUser } from "../../services/userService";
+// import {  } from "../../services/userService";
 
 class Register extends React.Component {
   constructor(props) {
@@ -80,7 +80,7 @@ class Register extends React.Component {
   formSubmit(e) {
     e.preventDefault();
     if (this.handleValidation()) {
-      insertUser(this.state.fields);
+      //insertUser(this.state.fields);
       this.props.history.push("/login");
     }
   }
