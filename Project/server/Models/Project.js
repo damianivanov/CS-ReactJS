@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
-const id = uuidv4();
 const projectSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -13,19 +12,13 @@ const projectSchema = new mongoose.Schema({
         type: String.prototype,
         required: true
     },
-    projectId: {
-        type: String,
-        reuqired: true,
-        default: id,
-        unique: true
-    },
     description: {
         type: String,
         max: 4096
     },
     invitationCode: {
         type: String,
-        default: id.substring(2, 8),
+        default: uuidv4().substring(2, 8),
         unique: true,
         required: true
     },

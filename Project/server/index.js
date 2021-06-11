@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const morgan = require('morgan')
 
 const mongoose = require('./mongoose');
 const nodemailer = require("nodemailer");
@@ -13,12 +14,13 @@ const sendErrorResponse = require('./utils').sendErrorResponse;
 const corsOptions = {
     origin: 'http://localhost:3000', // react server
 }
+app.use(morgan("dev"))
 app.use(cors(corsOptions))
 app.use(express.json({limit: '50mb'}));
 app.use(express.static('public'))
-app.use('/api', authRoute)
 app.use('/api/users', usersRoute)
 app.use('/api/projects', projectsRoute)
+app.use('/api', authRoute)
 
 
 let transporter = nodemailer.createTransport({
@@ -74,6 +76,6 @@ app.use(function (err, req, res, next) {
     sendErrorResponse(req, res, 500, `Server error: ${err.message}`, err);
 })
 
-app.listen(3000, () => {
+app.listen(3002, () => {
     console.log('server started')
 })

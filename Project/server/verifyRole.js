@@ -1,47 +1,11 @@
 const jwt = require('jsonwebtoken');
 const ROLES = require('./Models/Roles');
+const replaceId = require('./utils').replaceId;
 const User = require('./Models/User');
 
-module.exports = {
-    // isAdmin: (req, res, next) => {
-    //     const token = req.header('auth-token');
-    //     try {
-    //         const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    //         if (verified.role === ROLES.ROLES.ADMIN) {
-    //             next();
-    //         } else {
-    //             res.status(401).send('Admin Only')
-    //         }
-    //     } catch (error) {
-    //         res.status(400).send('Invalid Token')
-    //     }
-    // },
-    // isManager: (req, res, next) => {
-    //     const token = req.header('auth-token');
-    //     try {
-    //         const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    //         if (verified.role === ROLES.ROLES.MANAGER) {
-    //             next();
-    //         } else {
-    //             res.status(401).send('Manager Only')
-    //         }
-    //     } catch (error) {
-    //         res.status(400).send('Invalid Token')
-    //     }
-    // },
-    // isSameUser: (req) => {
-    //     const { userId } = req.params;
-    //     const token = req.header('auth-token');
-    //     try {
-    //         const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    //         return verified.userId === userId
-    //     } catch (error) {
-    //         return false;
-    //     }
-    // },
-    
-    verifyRoleOrSelf(role, allowIfSelf) {
-        return function (req, res, next) {
+module.exports = 
+    function verifyRoleOrSelf(role, allowIfSelf) {
+        return function (req, res, next) { //here there is no req and res
           const paramUserId = allowIfSelf && req.params.userId;
           const userId = req.userId;
           if (!userId || (allowIfSelf && !paramUserId) ) next({ status: 403, message: `No userId provided.` }); //Error
@@ -63,4 +27,3 @@ module.exports = {
           }
         }
     }
-}

@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
+const { required } = require('joi');
 
 const userSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-    default: uuidv4(),
-    unique: true
-  },
   username: {
     type: String,
     required: true,
@@ -44,15 +39,11 @@ const userSchema = new mongoose.Schema({
     min: 6,
     max: 512,
   },
-  registerDate: {
-    type: Date,
-    default: Date.now
-  },
   projects: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
   },
   tasks: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
   },
   role: {
     type: String,
@@ -61,6 +52,13 @@ const userSchema = new mongoose.Schema({
   deleted: {
     type: Boolean,
     default: false
+  },
+  gender:{
+    type: Number,
+    required: true,
+  },
+  photo:{
+    type:String
   }
 },
   {
@@ -80,6 +78,12 @@ userSchema.pre('save', async function (next) {
   }
 })
 
+userSchema.method("toJSON", function() {
+  const { __v, _id, ...object } = this.toObject();
+  object.id = _id;
+  return object;
+});
+
 userSchema.methods.isValidPassword = async function (password) {
   try {
     return await bcrypt.compare(password, this.password)
@@ -87,7 +91,7 @@ userSchema.methods.isValidPassword = async function (password) {
     throw error
   }
 }
-
+userSchema.set('autoIndex', true)
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

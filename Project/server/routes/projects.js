@@ -3,18 +3,18 @@ const User = require('../Models/User');
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { projectValidation } = require('../validation');
-const auth = require('../verifyToken');
-const verifyRole = require('../verifyRole');
+const verifyToken = require('../verifyToken');
+const verifyRoleOrSelf = require('../verifyRole');
 const ROLES = require('../Models/Roles');
 
-router.get("/", auth, verifyRole.isAdmin, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
 
     const projects = await Project.find({ deleted: false });
     if (!projects.length) return res.status(204).send('There are no projects in the database')
     return res.status(200).send(projects)
 })
 
-router.post("/", auth, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
 
     const token = req.header('auth-token');
     const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);

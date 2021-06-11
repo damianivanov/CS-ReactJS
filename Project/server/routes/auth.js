@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { registerValidation, loginValidation } = require("../validation");
 const verifyToken = require("../verifyToken");
-const sendErrorResponse = require('..utils/').sendErrorResponse;
+const sendErrorResponse = require('../utils').sendErrorResponse;
 const replaceId = require("../utils").replaceId
 const User = require("../Models/User");
 
@@ -26,20 +26,15 @@ router.post("/register", async (req, res) => {
     username: req.body.username,
     password: req.body.password,
     role: "basic",
-    photo: gender ? "male-avatar.png" : "woman-avatar.png"
+    photo: req.body.gender ? "male-avatar.png" : "woman-avatar.png"
   });
   try {
     const savedUser = await user.save();
-    if(savedUser.result.ok && savedUser.insertedCount === 1){
-        delete user.password;
-        replaceId(user);
-        const uri = req.baseUrl + '/' + user.id;
-        console.log('Created User: ', uri);
-        res.location(uri).status(201).json(user);
-    }
-    else {
-        sendErrorResponse(req, res, 400, `Error creating new user: ${user}`);
-    }
+        delete savedUser.password;
+        replaceId(savedUser); 
+        const uri = req.baseUrl + '/users/' + savedUser.id;
+        console.log('Created User: ', savedUser.id);
+        return res.location(uri).status(201).json(savedUser);
   } catch (error) {
     sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
   }
@@ -52,25 +47,19 @@ router.post("/login", async (req, res) => {
   const { error } = loginValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const tokenOld = req.header("auth-token");
-  if (tokenOld) return res.status(403).send("Already Logged In");
-
   const user = await User.findOne({ username: username });
-  if (!user)
-    return res
-      .status(400)
-      .send("There is no registered user with this username");
-  if (user.deleted) return res.status(400).send("This user has been deleted");
+  if (!user) return sendErrorResponse(req, res, 404, `User "${params.username}" not found.`);
+  if (user.deleted) return sendErrorResponse(req, res, 400, `The User is deleted.`);
 
   const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) return res.status(400).send("Wrong password");
+  if (!validPassword) return sendErrorResponse(req, res, 401, `Unauthorized.`);
 
   const token = jwt.sign(
     { email: user.email, userId: user.id, role: user.role },
     process.env.JWT_SECRET_TOKEN,
     { expiresIn: "7d" }
   );
-  res.header("auth-token", token).status(200).send(token);
+  res.status(200).send({token,user});
 });
 
 router.post("/logout", verifyToken, (req, res) => {
