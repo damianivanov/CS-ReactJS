@@ -9,7 +9,7 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import { activeUser, login } from "../../services/userService";
+import { checkJWT, login } from "../../services/userService";
 import { Redirect, useHistory, useLocation, Link } from "react-router-dom";
 
 export default function Login(props) {
@@ -22,7 +22,7 @@ export default function Login(props) {
 
   function formSubmit(e) {
     e.preventDefault();
-    const user = activeUser()
+    const user = checkJWT()
     if (!user) {
       login({username,password});
       props.setSigned(true);
@@ -33,6 +33,10 @@ export default function Login(props) {
       setError("Invalid Credentials!");
     }
   }
+  
+  if(props.signed)
+  return <Redirect to="/" />
+
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>

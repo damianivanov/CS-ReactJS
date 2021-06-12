@@ -4,16 +4,16 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Nav from "../src/components/NavBar/Nav";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
-// import UserList from "./components/UserList/UserList";
-// import EditUser from "./components/EditUser/EditUser";
+import Account from "./components/Account/Account";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { activeUser } from "./services/userService";
+import { checkJWT } from "./services/userService";
 import { activeDarkMode } from "./services/darkMode";
 import { CssBaseline } from "@material-ui/core";
-
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 function App() {
-  const [signed, setSigned] = useState(activeUser);
+  const [signed, setSigned] = useState(checkJWT);
   const [darkMode, setDarkMode] = useState(activeDarkMode);
   const theme = createMuiTheme({
     palette: {
@@ -21,7 +21,6 @@ function App() {
       primary: { main: darkMode ? "#051A28" : "#3f51b5" },
     },
   });
-
   return (
     <Router>
       <ThemeProvider theme={theme}>
@@ -31,15 +30,24 @@ function App() {
           signed={signed}
           setSigned={setSigned}
         />
+        <ReactNotification />
         <CssBaseline />
         <Switch>
           <Route path="/login">
-            <Login setSigned={setSigned} />{" "}
+            <Login signed={signed} setSigned={setSigned} />
           </Route>
-          <Route path="/register" component={Register} /> 
+
+          <Route path="/register">
+            <Register signed={signed} />
+          </Route>
+
+          <Route path="/account">
+            <Account signed={signed} />
+          </Route>
+
           {/* <Route path="/users/edit/:userId" component={EditUser} />
           <Route path="/users" component={UserList} /> */}
-         {/* <Route path="/forgotPassword" component={forgotPassword}></Route> */}
+          {/* <Route path="/forgotPassword" component={forgotPassword}></Route> */}
           {/* <Route exact path="/" component={Dashboard}></Route> */}
         </Switch>
       </ThemeProvider>

@@ -17,14 +17,14 @@ const userValidation = data => {
         firstName: Joi.string().min(1).required(),
         lastName: Joi.string().min(1).required(),
         username: Joi.string().min(3).required(),
+        password: Joi.string().regex(/^\$2[ayb]\$.{56}$/).required(),
         email: Joi.string().email().lowercase().required().min(6),
-        password: Joi.string().regex( /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/).required(),
         gender: Joi.number().valid(1,0).required(),
         role: Joi.string().valid('manager','admin','basic'),
         tasks: Joi.array().items(Joi.string().min(24).max(24)).optional(),
         projects: Joi.array().items(Joi.string().min(24).max(24)).optional(),
         deleted: Joi.boolean(),
-        photo: Joi.string().valid(Joi.string().uri(),'male-avatar.png','woman-avatar.png'),
+        photo: Joi.string().uri(),
         updatedAt: Joi.date(),
         createdAt: Joi.date()
     });

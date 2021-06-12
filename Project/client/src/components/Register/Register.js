@@ -10,9 +10,10 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link,Redirect } from "react-router-dom";
 import { withRouter } from "react-router-dom";
-// import {  } from "../../services/userService";
+import { registerUser } from "../../services/userService";
+import { store } from "react-notifications-component";
 
 class Register extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Register extends React.Component {
     this.state = {
       fields: {},
       errors: {},
+      error: "",
     };
   }
 
@@ -28,13 +30,14 @@ class Register extends React.Component {
     let errors = {};
     let formIsValid = true;
 
-    //fullname
+    //firstname
     if (typeof fields["firstName"] !== "undefined") {
       if (!fields["firstName"].match(/^[a-z ,.'-]+$/i)) {
         formIsValid = false;
         errors["firstName"] = "Only letters";
       }
     }
+
     //lastname
     if (typeof fields["lastName"] !== "undefined") {
       if (!fields["lastName"].match(/^[a-z ,.'-]+$/i)) {
@@ -49,6 +52,14 @@ class Register extends React.Component {
         formIsValid = false;
         errors["username"] =
           "The username should contain only letters,digits, - or _";
+      }
+    }
+
+    //email
+    if (typeof fields["email"] !== "undefined") {
+      if (!fields["email"].match(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/)) {
+        formIsValid = false;
+        errors["email"] = "Invalid email";
       }
     }
 
@@ -80,8 +91,32 @@ class Register extends React.Component {
   formSubmit(e) {
     e.preventDefault();
     if (this.handleValidation()) {
-      //insertUser(this.state.fields);
-      this.props.history.push("/login");
+      registerUser(this.state.fields)
+        .then((res) => {
+          if (res.status === 201) {
+            store.addNotification({
+              title: "Success!",
+              message: "Registered successfully",
+              type: "success",
+              insert: "top",
+              container: "top-right",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 3000,
+                onScreen: true,
+                pauseOnHover: true,
+                showIcon: true,
+              },
+            });
+            this.props.history.push("/login");
+          } else {
+            this.setState({ error: res.data });
+          }
+        })
+        .catch((err) => {
+          this.setState({ error: err.response.data });
+        });
     }
   }
 
@@ -95,6 +130,9 @@ class Register extends React.Component {
   }
 
   render() {
+    if(this.props.signed)
+     return <Redirect to="/" />
+     
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -149,7 +187,7 @@ class Register extends React.Component {
                 helperText={this.state.errors["username"]}
               />
             </Grid>
-            <Grid item xs={12} sm={6} container center="true">
+            <Grid item xs={12} sm={6}  container center="true">
               <InputLabel>Gender</InputLabel>
               <Select
                 id="gender"
@@ -162,7 +200,20 @@ class Register extends React.Component {
                 <MenuItem value={0}>Female</MenuItem>
               </Select>
             </Grid>
-
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="email"
+                label="Email"
+                id="email"
+                value={this.state.fields["email"]}
+                onChange={this.handleChange.bind(this, "email")}
+                error={this.state.errors["email"]}
+                helperText={this.state.errors["email"]}
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -206,7 +257,12 @@ class Register extends React.Component {
           >
             Sign Up
           </Button>
-          <Grid container justify="center" style={{ padding: "10px" }}>
+
+          {this.state.error && this.state.error !== "" && (
+            <Typography color="secondary" style={{textAlign:"center", padding:"5px"}}> {this.state.error} </Typography>
+          )}
+
+          <Grid container justify="center" style={{ padding: "20px" }}>
             <Link to="/login" variant="body2" style={{ color: "#f50057" }}>
               Already have an account? Sign in
             </Link>

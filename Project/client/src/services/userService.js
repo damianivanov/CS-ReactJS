@@ -1,7 +1,8 @@
-import { User } from "../entities/User";
 import http from "./http-client";
-var bcrypt = require("bcryptjs");
-
+var jwt = require('jsonwebtoken');
+const headers= {
+  "auth-token":getJWT()
+}
 // export async function insertUser(data) {
 //   let users = getAllUser();
 //   var salt = bcrypt.genSaltSync(10);
@@ -50,13 +51,6 @@ var bcrypt = require("bcryptjs");
 //   if (localStorage.getItem("user") == null)
 //     localStorage.setItem("user", JSON.stringify(user));
 // }
-
-// export function getActiveUser() {
-//   if (activeUser()) {
-//     return JSON.parse(localStorage.getItem("user"));
-//   }
-// }
-
 // export function deleteUser(id) {
 //   let users = getAllUser();
 //   users = users.filter((user) => user.id !== id);
@@ -74,36 +68,82 @@ var bcrypt = require("bcryptjs");
 
 //---------------------------------------
 
-function checkJWT() {
+export function getActiveUser() {
+  return JSON.parse(localStorage.getItem("profile"));
+}
+
+function setActiveUser(){
+  var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
+  localStorage.setItem("profile", JSON.stringify(decoded));
+}
+
+export function checkJWT() {
   return localStorage.getItem("userInfo") !== null;
 }
 
-function getJWT() {
+export function getJWT() {
   return localStorage.getItem("userInfo");
 }
 
 function setJWT(token) {
   if (!checkJWT()) localStorage.setItem("userInfo", token);
 }
-export async function login(user) {
+
+export function getExpDate(){
+  var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
+  return decoded.exp
+}
+
+export async function getFullAccount(){
+  const id = getActiveUser().userId
   try {
-    const signed = await http.post(`/login`,user).then(function (response) {
-      console.log(response);
+    const signed = await http.get(`/users/${id}`,{
+      headers:headers
     })
-    .catch(function (error) {
-      console.log(error.response.data.message);
-    });
-    setJWT(signed.data);
+    return signed.data
   } catch (error) {
-    console.log(error.message);
+    console.log(error.response.data.message);
+    return error
   }
 }
 
-export function logOut() {
-  localStorage.removeItem("userInfo");
+export async function login(user) {
+  try {
+    const signed = await http.post(`/login`, user)
+    setJWT(signed.data.token);
+    setActiveUser();
+  } catch (error) {
+    console.log(error.response.data.message);
+    //return error
+  }
 }
 
-export function activeUser() {
-  return localStorage.getItem("userInfo") !== null;
+export async function registerUser(user){
+  try {
+
+    delete(user["confirm password"])
+    const registered = await http.post(`/register`, user)
+    return registered
+  } catch (error) {
+    return error.response
+  }
 }
+
+export async function editUser(user){
+  try {
+    const updated = await http.put(`/users/${user.id}`, user,{
+      headers:headers})
+    return updated
+  } catch (error) {
+    return error.response
+  }
+}
+export function logOut() {
+  localStorage.removeItem("userInfo");
+  localStorage.removeItem("profile");
+}
+
+
+
+
 //Refactor

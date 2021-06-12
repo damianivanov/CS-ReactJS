@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Menu,
   Button,
@@ -14,8 +14,14 @@ import { useStyles } from "./Nav.styles";
 import yellow from "@material-ui/core/colors/yellow";
 import Toggle from "react-toggle";
 import "./Toggle.css";
-import { logOut } from "../../services/userService";
+import {
+  getExpDate,
+  logOut,
+  getJWT,
+  getActiveUser,
+} from "../../services/userService";
 import { Link, useHistory, useLocation } from "react-router-dom";
+
 import {
   deactivateDarkMode,
   activateDarkMode,
@@ -28,24 +34,27 @@ import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 
 export default function Nav(props) {
+  const classes = useStyles();
+  let history = useHistory();
+  let location = useLocation();
+  const [user, setUser] = useState(getActiveUser());
   const [linkColor, setColor] = React.useState(
     activeDarkMode ? "white" : "black"
   );
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
   function changeTheme() {
     if (props.darkMode) {
       props.setDarkMode(false);
       deactivateDarkMode();
       setColor("black");
     } else {
-      props.setDarkMode(true);
+      props.setDarkMode(+true);
       activateDarkMode();
       setColor("white");
     }
   }
-
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const toggler = (
     <Toggle
@@ -96,17 +105,28 @@ export default function Nav(props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  let history = useHistory();
-  let location = useLocation();
-
-  function onLogOut() {
+  const onLogOut = () => {
     props.setSigned(false);
     logOut();
     let { from } = location.state || { from: { pathname: "/" } };
     history.replace(from);
     history.push("/login");
     handleMenuClose();
+  };
+
+  function onProfile() {
+    history.push("/account");
+    handleMenuClose();
   }
+
+  useEffect(() => {
+    if (getJWT()) {
+      if (getExpDate() * 1000 < new Date().getTime()) onLogOut();
+    }
+    setUser(getActiveUser());
+  }, 
+  //eslint-disable-next-line
+  []);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -119,7 +139,9 @@ export default function Nav(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={onProfile}>
+        {user ? user.username : "Profile"}
+      </MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={onLogOut}>Sign Out</MenuItem>
     </Menu>
@@ -156,7 +178,7 @@ export default function Nav(props) {
 
   const signedUser = (
     <React.Fragment>
-      <Button style={{ margin: "2px" }}>
+      <Button style={{ margin: "6px" }} variant="outlined">
         <Link
           to="/dashboard"
           style={{ color: "white", textDecoration: "none" }}
@@ -164,6 +186,7 @@ export default function Nav(props) {
           Dashboard
         </Link>
       </Button>
+
       <IconButton
         edge="end"
         aria-label="account of current user"
@@ -213,7 +236,7 @@ export default function Nav(props) {
         Dashboard
       </Link>
     </MenuItem>,
-    <MenuItem onClick={handleMenuClose}>Profile</MenuItem>,
+    <MenuItem onClick={onProfile}>{user ? user.username : "Profile"}</MenuItem>,
     <MenuItem onClick={handleMenuClose}>My account</MenuItem>,
     <MenuItem onClick={onLogOut}>Sign Out</MenuItem>,
   ];
@@ -230,7 +253,7 @@ export default function Nav(props) {
       onClose={handleMobileMenuClose}
     >
       {props.signed ? signedUserMenu : noUserMenu}
-      <div container style={{ marginLeft: "16px" }}>
+      <div container style={{ marginLeft: "16px" }} >
         {toggler}
       </div>
     </Menu>
@@ -244,14 +267,21 @@ export default function Nav(props) {
           <Toolbar>
             <IconButton style={{ borderRadius: "2%" }}>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
-                <div container>
+                <div container
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <AssessmentIcon fontSize="large" />
                   <Typography className={classes.title} variant="h5" noWrap>
-                    <AssessmentIcon fontSize="large" />
-                    Project Manager Tool
+                    Project Manager
                   </Typography>
                 </div>
               </Link>
             </IconButton>
+
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               {toggler}

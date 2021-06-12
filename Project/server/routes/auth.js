@@ -16,7 +16,7 @@ router.post("/register", async (req, res) => {
   if (email) return res.status(400).send("Email already exists");
 
   const username = await User.findOne({ username: req.body.username });
-  if (username) return res.status(400).send({ message: "Username already exists" });
+  if (username) return res.status(400).send("Username already exists");
 
   const user = new User({
     firstName: req.body.firstName,
@@ -48,17 +48,19 @@ router.post("/login", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   const user = await User.findOne({ username: username });
-  if (!user) return sendErrorResponse(req, res, 404, `User "${params.username}" not found.`);
+
+  if (!user) return sendErrorResponse(req, res, 404, `User "${username}" not found.`);
   if (user.deleted) return sendErrorResponse(req, res, 400, `The User is deleted.`);
 
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) return sendErrorResponse(req, res, 401, `Unauthorized.`);
 
   const token = jwt.sign(
-    { email: user.email, userId: user.id, role: user.role },
+    { email: user.email, userId: user.id, role: user.role, username: user.username },
     process.env.JWT_SECRET_TOKEN,
     { expiresIn: "7d" }
   );
+  delete(user.password);
   res.status(200).send({token,user});
 });
 
