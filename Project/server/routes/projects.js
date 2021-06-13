@@ -5,38 +5,38 @@ const jwt = require('jsonwebtoken');
 const { projectValidation } = require('../validation');
 const verifyToken = require('../verifyToken');
 const verifyRoleOrSelf = require('../verifyRole');
-const ROLES = require('../Models/Roles');
+const sendErrorResponse = require("../utils").sendErrorResponse;
+const replaceId = require("../utils").replaceId;
 
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", verifyRoleOrSelf(3,false), async (req, res) => {
 
-    const projects = await Project.find({ deleted: false });
-    if (!projects.length) return res.status(204).send('There are no projects in the database')
+    const projects = await Project.find();
+    if (!projects) return sendErrorResponse(req, res, 204, `No Projects`);
     return res.status(200).send(projects)
 })
 
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", verifyRoleOrSelf(2,false), async (req, res) => {
 
-    const token = req.header('auth-token');
-    const verified = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-
-    const userId = verified.userId
-    const user = await User.findOne({ id: userId });
-    if (!user) return res.status(400).send("The user doesn't exists")
-    req.body.managerId = userId;
     const { error } = await projectValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return sendErrorResponse(req, res, 400, error.details[0].message, error);
+
     const project = new Project({
         name: req.body.name,
-        managerId: userId.toString(),
+        managerId: req.body.managerId,
         description: req.body.description,
         tasksId: req.body.tasksId,
-        team: req.body.team
+        team: req.body.team,
+        deleted: false,
     })
     try {
         const savedProject = await project.save();
-        res.status(201).send({ project: savedProject.projectId });
+        replaceId(savedProject); 
+        const uri = req.baseUrl + `/${savedProject.id}` ;
+        console.log('Created Project: ', savedProject.name);
+        return res.location(uri).status(201).json(savedProject);
     } catch (error) {
-        res.status(401).send(error);
+        sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
     }
 })
+
 module.exports = router;

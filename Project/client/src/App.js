@@ -7,7 +7,7 @@ import Register from "./components/Register/Register";
 import Account from "./components/Account/Account";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { checkJWT } from "./services/userService";
+import { checkJWT, getActiveUser } from "./services/userService";
 import { activeDarkMode } from "./services/darkMode";
 import { CssBaseline } from "@material-ui/core";
 import ReactNotification from 'react-notifications-component'
@@ -15,6 +15,7 @@ import 'react-notifications-component/dist/theme.css'
 function App() {
   const [signed, setSigned] = useState(checkJWT);
   const [darkMode, setDarkMode] = useState(activeDarkMode);
+  const [loggedUser,setLoggedUser] = useState(getActiveUser())
   const theme = createMuiTheme({
     palette: {
       type: darkMode ? "dark" : "light",
@@ -29,6 +30,8 @@ function App() {
           setDarkMode={setDarkMode}
           signed={signed}
           setSigned={setSigned}
+          loggedUser={loggedUser}
+          setLoggedUser={setLoggedUser}
         />
         <ReactNotification />
         <CssBaseline />
@@ -42,7 +45,11 @@ function App() {
           </Route>
 
           <Route path="/account">
-            <Account signed={signed} />
+            <Account
+              signed={signed}
+              loggedUser={loggedUser}
+              setLoggedUser={setLoggedUser}
+            />
           </Route>
 
           {/* <Route path="/users/edit/:userId" component={EditUser} />

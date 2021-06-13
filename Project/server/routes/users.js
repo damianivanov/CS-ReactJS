@@ -1,12 +1,10 @@
 const router = require("express").Router();
-const jwt = require("jsonwebtoken");
-const { uservalidation, userValidation } = require("../validation");
-const sendErrorResponse = require("../utils").sendErrorResponse;
+const { userValidation } = require("../validation");
 const verifyToken = require("../verifyToken");
 const verifyRoleOrSelf = require("../verifyRole.js");
-const User = require("../Models/User");
+const sendErrorResponse = require("../utils").sendErrorResponse;
 const replaceId = require("../utils").replaceId;
-const ROLES = require("../Models/Roles");
+const User = require("../Models/User");
 
 router.get("/", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
   const allUsers = await User.find();
@@ -37,7 +35,7 @@ router.post("/", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
     const savedUser = await newUser.save();
     delete savedUser.password;
         replaceId(savedUser); 
-        const uri = req.baseUrl + '/users/' + savedUser.id;
+        const uri = req.baseUrl + `/${savedUser.id}`;
         console.log('Created User: ', savedUser.id);
         return res.location(uri).status(201).json(savedUser);
   } catch (error) {

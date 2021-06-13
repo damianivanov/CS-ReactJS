@@ -9,7 +9,7 @@ const projectSchema = new mongoose.Schema({
         max: 128,
     },
     managerId: {
-        type: String.prototype,
+        type: String,
         required: true
     },
     description: {

@@ -76,6 +76,14 @@ function setActiveUser(){
   var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
   localStorage.setItem("profile", JSON.stringify(decoded));
 }
+export function updateActiveUser(data){
+  const current = getActiveUser()
+  current.userId=data.id;
+  current.email=data.email;
+  current.role=data.role;
+  current.username = data.username;
+  localStorage.setItem("profile", JSON.stringify(current));
+}
 
 export function checkJWT() {
   return localStorage.getItem("userInfo") !== null;
@@ -94,6 +102,7 @@ export function getExpDate(){
   return decoded.exp
 }
 
+// ---------API--------
 export async function getFullAccount(){
   const id = getActiveUser().userId
   try {
@@ -138,6 +147,7 @@ export async function editUser(user){
     return error.response
   }
 }
+
 export function logOut() {
   localStorage.removeItem("userInfo");
   localStorage.removeItem("profile");

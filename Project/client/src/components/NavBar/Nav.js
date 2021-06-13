@@ -37,7 +37,7 @@ export default function Nav(props) {
   const classes = useStyles();
   let history = useHistory();
   let location = useLocation();
-  const [user, setUser] = useState(getActiveUser());
+  // const [user, setUser] = useState();
   const [linkColor, setColor] = React.useState(
     activeDarkMode ? "white" : "black"
   );
@@ -123,10 +123,8 @@ export default function Nav(props) {
     if (getJWT()) {
       if (getExpDate() * 1000 < new Date().getTime()) onLogOut();
     }
-    setUser(getActiveUser());
-  }, 
-  //eslint-disable-next-line
-  []);
+    // setUser(getActiveUser());
+  }, []);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -140,7 +138,7 @@ export default function Nav(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={onProfile}>
-        {user ? user.username : "Profile"}
+        {props.loggedUser ? props.loggedUser.username : "Profile"}
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={onLogOut}>Sign Out</MenuItem>
@@ -236,7 +234,7 @@ export default function Nav(props) {
         Dashboard
       </Link>
     </MenuItem>,
-    <MenuItem onClick={onProfile}>{user ? user.username : "Profile"}</MenuItem>,
+    <MenuItem onClick={onProfile}>{props.loggedUser ? props.loggedUser.username : "Profile"}</MenuItem>,
     <MenuItem onClick={handleMenuClose}>My account</MenuItem>,
     <MenuItem onClick={onLogOut}>Sign Out</MenuItem>,
   ];

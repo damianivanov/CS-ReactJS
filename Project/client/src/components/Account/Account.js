@@ -1,247 +1,94 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Redirect, useHistory } from "react-router-dom";
-import { editUser, getFullAccount, getJWT } from "../../services/userService";
-import CreateIcon from "@material-ui/icons/Create";
-import {
-  TextField,
-  Input,
-  Avatar,
-  InputAdornment,
-  Typography,
-  Container,
-  CssBaseline,
-  Grid,
-  Button,
-  NativeSelect,
-  InputLabel,
-} from "@material-ui/core";
-import { store } from "react-notifications-component";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import EditUser from './EditUser'
+import MyTasks from './MyTasks'
 
-const useStyles = makeStyles((theme) => ({
-  large: {
-    width: theme.spacing(15),
-    height: theme.spacing(15),
-  },
-}));
-
-export default function Account(props) {
-  const classes = useStyles();
-  let history = useHistory();
-  const [fields, setFields] = useState({});
-  const [errors, setErrors] = useState({});
-  const [error, setError] = useState({});
-  useEffect(() => {
-    if (getJWT()) {
-      getFullAccount().then((res) => {
-        console.log(res);
-        setFields(res);
-        console.log(fields);
-      });
-    }
-  }, []);
-
-  function handleValidation() {
-    let errors = {};
-    let formIsValid = true;
-
-    //firstname
-    if (typeof fields["firstName"] !== "undefined") {
-      if (!fields["firstName"].match(/^[a-z ,.'-]+$/i)) {
-        formIsValid = false;
-        errors["firstName"] = "Only letters";
-      }
-    }
-
-    //lastname
-    if (typeof fields["lastName"] !== "undefined") {
-      if (!fields["lastName"].match(/^[a-z ,.'-]+$/i)) {
-        formIsValid = false;
-        errors["lastName"] = "Only letters";
-      }
-    }
-
-    //username
-    if (typeof fields["username"] !== "undefined") {
-      if (!fields["username"].match(/^[a-z0-9_-]{3,15}$/)) {
-        formIsValid = false;
-        errors["username"] =
-          "The username should contain only letters,digits, - or _";
-      }
-    }
-
-    setErrors(errors);
-    return formIsValid;
-  }
-
-  const formSubmit = (e) => {
-    e.preventDefault();
-    if (handleValidation()) {
-      editUser(fields)
-        .then((res) => {
-          if (res.status === 200) {
-            store.addNotification({
-              title: "Success!",
-              message: "Edited successfully",
-              type: "success",
-              insert: "top",
-              container: "top-right",
-              animationIn: ["animate__animated", "animate__fadeIn"],
-              animationOut: ["animate__animated", "animate__fadeOut"],
-              dismiss: {
-                duration: 3000,
-                onScreen: true,
-                pauseOnHover: true,
-                showIcon: true,
-              },
-            });
-            history.push("/login");
-          } else {
-            this.setState({ error: res.data });
-          }
-        })
-        .catch((err) => {
-          this.setState({ error: err.response.data });
-        });
-    }
-  };
-
-  const handleChange = (e) => {
-    setFields({
-      ...fields,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  if (!props.signed) return <Redirect to="/login" />;
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
   return (
-    <React.Fragment>
-      <Container
-        component="main"
-        maxWidth="xs"
-        style={{ height: "100%", marginTop: "20px" }}
-      >
-        <CssBaseline />
-        <Typography component="h1" variant="h4" align="center">
-          Edit User
-        </Typography>
-        <form
-          style={{ padding: "20px" }}
-          onSubmit={formSubmit}
-          autoComplete="off"
-        >
-          <Grid container spacing={2}>
-            <Avatar className={classes.large} src={fields["photo"]} />
-            <Grid item xs={12} sm={9}>
-              <TextField
-                variant="outlined"
-                name="photo"
-                value={fields["photo"]}
-                onChange={handleChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                value={fields["firstName"]}
-                onChange={handleChange}
-                error={errors["firstName"]}
-                helperText={errors["firstName"]}
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="lastName"
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                value={fields["lastName"]}
-                onChange={handleChange}
-                error={errors["lastName"]}
-                helperText={errors["lastName"]}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="username"
-                name="username"
-                value={fields["username"]}
-                onChange={handleChange}
-                error={errors["username"]}
-                helperText={errors["username"]}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                name="email"
-                value={fields["email"]}
-                disabled
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} container center="true">
-              <InputLabel id="gender">Gender</InputLabel>
-              <NativeSelect
-                id="gender"
-                name="gender"
-                value={fields["gender"]}
-                onChange={handleChange}
-                fullWidth
-                required
-              >
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </NativeSelect>
-            </Grid>
-            <Grid item xs={12} sm={6} container center="true">
-              <InputLabel id="role">Role</InputLabel>
-              <NativeSelect
-                id="role"
-                name="role"
-                value={fields["role"]}
-                fullWidth
-                disabled
-              >
-                <option value={"user"}>User</option>
-                <option value={"admin"}>Admin</option>
-              </NativeSelect>
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-          >
-            <Button
-              item
-              type="submit"
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "10px" }}
-            >
-              Submit
-            </Button>
-          </Grid>
-        </form>
-      </Container>
-    </React.Fragment>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`nav-tabpanel-${index}`}
+      aria-labelledby={`nav-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
-//errors while saving (existing user in backend)
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `nav-tab-${index}`,
+    'aria-controls': `nav-tabpanel-${index}`,
+  };
+}
+
+function LinkTab(props) {
+  return (
+    <Tab
+      component="a"
+      onClick={(event) => {
+        event.preventDefault();
+      }}
+      {...props}
+    />
+  );
+}
+
+
+
+export default function NavTabs(props) {
+  
+  const [value, setValue] = React.useState(0);
+  
+  if(!props.signed) <Redirect to="/" />
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <div >
+      <AppBar position="static">
+        <Tabs
+          variant="fullWidth"
+          value={value}
+          onChange={handleChange}
+          aria-label="nav tabs example"
+        >
+          <LinkTab label="Edit Profile" href="/edit" {...a11yProps(0)} />
+          <LinkTab label="My Tasks" href="/tasks" {...a11yProps(1)} />
+          <LinkTab label="My Projects" href="/projects" {...a11yProps(2)} />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+        <EditUser props={props}></EditUser>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <MyTasks props={props}></MyTasks>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        
+      </TabPanel>
+    </div>
+  );
+}
