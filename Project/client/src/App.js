@@ -5,6 +5,8 @@ import Nav from "../src/components/NavBar/Nav";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import Account from "./components/Account/Account";
+import MyTasks from './components/Account/MyTasks'
+import MyProjects from './components/Account/MyProjects'
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { checkJWT, getActiveUser } from "./services/userService";
@@ -52,6 +54,21 @@ function App() {
             />
           </Route>
 
+          <Route path="/tasks">
+            <MyTasks
+              signed={signed}
+              loggedUser={loggedUser}
+              setLoggedUser={setLoggedUser}
+            />
+          </Route>
+
+          <Route path="/projects">
+            <MyProjects
+              signed={signed}
+              loggedUser={loggedUser}
+              setLoggedUser={setLoggedUser}
+            />
+          </Route>
           {/* <Route path="/users/edit/:userId" component={EditUser} />
           <Route path="/users" component={UserList} /> */}
           {/* <Route path="/forgotPassword" component={forgotPassword}></Route> */}

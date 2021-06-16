@@ -137,10 +137,10 @@ export default function Nav(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={onProfile}>
+      {/* <MenuItem onClick={onProfile}>
         {props.loggedUser ? props.loggedUser.username : "Profile"}
-      </MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      </MenuItem> */}
+      <MenuItem onClick={onProfile}>My account</MenuItem>
       <MenuItem onClick={onLogOut}>Sign Out</MenuItem>
     </Menu>
   );
@@ -234,8 +234,8 @@ export default function Nav(props) {
         Dashboard
       </Link>
     </MenuItem>,
-    <MenuItem onClick={onProfile}>{props.loggedUser ? props.loggedUser.username : "Profile"}</MenuItem>,
-    <MenuItem onClick={handleMenuClose}>My account</MenuItem>,
+    // <MenuItem onClick={onProfile}>{props.loggedUser ? props.loggedUser.username : "Profile"}</MenuItem>,
+    <MenuItem onClick={onProfile}>My account</MenuItem>,
     <MenuItem onClick={onLogOut}>Sign Out</MenuItem>,
   ];
 

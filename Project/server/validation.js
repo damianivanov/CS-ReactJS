@@ -54,6 +54,8 @@ const projectValidation = (data) => {
     invitationCode: Joi.string().min(6).max(6),
     tasksId: Joi.array().items(Joi.string().min(24).max(24)).optional(),
     team: Joi.array().items(Joi.string().min(24).max(24)).optional(),
+    company: Joi.string(),
+    photo: Joi.uri(),
     deleted: Joi.boolean(),
     updatedAt: Joi.date(),
     createdAt: Joi.date(),

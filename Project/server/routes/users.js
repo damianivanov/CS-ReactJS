@@ -50,7 +50,7 @@ router.get( "/:userId",verifyToken, verifyRoleOrSelf(3, true), async (req, res) 
 
     const user = await User.findOne({ _id: userId });
     if (!user)
-      sendErrorResponse(req, res, 204, `There is no user with this id`);
+      return sendErrorResponse(req, res, 204, `There is no user with this id`);
     delete user.password;
     replaceId(user);
     return res.status(200).send(user);
