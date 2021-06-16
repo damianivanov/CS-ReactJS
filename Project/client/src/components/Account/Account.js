@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 import EditUser from './EditUser'
 import MyTasks from './MyTasks'
 import MyProjects from './MyProjects'
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -60,7 +61,7 @@ export default function NavTabs(props) {
   
   const [value, setValue] = React.useState(0);
   
-  if(!props.signed) <Redirect to="/" />
+  if(!props.signed) return <Redirect to="/login" />
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

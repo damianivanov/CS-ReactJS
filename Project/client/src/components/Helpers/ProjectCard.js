@@ -45,12 +45,13 @@ export default function ProjectCard({project}) {
         <Typography variant="subtitle2" component="p" gutterBottom>
           {project.description.substr(0, 100)}
           <br />
-          <Typography variant="caption" gutterBottom >{date.format("MMM Do YYYY")}</Typography>
+          <Typography variant="caption" component="p" gutterBottom align="right">{date.format("MMM Do YYYY")}</Typography>
           
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">See Project</Button>
+        <Button href={`/project/${project.id}`}>See Project
+        </Button>
       </CardActions>
     </Card>
   );

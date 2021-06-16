@@ -18,4 +18,15 @@ export async function getMyProjects(){
       return error
     }
   }
-  
+
+export async function joinProject(code) {
+  try {
+    const project = await http.post(`/projects/join/${code}`,{}, {
+      headers: headers,
+    });
+    return project;
+  } catch (error) {
+    console.log(error.response.data.message);
+    return error.response;
+  }
+}

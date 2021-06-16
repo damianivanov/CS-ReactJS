@@ -6,7 +6,7 @@ const User = require('./Models/User');
 module.exports = 
     function verifyRoleOrSelf(role, allowIfSelf) {
         return function (req, res, next) { //here there is no req and res
-          const paramUserId = allowIfSelf && req.params.userId;
+          const paramUserId = allowIfSelf && (req.params.userId||req.userId);
           const userId = req.userId || req.body.managerId;
           if (!userId || (allowIfSelf && !paramUserId) ) next({ status: 403, message: `No userId provided.` }); //Error
           else {

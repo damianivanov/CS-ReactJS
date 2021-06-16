@@ -18,7 +18,6 @@ import {
   getExpDate,
   logOut,
   getJWT,
-  getActiveUser,
 } from "../../services/userService";
 import { Link, useHistory, useLocation } from "react-router-dom";
 
@@ -32,17 +31,18 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import AssessmentIcon from "@material-ui/icons/Assessment";
+import LeftDrawer from './LeftDrawer'
 
 export default function Nav(props) {
   const classes = useStyles();
   let history = useHistory();
   let location = useLocation();
   // const [user, setUser] = useState();
-  const [linkColor, setColor] = React.useState(
+  const [linkColor, setColor] = useState(
     activeDarkMode ? "white" : "black"
   );
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   function changeTheme() {
     if (props.darkMode) {
@@ -137,9 +137,7 @@ export default function Nav(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {/* <MenuItem onClick={onProfile}>
-        {props.loggedUser ? props.loggedUser.username : "Profile"}
-      </MenuItem> */}
+
       <MenuItem onClick={onProfile}>My account</MenuItem>
       <MenuItem onClick={onLogOut}>Sign Out</MenuItem>
     </Menu>
@@ -263,9 +261,11 @@ export default function Nav(props) {
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
+              <LeftDrawer />
             <IconButton style={{ borderRadius: "2%" }}>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
-                <div container
+                <div
+                  container
                   style={{
                     display: "flex",
                     alignItems: "center",

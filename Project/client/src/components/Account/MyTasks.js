@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
-
+import {Redirect} from 'react-router-dom'
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CheckboxList({props}) {
+export default function CheckboxList(props) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
   const [tasks, setTasks] = React.useState([]);
@@ -36,6 +36,10 @@ export default function CheckboxList({props}) {
   useEffect(() => {
       //setTasks(getTasks())
   }, [])
+
+  if(!props.signed)
+  return <Redirect to="/login" />
+
   return (
     <List className={classes.root}>
       {[0, 1, 2, 3].map((value) => {

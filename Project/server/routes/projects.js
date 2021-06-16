@@ -31,7 +31,6 @@ router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
     })
     try {
         const savedProject = await project.save();
-        replaceId(savedProject); 
         const uri = req.baseUrl + `/${savedProject.id}` ;
         console.log('Created Project: ', savedProject.name);
         return res.location(uri).status(201).json(savedProject);
@@ -40,15 +39,7 @@ router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
     }
 })
 
-router.get( "/myprojects/:userId",verifyToken, verifyRoleOrSelf(3, true), async (req, res) => {
-  const { userId } = req.params;
-  if (!userId) return sendErrorResponse(req, res, 400, `Missing userId`);
-  
-  const projects = await Project.find({ team: userId,deleted:false });
-  if (!projects) sendErrorResponse(req, res, 204, `There is no projects with this user`);
-  
-    return res.status(200).send(projects);
-});
+
 
 router.get( "/:projectId",verifyToken, verifyRoleOrSelf(2, false), async (req, res) => {
     const { projectId } = req.params;
@@ -112,5 +103,51 @@ router.delete( "/:projectId", verifyToken, verifyRoleOrSelf(2, false), async (re
     return sendErrorResponse(req, res, 403, `Not enough privilegies.`);
   }
 );
+
+router.get( "/myprojects/:userId",verifyToken, verifyRoleOrSelf(3, true), async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) return sendErrorResponse(req, res, 400, `Missing userId`);
+  
+  const projects = await Project.find({ team: userId,deleted:false });
+  if (!projects) sendErrorResponse(req, res, 204, `There is no projects with this user`);
+  
+    return res.status(200).send(projects);
+});
+
+router.post("/join/:code",verifyToken,verifyRoleOrSelf(3,true),async(req,res)=>{
+  
+  const { code } = req.params;
+  if (!code) return sendErrorResponse(req, res, 400, `Missing code`);
+
+  const loggedUser  = req.user;
+  if (!loggedUser) return sendErrorResponse(req, res, 400, `Missing user`);
+
+  const project = await Project.findOne({ invitationCode: code });
+  if (!project) return sendErrorResponse(req, res, 400, `Invalid Code`);
+
+  const user = await User.findOne({ id: loggedUser.userId });
+  if (!user) return sendErrorResponse(req, res, 400, `There is no uesr with this id`);
+
+ if (!user.projects.includes(project.id) && !project.team.includes(user.id)) {
+   user.projects.push(project.id);
+   project.team.push(user.id);
+ }else return sendErrorResponse(req, res, 400, `Already assigned to the project`);
+ 
+
+   
+
+  try {
+    await user.save();
+    await project.save();
+    const uri = req.baseUrl + `/${project.id}` ;
+    console.log('Updated Project: ', project.name);
+    return res.status(200).location(`${uri}`).send(project)
+  } catch (error) {
+    return sendErrorResponse(req, res, 500, error);
+  }
+
+});
+  
+
 
 module.exports = router;
