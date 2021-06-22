@@ -28,6 +28,7 @@ const useStyles = makeStyles({
 export default function ProjectCard({project}) {
   const classes = useStyles();
   let date = moment(project.createdAt, 'YYYY-MM-DD')
+
   return (
     <Card className={classes.root}>
       <CardContent>
@@ -36,7 +37,6 @@ export default function ProjectCard({project}) {
           color="textSecondary"
           gutterBottom
         >
-          
         </Typography>
         <Typography variant="h4" component="h1" align="center">{project.name}</Typography>
         <Typography className={classes.pos} color="textSecondary" align="right">

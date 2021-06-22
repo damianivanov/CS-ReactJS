@@ -8,6 +8,7 @@ import Account from "./components/Account/Account";
 import MyTasks from "./components/Account/MyTasks";
 import MyProjects from "./components/Account/MyProjects";
 import JoinProject from "./components/Helpers/JoinProject";
+import Project from "./components/Project/Project";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { checkJWT, getActiveUser } from "./services/userService";
 import { activeDarkMode } from "./services/darkMode";
@@ -54,11 +55,12 @@ function App() {
             />
           </Route>
 
+
           <Route path="/tasks">
             <MyTasks
-              signed={signed}
-              loggedUser={loggedUser}
-              setLoggedUser={setLoggedUser}
+              props={{ signed:signed,
+                loggedUser:loggedUser,
+                setLoggedUser:setLoggedUser}}
             />
           </Route>
 
@@ -76,6 +78,9 @@ function App() {
               setLoggedUser={setLoggedUser}
             />
           </Route>
+          <Route path="/project/:projectId" component={(props) => <Project signed={signed} props={props}
+              loggedUser={loggedUser}
+              setLoggedUser={setLoggedUser} />}/>
           {/* <Route path="/users/edit/:userId" component={EditUser} />
           <Route path="/users" component={UserList} /> */}
           {/* <Route path="/forgotPassword" component={forgotPassword}></Route> */}

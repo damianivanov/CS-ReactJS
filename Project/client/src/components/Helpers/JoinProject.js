@@ -10,6 +10,7 @@ export default function JoinProject(props) {
   const [error, setError] = useState();
   const [code, setCode] = useState("");
   let history = useHistory();
+  
   const handleSubmit = (e) => {
       e.preventDefault()
     joinProject(code)

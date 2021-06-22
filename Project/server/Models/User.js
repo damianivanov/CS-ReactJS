@@ -40,10 +40,10 @@ const userSchema = new mongoose.Schema({
     max: 512,
   },
   projects: {
-    type: [mongoose.Schema.Types.ObjectId],
+    type:[String]
   },
   tasks: {
-    type: [mongoose.Schema.Types.ObjectId],
+    type:[String]
   },
   role: {
     type: String,

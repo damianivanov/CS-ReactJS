@@ -126,28 +126,66 @@ router.post("/join/:code",verifyToken,verifyRoleOrSelf(3,true),async(req,res)=>{
   if (!project) return sendErrorResponse(req, res, 400, `Invalid Code`);
 
   const user = await User.findOne({ id: loggedUser.userId });
-  if (!user) return sendErrorResponse(req, res, 400, `There is no uesr with this id`);
-
- if (!user.projects.includes(project.id) && !project.team.includes(user.id)) {
+  if (!user) return sendErrorResponse(req, res, 400, `There is no user with this id`);
+//user.project -BAD
+ if (user.projects && !user.projects.includes(project.id) && !project.team.includes(user.id)) {
    user.projects.push(project.id);
    project.team.push(user.id);
  }else return sendErrorResponse(req, res, 400, `Already assigned to the project`);
  
-
-   
-
   try {
     await user.save();
     await project.save();
     const uri = req.baseUrl + `/${project.id}` ;
-    console.log('Updated Project: ', project.name);
-    return res.status(200).location(`${uri}`).send(project)
+    console.log('Added to Project: ', project.name);
+    return res.status(201).location(`${uri}`).send(project)
   } catch (error) {
     return sendErrorResponse(req, res, 500, error);
   }
 
 });
   
+router.post("/leave/:projectId",verifyToken,verifyRoleOrSelf(3,true),async(req,res)=>{
+  
+  const { projectId } = req.params;
+  if (!projectId) return sendErrorResponse(req, res, 400, `Missing code`);
+
+  const loggedUser  = req.user;
+  if (!loggedUser) return sendErrorResponse(req, res, 400, `Missing user`);
+
+  const project = await Project.findOne({ _id: projectId });
+  if (!project) return sendErrorResponse(req, res, 400, `Invalid Code`);
+
+  const user = await User.findOne({ id: loggedUser.userId });
+  if (!user) return sendErrorResponse(req, res, 400, `There is no uesr with this id`);
+//user.projects = undefined
+
+ if (user.projects.includes(project.id) && project.team.includes(user.id)) {
+  var filteredTeam = project.team.filter((userId) => {
+    userId !== user.id;
+   });
+
+  var filtered = user.projects.filter((prId) => {
+    prId!== project.id;
+   });
+   
+   
+
+  user.projects = filtered;
+   project.team = filteredTeam;
+ } else return sendErrorResponse(req, res, 400, `Not assigned to the project`);
+ 
+
+  try {
+    await user.save();
+    await project.save()
+    console.log('Removed From project: ', project.name);
+    return res.status(200).send(project)
+  } catch (error) {
+    return sendErrorResponse(req, res, 500, error);
+  }
+
+});
 
 
 module.exports = router;

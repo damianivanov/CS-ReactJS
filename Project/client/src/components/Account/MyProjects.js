@@ -4,7 +4,7 @@ import { getJWT } from "../../services/userService";
 import ProjectCard from "../Helpers/ProjectCard";
 import { Redirect } from 'react-router-dom';
 
-export default function MyProjects(props ) {
+export default function MyProjects(props) {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function MyProjects(props ) {
       });
   }, []);
 
-  if(!props.signed) return <Redirect to="/login" /> 
+ if(!props.signed) return <Redirect to="/login" /> 
   
   return (
     <div style={{padding:"20px"}}>
