@@ -8,6 +8,7 @@ const mongoose = require('./mongoose');
 const nodemailer = require("nodemailer");
 const authRoute = require('./routes/auth')
 const usersRoute = require('./routes/users')
+const tasksRoute = require('./routes/tasks')
 const projectsRoute = require('./routes/projects')
 const sendErrorResponse = require('./utils').sendErrorResponse;
 
@@ -19,6 +20,7 @@ app.use(cors(corsOptions))
 app.use(express.json({limit: '50mb'}));
 app.use(express.static('public'))
 app.use('/api/users', usersRoute)
+app.use('/api/tasks',tasksRoute)
 app.use('/api/projects', projectsRoute)
 app.use('/api', authRoute)
 

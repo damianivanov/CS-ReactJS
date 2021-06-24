@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
+
 
 const projectSchema = new mongoose.Schema(
   {
@@ -13,7 +13,6 @@ const projectSchema = new mongoose.Schema(
     deleted: { type: Boolean, default: false },
     invitationCode: {
       type: String,
-      default: uuidv4().substring(2, 8),
       unique: true,
       required: true,
     },

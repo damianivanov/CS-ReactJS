@@ -4,9 +4,9 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { projectValidation } = require('../validation');
 const verifyToken = require('../verifyToken');
-const verifyRoleOrSelf = require('../verifyRole');
+const {verifyRoleOrSelf} = require('../verifyRole');
 const sendErrorResponse = require("../utils").sendErrorResponse;
-const replaceId = require("../utils").replaceId;
+const { v4: uuidv4 } = require("uuid");
 
 router.get("/",verifyToken, verifyRoleOrSelf(3,false), async (req, res) => {
 
@@ -26,6 +26,7 @@ router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
         description: req.body.description,
         tasksId: req.body.tasksId,
         team: req.body.team,
+        invitationCode: uuidv4().substring(2, 8),
         company: req.body.company,
         deleted: false,
     })
@@ -41,7 +42,7 @@ router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
 
 
 
-router.get( "/:projectId",verifyToken, verifyRoleOrSelf(2, false), async (req, res) => {
+router.get("/:projectId",verifyToken, verifyRoleOrSelf(2, false), async (req, res) => {
     const { projectId } = req.params;
     if (!projectId) return sendErrorResponse(req, res, 400, `Missing projectId`);
     
@@ -70,8 +71,8 @@ router.put("/:projectId", verifyToken,verifyRoleOrSelf(2,false), async (req, res
   delete (project.id);
   try {
     if (user.id === project.managerId || user.role === "admin") {
-      if (project.deleted)
-        return sendErrorResponse(req, res, 400, `Project is deleted.`);
+      // if (project.deleted)
+      //   return sendErrorResponse(req, res, 400, `Project is deleted.`);
       const updated = await Project.findOneAndUpdate(
         { _id: projectId },
         project,
@@ -86,7 +87,7 @@ router.put("/:projectId", verifyToken,verifyRoleOrSelf(2,false), async (req, res
   }
 });
 
-router.delete( "/:projectId", verifyToken, verifyRoleOrSelf(2, false), async (req, res) => {
+router.delete("/:projectId", verifyToken, verifyRoleOrSelf(2, false), async (req, res) => {
     const { projectId } = req.params;
     if (!projectId) return sendErrorResponse(req, res, 400, `Missing projectId`);
     
@@ -103,6 +104,7 @@ router.delete( "/:projectId", verifyToken, verifyRoleOrSelf(2, false), async (re
     return sendErrorResponse(req, res, 403, `Not enough privilegies.`);
   }
 );
+
 
 router.get( "/myprojects/:userId",verifyToken, verifyRoleOrSelf(3, true), async (req, res) => {
   const { userId } = req.params;
@@ -125,7 +127,7 @@ router.post("/join/:code",verifyToken,verifyRoleOrSelf(3,true),async(req,res)=>{
   const project = await Project.findOne({ invitationCode: code });
   if (!project) return sendErrorResponse(req, res, 400, `Invalid Code`);
 
-  const user = await User.findOne({ id: loggedUser.userId });
+  const user = await User.findOne({ _id: loggedUser.id });
   if (!user) return sendErrorResponse(req, res, 400, `There is no user with this id`);
 //user.project -BAD
  if (user.projects && !user.projects.includes(project.id) && !project.team.includes(user.id)) {
@@ -160,7 +162,7 @@ router.post("/leave/:projectId",verifyToken,verifyRoleOrSelf(3,true),async(req,r
   if (!user) return sendErrorResponse(req, res, 400, `There is no uesr with this id`);
 //user.projects = undefined
 
- if (user.projects.includes(project.id) && project.team.includes(user.id)) {
+ if (user.projects.includes(project.id) || project.team.includes(user.id)) {
   var filteredTeam = project.team.filter((userId) => {
     userId !== user.id;
    });
@@ -168,7 +170,6 @@ router.post("/leave/:projectId",verifyToken,verifyRoleOrSelf(3,true),async(req,r
   var filtered = user.projects.filter((prId) => {
     prId!== project.id;
    });
-   
    
 
   user.projects = filtered;

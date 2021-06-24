@@ -1,9 +1,8 @@
 const router = require("express").Router();
 const { userValidation } = require("../validation");
 const verifyToken = require("../verifyToken");
-const verifyRoleOrSelf = require("../verifyRole.js");
+const {verifyRoleOrSelf} = require("../verifyRole.js");
 const sendErrorResponse = require("../utils").sendErrorResponse;
-const replaceId = require("../utils").replaceId;
 const User = require("../Models/User");
 
 router.get("/", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
@@ -33,8 +32,7 @@ router.post("/", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
 
   try {
     const savedUser = await newUser.save();
-    delete savedUser.password;
-        replaceId(savedUser); 
+    delete(savedUser.password)
         const uri = req.baseUrl + `/${savedUser.id}`;
         console.log('Created User: ', savedUser.id);
         return res.location(uri).status(201).json(savedUser);
@@ -49,10 +47,8 @@ router.get( "/:userId",verifyToken, verifyRoleOrSelf(3, true), async (req, res) 
     if (!userId) return sendErrorResponse(req, res, 400, `Missing userId`);
 
     const user = await User.findOne({ _id: userId });
-    if (!user)
-      return sendErrorResponse(req, res, 204, `There is no user with this id`);
-    delete user.password;
-    replaceId(user);
+    if (!user) return sendErrorResponse(req, res, 400, `There is no user with this id`);
+    //delete(user.password)
     return res.status(200).send(user);
   }
 );
@@ -77,10 +73,8 @@ try {
   const updated = await User.findOneAndUpdate({_id:userId},user,{
     new: true
   });
-  var newUser=updated.toObject()
-  replaceId(newUser)
-  delete(newUser.__v)
-  return res.json(newUser);
+  delete(updated.password)
+  return res.json(updated);
 
 } catch (error) {
   sendErrorResponse(req, res, 400, `Error while saving the user.`);  
