@@ -79,8 +79,8 @@ function App() {
             />
           </Route>
           <Route path="/project/:projectId" component={(props) => <Project signed={signed} props={props}
-              loggedUser={loggedUser}
-              setLoggedUser={setLoggedUser} />}/>
+              loggedUser={loggedUser} />}/>
+              
           {/* <Route path="/users/edit/:userId" component={EditUser} />
           <Route path="/users" component={UserList} /> */}
           {/* <Route path="/forgotPassword" component={forgotPassword}></Route> */}

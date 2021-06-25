@@ -36,24 +36,25 @@ router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
         console.log('Created Project: ', savedProject.name);
         return res.location(uri).status(201).json(savedProject);
     } catch (error) {
-        sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
+      return sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
     }
 })
 
 
 
-router.get("/:projectId",verifyToken, verifyRoleOrSelf(2, false), async (req, res) => {
+router.get("/:projectId",verifyToken, verifyRoleOrSelf(1, false), async (req, res) => {
     const { projectId } = req.params;
     if (!projectId) return sendErrorResponse(req, res, 400, `Missing projectId`);
     
     const user = req.user
     const project = await Project.findOne({ _id: projectId });
-    if (!project) sendErrorResponse(req, res, 204, `There is no project with this id`);
+    if (!project) return sendErrorResponse(req, res, 400, `There is no project with this id`);
     
-    if (user.id === project.managerId || user.role === "admin") {
-      if (project.deleted)
-      return sendErrorResponse(req, res, 400, `Project is deleted.`);
-      return res.status(200).send(project);
+    if (user.id === project.managerId || user.role === "admin" || project.team.includes(user.id)) {
+      if (project.deleted) return sendErrorResponse(req, res, 400, `Project is deleted.`);
+      const manager = await User.findOne({_id: project.managerId})
+      const team = await User.find({_id: {$in: project.team}})
+      return res.status(200).send({project,manager,team});
     }
     return sendErrorResponse(req, res, 403, `Not enough privilegies.`);
   }
@@ -83,7 +84,7 @@ router.put("/:projectId", verifyToken,verifyRoleOrSelf(2,false), async (req, res
       return res.status(200).send(updated);
     }
   } catch (error) {
-    sendErrorResponse(req, res, 400, `Error while saving the project.`);
+    return sendErrorResponse(req, res, 400, `Error while saving the project.`);
   }
 });
 
@@ -93,7 +94,7 @@ router.delete("/:projectId", verifyToken, verifyRoleOrSelf(2, false), async (req
     
     const user = req.user
     const project = await Project.findOne({ _id: projectId });
-    if (!project) sendErrorResponse(req, res, 204, `There is no project with this id`);
+    if (!project) return sendErrorResponse(req, res, 400, `There is no project with this id`);
     
     if(user.id===project.managerId || user.role==='admin'){
         if (project.deleted) return sendErrorResponse(req, res, 400, `Project is deleted.`);
@@ -111,7 +112,7 @@ router.get( "/myprojects/:userId",verifyToken, verifyRoleOrSelf(3, true), async 
   if (!userId) return sendErrorResponse(req, res, 400, `Missing userId`);
   
   const projects = await Project.find({ team: userId,deleted:false });
-  if (!projects) sendErrorResponse(req, res, 204, `There is no projects with this user`);
+  if (!projects) return sendErrorResponse(req, res, 400, `There is no projects with this user`);
   
     return res.status(200).send(projects);
 });

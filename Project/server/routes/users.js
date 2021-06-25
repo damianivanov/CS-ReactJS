@@ -37,7 +37,7 @@ router.post("/", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
         console.log('Created User: ', savedUser.id);
         return res.location(uri).status(201).json(savedUser);
   } catch (error) {
-    sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
+    return (req, res, 500, `Server error: ${error}`, error);
   }
 });
 
@@ -61,12 +61,10 @@ router.put("/:userId", verifyToken,verifyRoleOrSelf(3,true), async (req, res) =>
   if (error) return sendErrorResponse(req, res, 400, error.details[0].message, error);
 
   if (user.id !== userId) {
-    sendErrorResponse(req, res, 400, `Invalid user data - id in url doesn't match: ${user}`);
-    return;
+    return sendErrorResponse(req, res, 400, `Invalid user data - id in url doesn't match: ${user}`);
 }
 if(req.user.role !== 3 && user.role !== req.user.role) {
-  sendErrorResponse(req, res, 400, `Invalid user data - role can not be changed.`);
-  return;
+  return sendErrorResponse(req, res, 400, `Invalid user data - role can not be changed.`);
 }
 delete (user.id);
 try {
@@ -77,7 +75,7 @@ try {
   return res.json(updated);
 
 } catch (error) {
-  sendErrorResponse(req, res, 400, `Error while saving the user.`);  
+  return sendErrorResponse(req, res, 400, `Error while saving the user.`);  
 }
 });
 router.delete( "/:userId", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {

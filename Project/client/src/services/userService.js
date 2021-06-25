@@ -98,8 +98,13 @@ function setJWT(token) {
 }
 
 export function getExpDate(){
-  var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
-  return decoded.exp
+  try {
+    var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
+    return decoded.exp
+  } catch (error) {
+    console.log(error)
+    return 0
+  }
 }
 
 // ---------API--------
@@ -121,9 +126,10 @@ export async function login(user) {
     const signed = await http.post(`/login`, user)
     setJWT(signed.data.token);
     setActiveUser();
+    return signed
   } catch (error) {
-    console.log(error.response.data.message);
-    //return error
+    console.log(error.response);
+    return error.response
   }
 }
 

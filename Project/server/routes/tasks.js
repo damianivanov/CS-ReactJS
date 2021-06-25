@@ -14,9 +14,10 @@ router.get("/mytasks", verifyToken,verifyRoleOrSelf(1,false), async (req, res) =
 });
 
 router.get("/myActiveTasks", verifyToken,verifyRoleOrSelf(1,false), async (req, res) => {
-  const tasks = await Task.find({ assigneeId: req.userId,status: {$in: ['active', 'review']}})
+  const tasks = await Task.find({ assigneeId: req.userId, status: {$in: ['active', 'review']}})
   return res.json(tasks);
 });
+
 router.get("/", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
   const tasks = await Task.find();
   if (!tasks) return sendErrorResponse(req, res, 204, `No Tasks`);
@@ -63,10 +64,9 @@ router.post("/", verifyToken, verifyRoleOrSelf(2, false), async (req, res) => {
     console.log("Created Task: ", savedTasks.label);
     return res.location(uri).status(201).json(savedTasks);
   } catch (error) {
-    sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
+    return sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
   }
 });
-
 
 router.get("/:taskId",verifyToken, verifyRoleOrSelf(1, false), async (req, res) => {
     const { taskId } = req.params;
@@ -98,7 +98,7 @@ router.put("/:taskId", verifyToken,verifyRoleOrSelf(2,false), async (req, res) =
     });
     return res.json(updated);
   } catch (error) {
-    sendErrorResponse(req, res, 400, `Error while saving the task.`);
+    return sendErrorResponse(req, res, 400, `Error while saving the task.`);
   }
 });
 
@@ -108,7 +108,7 @@ router.delete("/:taskId", verifyToken, verifyRoleOrSelf(2, false), async (req, r
 
   const task = await Task.findOne({ _id: taskId });
   if (!task) 
-    return sendErrorResponse(req, res, 204, `There is no task with this id`);
+    return sendErrorResponse(req, res, 400, `There is no task with this id`);
 
   if (task.assignorId !== req.userId && req.user.role !== "admin")
     return sendErrorResponse(req, res, 403, `Only the assignor can edit task`);
@@ -173,10 +173,9 @@ router.post("/:taskId",verifyToken, verifyRoleOrSelf(2, false), async (req, res)
     console.log(`Created Subtask of ${task.label}: `, savedTasks.label);
     return res.location(uri).status(201).json(savedTasks);
   } catch (error) {
-    sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
+    return sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
   }
 });
-
 
 router.get("/:taskId/results", verifyToken,verifyRoleOrSelf(1,false), async (req, res) => {
   const { taskId } = req.params;
@@ -207,7 +206,7 @@ router.post("/:taskId/results", verifyToken,verifyRoleOrSelf(1,false), async (re
     });
     return res.json(updated);
   } catch (error) {
-    sendErrorResponse(req, res, 400, `Error while saving the task.`);
+    return sendErrorResponse(req, res, 400, `Error while saving the task.`);
   }
 });
 

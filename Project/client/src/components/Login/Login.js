@@ -24,11 +24,22 @@ export default function Login(props) {
     e.preventDefault();
     const user = checkJWT()
     if (!user) {
-      login({username,password});
-      props.setSigned(true);
-      let { from } = location.state || { from: { pathname: "/" } };
-      history.replace(from);
-      <Redirect to="/" />;
+      login({username,password}).then((res) => {
+        if (res.status === 200) {
+          console.log("Logged In")
+          props.setSigned(true);
+          let { from } = location.state || { from: { pathname: "/" } };
+          history.replace(from);
+          <Redirect to="/" />;
+        } else {
+          // console.log(res.data)
+          // setError(res.data.message);
+          setError("Invalid Credentials!"); //the error message have too much info for existing users
+        }
+      }).catch((err) => {
+        console.log(err)
+        setError(err.response.data.message); //not sure if it's data.message
+      });    
     } else {
       setError("Invalid Credentials!");
     }

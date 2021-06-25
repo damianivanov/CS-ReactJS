@@ -249,7 +249,7 @@ export default function Nav(props) {
       onClose={handleMobileMenuClose}
     >
       {props.signed ? signedUserMenu : noUserMenu}
-      <div container style={{ marginLeft: "16px" }} >
+      <div  style={{ marginLeft: "16px" }} >
         {toggler}
       </div>
     </Menu>
@@ -265,7 +265,7 @@ export default function Nav(props) {
             <IconButton style={{ borderRadius: "2%" }}>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 <div
-                  container
+                  
                   style={{
                     display: "flex",
                     alignItems: "center",

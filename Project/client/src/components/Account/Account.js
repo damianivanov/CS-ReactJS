@@ -88,7 +88,9 @@ export default function NavTabs(props) {
         <MyTasks props={props}></MyTasks>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <MyProjects props={props}></MyProjects>
+        <MyProjects signed={props.signed}
+              loggedUser={props.loggedUser}
+              setLoggedUser={props.setLoggedUser}></MyProjects>
       </TabPanel>
     </div>
   );

@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
     console.log("Created User: ", savedUser.id);
     return res.location(uri).status(201).json(savedUser);
   } catch (error) {
-    sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
+    return sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
   }
 });
 
