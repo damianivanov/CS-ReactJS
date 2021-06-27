@@ -29,9 +29,33 @@ export async function getMyProjects(){
     }
   }
 
+export async function createProject(project,userId){
+  project= {...project,managerId:userId}
+  try {
+    const createdProject = await http.post(`/projects`, project,{
+      headers:headers
+    })
+    return createdProject
+  } catch (error) {
+    return error.response
+  }
+}
+
 export async function joinProject(code) {
   try {
     const project = await http.post(`/projects/join/${code}`,{}, {
+      headers: headers,
+    });
+    return project;
+  } catch (error) {
+    console.log(error.response.data.message);
+    return error.response;
+  }
+}
+
+export async function leaveProject(id) {
+  try {
+    const project = await http.post(`/projects/leave/${id}`,{}, {
       headers: headers,
     });
     return project;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import {
   Menu,
   Button,
@@ -37,7 +37,6 @@ export default function Nav(props) {
   const classes = useStyles();
   let history = useHistory();
   let location = useLocation();
-  // const [user, setUser] = useState();
   const [linkColor, setColor] = useState(
     activeDarkMode ? "white" : "black"
   );
@@ -111,7 +110,7 @@ export default function Nav(props) {
     let { from } = location.state || { from: { pathname: "/" } };
     history.replace(from);
     history.push("/login");
-    handleMenuClose();
+    handleMenuClose()
   };
 
   function onProfile() {
@@ -249,7 +248,7 @@ export default function Nav(props) {
       onClose={handleMobileMenuClose}
     >
       {props.signed ? signedUserMenu : noUserMenu}
-      <div  style={{ marginLeft: "16px" }} >
+      <div style={{ marginLeft: "16px" }} >
         {toggler}
       </div>
     </Menu>
@@ -261,7 +260,7 @@ export default function Nav(props) {
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
-              <LeftDrawer />
+              <LeftDrawer props={props}/>
             <IconButton style={{ borderRadius: "2%" }}>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 <div
@@ -281,11 +280,7 @@ export default function Nav(props) {
             </IconButton>
 
             <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              {toggler}
-              {props.signed ? signedUser : noUser}
-            </div>
-
+            <div className={classes.sectionDesktop}>{toggler} {props.signed ? signedUser : noUser}</div>
             <div className={classes.sectionMobile}>
               <IconButton
                 aria-label="show more"

@@ -24,7 +24,7 @@ router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
         name: req.body.name,
         managerId: req.body.managerId,
         description: req.body.description,
-        tasksId: req.body.tasksId,
+        tasksId: req.body.tasksId ? req.body.tasksId : [],
         team: req.body.team,
         invitationCode: uuidv4().substring(2, 8),
         company: req.body.company,
@@ -111,7 +111,8 @@ router.get( "/myprojects/:userId",verifyToken, verifyRoleOrSelf(3, true), async 
   const { userId } = req.params;
   if (!userId) return sendErrorResponse(req, res, 400, `Missing userId`);
   
-  const projects = await Project.find({ team: userId,deleted:false });
+  const projects = await Project.find({ 
+    $or: [{ team: userId }, { managerId: userId }], deleted:false });
   if (!projects) return sendErrorResponse(req, res, 400, `There is no projects with this user`);
   
     return res.status(200).send(projects);
@@ -151,30 +152,33 @@ router.post("/join/:code",verifyToken,verifyRoleOrSelf(3,true),async(req,res)=>{
 router.post("/leave/:projectId",verifyToken,verifyRoleOrSelf(3,true),async(req,res)=>{
   
   const { projectId } = req.params;
-  if (!projectId) return sendErrorResponse(req, res, 400, `Missing code`);
+  if (!projectId) return sendErrorResponse(req, res, 400, `Missing projectId`);
 
   const loggedUser  = req.user;
   if (!loggedUser) return sendErrorResponse(req, res, 400, `Missing user`);
 
   const project = await Project.findOne({ _id: projectId });
-  if (!project) return sendErrorResponse(req, res, 400, `Invalid Code`);
+  if (!project) return sendErrorResponse(req, res, 400, `Invalid projectId`);
 
-  const user = await User.findOne({ id: loggedUser.userId });
-  if (!user) return sendErrorResponse(req, res, 400, `There is no uesr with this id`);
-//user.projects = undefined
-
+  const user = await User.findOne({ _id: loggedUser.id });
+  if (!user) return sendErrorResponse(req, res, 400, `There is no user with this id`);
+  //user.projects = undefined
+if(user.id===project.managerId){
+  return sendErrorResponse(req, res, 403, `Manager can't leave the project`);
+}
  if (user.projects.includes(project.id) || project.team.includes(user.id)) {
-  var filteredTeam = project.team.filter((userId) => {
-    userId !== user.id;
-   });
 
-  var filtered = user.projects.filter((prId) => {
-    prId!== project.id;
-   });
+  var filteredTeam = project.team.filter(userId => 
+    userId !== user.id
+   );
+
+  var filtered = user.projects.filter(prId => 
+    prId !== project.id
+   );
    
 
+  project.team = filteredTeam;
   user.projects = filtered;
-   project.team = filteredTeam;
  } else return sendErrorResponse(req, res, 400, `Not assigned to the project`);
  
 

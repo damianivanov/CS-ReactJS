@@ -12,7 +12,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined';
 import {Link} from 'react-router-dom'
-export default function LeftDrawer() {
+
+
+
+
+export default function LeftDrawer({props}) {
+
 
   const [open, setOpen] = React.useState(false);
 
@@ -20,7 +25,6 @@ export default function LeftDrawer() {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
     setOpen(value);
   };
 
@@ -31,8 +35,7 @@ export default function LeftDrawer() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-
-      <Link to="/projects" style={{ color: "white", textDecoration: "none" }}>
+        <Link to="/projects" style={{ color: "white", textDecoration: "none" }}>
           <ListItem button>
             <ListItemIcon>
               <AccountTreeIcon />
@@ -50,6 +53,17 @@ export default function LeftDrawer() {
           </ListItem>
         </Link>
 
+        {props.loggedUser && (props.loggedUser.role === "admin" ||
+          props.loggedUser.role === "manager") && (
+          <Link to="/create" style={{ color: "white", textDecoration: "none" }}>
+            <ListItem button>
+              <ListItemIcon>
+                <LibraryAddOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Create Project"} />
+            </ListItem>
+          </Link>
+        )}
       </List>
       <Divider />
       <List>

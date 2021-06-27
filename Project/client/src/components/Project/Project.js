@@ -27,6 +27,12 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(4),
     height: theme.spacing(4),
   },
+  avatar: {
+    height: "40px",
+    width: "40px",
+    display: "inline-flex",
+    verticalAlign: "center"
+  }
 }));
 
 const moment = require("moment");
@@ -36,14 +42,10 @@ export default function Project(props) {
   const member = (member) => {
     return(
 
-      <div
-      style={{
-        // display: "flex",
-        // alignItems: "center",
-        // flexWrap: "wrap",
-        // justifyContent: "flex-end",
-      }}
-      >
+      <div style={{
+      justify:"center",
+      alignItems: "center",
+      flexWrap: "wrap"}}>
     <Typography
       variant="h7"
       style={{ padding: "5px" }}
@@ -52,13 +54,12 @@ export default function Project(props) {
       {member.lastName} ({member.username})
     </Typography>
 
-    <Avatar className={classes.large} src={member.photo} />
+    <Avatar className={classes.avatar} src={member.photo} fontSize="large"/>
   </div>
   )
   }
   
   const classes = useStyles();
-  let history = useHistory();
   const [project, setProject] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -76,49 +77,37 @@ export default function Project(props) {
     },[]);
 
 
-
     if(!loading)
       return (
         <Container style={{ padding: "20px" }}>
-          <Box border={1}>
+          <Box border={2}>
             <Typography variant="h2" align="center" color="error">
               {project && project.project.name}
             </Typography>
-            <Container style={{ width: "40%", float: "right",align:"left" }}>
+            
+            <Container style={{ width: "40%", float: "right",align:"left",padding:"20px" }}>
               <Typography align="right" variant="h6">
+              <Box border={1}>
                 Created on:{" "}
                 {moment(project.project.createdAt, "YYYY-MM-DD")
                   .format("MMM Do YYYY")
                   .toString()}
+                <Typography>Company: {project.project.company}</Typography>
+              {member(project.manager)}
+                </Box>
               </Typography>
 
-              {/* <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Typography
-                  align="right"
-                  variant="h6"
-                  style={{ padding: "10px" }}
-                  >
-                  Manager : {project.manager.firstName}{" "}
-                  {project.manager.lastName}
-                </Typography>
-
-                <Avatar className={classes.large} src={project.manager.photo} />
-              </div> */}
-              {member(project.manager)}
             </Container>
-            <div style={{ width: "40%", float: "left",align:"left"}}>
+            <Container style={{ width: "50%", float: "left",align:"left",padding:"20px"}}>
+              <Box border={1}>
+              <Typography align="center" variant="h5">Team:</Typography>
               {project.team.map((teamMember, key) => member(teamMember))}
-            </div>
+              </Box>
+            </Container>
           </Box>
         </Container>
       );
+
   return (
     <div className={classes.root}>
       <CircularProgress color="secondary" style={{height:"100hv"}}/>
