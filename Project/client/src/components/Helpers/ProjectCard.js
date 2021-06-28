@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 import { leaveProject } from "../../services/projectService";
 import {
   Card,
@@ -18,6 +17,7 @@ import {
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Alert from '@material-ui/lab/Alert';
 const moment = require('moment');
+
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -37,31 +37,11 @@ const useStyles = makeStyles({
   },
 });
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     maxWidth: 345,
-//   },
-//   media: {
-//     height: 0,
-//     paddingTop: "56.25%",
-//   },
-//   expand: {
-//     transform: "rotate(0deg)",
-//     marginLeft: "auto",
-//     transition: theme.transitions.create("transform", {
-//       duration: theme.transitions.duration.shortest,
-//     }),
-//   },
-//   expandOpen: {
-//     transform: "rotate(180deg)",
-//   },
-
-// }));
 export default function ProjectCard({project,setDate}) {
   const classes = useStyles();
   let date = moment(project.createdAt, 'YYYY-MM-DD')
-  const [open, setOpen] = React.useState(false);
-  const [error, setError] = React.useState("")
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState("")
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -81,6 +61,7 @@ export default function ProjectCard({project,setDate}) {
     setOpen(false);
     setDate(new Date())
   }; 
+
   return (
     <Card className={classes.root}>
       <CardContent>
@@ -110,7 +91,7 @@ export default function ProjectCard({project,setDate}) {
       </CardContent>
 
       <CardActions>
-        <Button href={`/project/${project.id}`}>See Project</Button>
+        <Button href={`/projects/${project.id}`}>See Project</Button>
         <Button onClick={handleClickOpen} style={{float:"right"}}>
           Leave <ExitToAppIcon />
         </Button>
@@ -128,6 +109,7 @@ export default function ProjectCard({project,setDate}) {
             Leaving {project.name}
           </DialogContentText>
         </DialogContent>
+        
         <DialogActions>
           <Button onClick={Cancel} color="primary" autoFocus>
             Cancel

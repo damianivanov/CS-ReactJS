@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -16,10 +16,16 @@ import {Link} from 'react-router-dom'
 
 
 
-export default function LeftDrawer({props}) {
+export default function LeftDrawer({props},setDate,date) {
 
 
   const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    return () => {
+      console.log(date)
+    }
+  }, [date])
 
   const toggleDrawer = (value) => (event) => {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -40,7 +46,7 @@ export default function LeftDrawer({props}) {
             <ListItemIcon>
               <AccountTreeIcon />
             </ListItemIcon>
-            <ListItemText primary={"My Projects"} />
+            <ListItemText primary={"Projects"} />
           </ListItem>
         </Link>
 

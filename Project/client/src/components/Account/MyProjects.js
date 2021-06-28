@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import { makeStyles,GridList } from "@material-ui/core";
+import { makeStyles,GridList,Button } from "@material-ui/core";
 import { getMyProjects } from "../../services/projectService";
 import { getJWT } from "../../services/userService";
 import ProjectCard from "../Helpers/ProjectCard";
@@ -40,26 +40,24 @@ export default function MyProjects(props) {
     fetchProjects()
     }, [date]);
 
-  const content = (
-    <div className={classes.root}>
-      <GridList className={classes.gridList} cols={2.5}>
-      {projects.map((project, i) => (
-        <ProjectCard project={project}s tyle={{ margin: "5px" }}/>
-      ))}
-      </GridList>
-    </div>
-  );
-
  if(!props.signed) return <Redirect to="/login" /> 
   
   return (
-    <div className={classes.root} >
-    <GridList className={classes.gridList} cols={2.5} >
-      {projects.map((project, i) => (
-        <ProjectCard project={project} setDate={setDate}></ProjectCard>
-      ))}
-     </GridList>
+    <div className={classes.root}>
+
+      {(props.loggedUser.role === "admin" ||
+        props.loggedUser.role === "manager") && (
+       <div> <Button href={"/create"} variant="contained" color="secondary" style={{margin:"10px"}}>
+          Create
+        </Button>
+        </div>
+      )}
+
+      <GridList className={classes.gridList} cols={2.5}>
+        {projects.map((project, i) => (
+          <ProjectCard project={project} setDate={setDate}></ProjectCard>
+        ))}
+      </GridList>
     </div>
-  // {content}
   );
 }

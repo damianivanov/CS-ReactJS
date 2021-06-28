@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Menu,
   Button,
@@ -42,7 +42,7 @@ export default function Nav(props) {
   );
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-
+ 
   function changeTheme() {
     if (props.darkMode) {
       props.setDarkMode(false);
@@ -122,7 +122,6 @@ export default function Nav(props) {
     if (getJWT()) {
       if (getExpDate() * 1000 < new Date().getTime()) onLogOut();
     }
-    // setUser(getActiveUser());
   }, []);
 
   const menuId = "primary-search-account-menu";
@@ -260,7 +259,7 @@ export default function Nav(props) {
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
-              <LeftDrawer props={props}/>
+              <LeftDrawer props={props} />
             <IconButton style={{ borderRadius: "2%" }}>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 <div

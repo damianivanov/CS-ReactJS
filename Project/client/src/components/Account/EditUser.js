@@ -100,9 +100,8 @@ export default function Account({ props }) {
                 showIcon: true,
               },
             });
-            history.push("/login");
           } else {
-            setError(res.data);
+            setError(res.data.message);
           }
         })
         .catch((err) => {
@@ -128,14 +127,14 @@ export default function Account({ props }) {
         <CssBaseline />
         <Typography component="h1" variant="h2" align="center">
           <Box fontWeight="fontWeightBold" m={1}>
-            Edit User
+            Edit user
           </Box>
         </Typography>
         <form
           style={{ padding: "20px" }}
           onSubmit={formSubmit}
           autoComplete="off"
-        >
+        > 
           <Grid container spacing={2}>
             <Grid container item xs={12} justify="center">
               <Avatar className={classes.large} src={fields["photo"]} />
@@ -144,7 +143,7 @@ export default function Account({ props }) {
               <TextField
                 fullWidth
                 name="photo"
-                value={fields["photo"]}
+                value={(fields["photo"]==="male-avatar.png" || fields["photo"]==="woman-avatar.png") ? " " : fields["photo"]}
                 onChange={handleChange}
               />
             </Grid>
@@ -198,7 +197,9 @@ export default function Account({ props }) {
                 id="email"
                 name="email"
                 value={fields["email"]}
-                disabled
+                onChange={handleChange}
+                error={errors["email"]}
+                helperText={errors["email"]}
               />
             </Grid>
             <Grid item xs={12} sm={6} container center="true">
@@ -226,6 +227,7 @@ export default function Account({ props }) {
               >
                 <option value={"user"}>User</option>
                 <option value={"admin"}>Admin</option>
+                <option value={"manager"}>Manager</option>
               </NativeSelect>
             </Grid>
           </Grid>
@@ -236,8 +238,8 @@ export default function Account({ props }) {
             justify="space-between"
             alignItems="center"
           >
-            {error !== "" && (
-              <Typography color="secondary"> {error} </Typography>
+            {error && (
+              <Typography color="secondary" centered> {error} </Typography>
             )}
 
             <Button
@@ -256,4 +258,3 @@ export default function Account({ props }) {
     </React.Fragment>
   );
 }
-//errors while saving (existing user in backend)

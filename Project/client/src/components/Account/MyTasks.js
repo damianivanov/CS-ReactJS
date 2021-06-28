@@ -1,18 +1,24 @@
-import React,{useEffect} from 'react';
+import React,{useEffect,useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Button from '@material-ui/core/Button';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
+import Box from '@material-ui/core/Box'
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
 import {Redirect} from 'react-router-dom'
+import { getJWT } from "../../services/userService";
+import { getMytasks } from '../../services/taskService';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     backgroundColor: theme.palette.background.paper,
+    marginTop:"10px"
   },
 }));
 
@@ -20,6 +26,7 @@ export default function CheckboxList({props}) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
   const [tasks, setTasks] = React.useState([]);
+
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -29,48 +36,94 @@ export default function CheckboxList({props}) {
     } else {
       newChecked.splice(currentIndex, 1);
     }
-
     setChecked(newChecked);
   };
 
+  const handleComplete = (value) => () =>{
+    console.log(value)
+  }
+
   useEffect(() => {
-      //setTasks(getTasks())
+    const fetchTasks= async ()=>{
+      if (getJWT())
+      getMytasks().then((tasks) => {
+        console.log(tasks);
+        setTasks(tasks);
+      });
+    }
+    fetchTasks()
   }, [])
 
-  if(!props.signed)
-  return <Redirect to="/login" />
+  if(!props.signed) return <Redirect to="/login" />
 
   return (
-    <List className={classes.root}>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
+    <React.Fragment>
+      <Box border={1}>
+        <ListItem>
+       
+          {/* <ListItemIcon /> */}
+          <ListItemText
+            primary={`Task Label`}
+            style={{ maxWidth: "45%" }}
+            primaryTypographyProps={{ variant: "h4" }}
+          />
+          <ListItemText
+            primary={`Task status`}
+            style={{  }}
+            primaryTypographyProps={{ variant: "h4", style:{textAlign:"center"} }}
+          />
+          {/* <ListItemText
+            primary={`Assigned to`}
+            style={{ maxWidth: "12%" }}
+            primaryTypographyProps={{ variant: "h5" }}
+          />
+          <ListItemText
+            primary={`Assigned by`}
+            style={{ maxWidth: "13%" }}
+            primaryTypographyProps={{ variant: "h5" }}
+          /> */}
+           <ListItemText
+          primary={`Mark as complete`}
+          primaryTypographyProps={{ variant: "h5", style:{float:"right"} }}
+        />
+        </ListItem>
+      </Box>
 
-        return (
-          <ListItem
-            key={value}
-            role={undefined}
-            dense
-            button
-            onClick={handleToggle(value)}
-          >
-            <ListItemIcon>
-              <Checkbox
-                edge="start"
-                checked={checked.indexOf(value) !== -1}
-                tabIndex={-1}
-                disableRipple
-                inputProps={{ "aria-labelledby": labelId }}
+      <List className={classes.root}>
+        {tasks.map((task) => {
+          const labelId = `checkbox-list-label-${task.label}`;
+
+          return (
+            <ListItem
+              key={task.id}
+              role={props.loggedUser.role}
+              dense
+              button
+              onClick={handleToggle(task)}
+              component="a"
+              href={`/tasks/${task.id}`}
+            >
+              <ListItemText
+                id={labelId}
+                primary={task.label}
+                style={{ maxWidth: "48%" }}
+                primaryTypographyProps={{ variant: "h5"}}
               />
-            </ListItemIcon>
-            <ListItemText id={labelId} primary={``} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="comments">
-                <CommentIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
-    </List>
+              <ListItemText
+                id={labelId}
+                primary={task.status}
+                style={{ textAllign:"center",padding:"10px" }}
+              />
+
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="comments">
+                  <DoneOutlineIcon onClick={handleComplete(task)} />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+      </List>
+    </React.Fragment>
   );
 }

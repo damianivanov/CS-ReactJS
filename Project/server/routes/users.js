@@ -66,6 +66,7 @@ router.put("/:userId", verifyToken,verifyRoleOrSelf(3,true), async (req, res) =>
 if(req.user.role !== 3 && user.role !== req.user.role) {
   return sendErrorResponse(req, res, 400, `Invalid user data - role can not be changed.`);
 }
+
 delete (user.id);
 try {
   const updated = await User.findOneAndUpdate({_id:userId},user,{
@@ -78,6 +79,7 @@ try {
   return sendErrorResponse(req, res, 400, `Error while saving the user.`);  
 }
 });
+
 router.delete( "/:userId", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
     const { userId } = req.params;
     if (!userId) return sendErrorResponse(req, res, 400, `Missing userId`);

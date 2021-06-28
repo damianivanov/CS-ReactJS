@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import {TextField,Button} from "@material-ui/core";
 import { store } from "react-notifications-component";
 import { joinProject } from "../../services/projectService";
-
-import {updateActiveUser,getActiveUser} from '../../services/userService'
+import { Redirect } from 'react-router-dom';
+import {getActiveUser} from '../../services/userService'
 import { useHistory } from "react-router-dom";
 
 export default function JoinProject(props) {
@@ -46,9 +46,10 @@ export default function JoinProject(props) {
   const handleChange = (e) => {
     setCode( e.target.value)
   };
-
+  if(!props.signed) return <Redirect to="/login" /> 
   return (
     <form onSubmit={handleSubmit}>
+      
     <div 
       style={{
           fontSize:"50px",

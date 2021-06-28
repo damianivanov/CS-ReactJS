@@ -142,7 +142,7 @@ router.post("/join/:code",verifyToken,verifyRoleOrSelf(3,true),async(req,res)=>{
     await project.save();
     const uri = req.baseUrl + `/${project.id}` ;
     console.log('Added to Project: ', project.name);
-    return res.status(201).location(`${uri}`).send(project)
+    return res.status(200).location(`${uri}`).send(project)
   } catch (error) {
     return sendErrorResponse(req, res, 500, error);
   }

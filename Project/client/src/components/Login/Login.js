@@ -10,12 +10,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { checkJWT, login } from "../../services/userService";
-import { Redirect, useHistory, useLocation, Link } from "react-router-dom";
-
+import { Redirect, useHistory, Link } from "react-router-dom";
+import { getActiveUser } from "../../services/userService";
 export default function Login(props) {
   const classes = useStyles();
   let history = useHistory();
-  let location = useLocation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,13 +27,13 @@ export default function Login(props) {
         if (res.status === 200) {
           console.log("Logged In")
           props.setSigned(true);
-          let { from } = location.state || { from: { pathname: "/" } };
-          history.replace(from);
-          <Redirect to="/" />;
+          props.setLoggedUser(getActiveUser())
+          history.replace("/");
         } else {
           // console.log(res.data)
           // setError(res.data.message);
-          setError("Invalid Credentials!"); //the error message have too much info for existing users
+          //the error message have too much info for existing users
+          setError("Invalid Credentials!"); 
         }
       }).catch((err) => {
         console.log(err)

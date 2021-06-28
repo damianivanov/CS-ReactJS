@@ -32,9 +32,7 @@ const userValidation = (data) => {
     firstName: Joi.string().min(1).required(),
     lastName: Joi.string().min(1).required(),
     username: Joi.string().min(3).required(),
-    password: Joi.string()
-      .regex(/^\$2[ayb]\$.{56}$/)
-      .required(),
+    password: Joi.string().regex(/^\$2[ayb]\$.{56}$/),
     email: Joi.string().email().lowercase().required().min(6),
     gender: Joi.number().valid(1, 0).required(),
     role: Joi.string().valid("manager", "admin", "basic"),

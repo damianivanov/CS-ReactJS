@@ -85,9 +85,9 @@ class CreateProject extends React.Component {
      return <Redirect to="/" />
      
     return (
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" style={{marginTop:"5%"}}>
         <CssBaseline />
-        <Typography component="h1" variant="h4" align="center" p={5}>
+        <Typography component="h1" variant="h3" align="center" style={{marginBottom:"5%"}}>
           Create a Project
         </Typography>
         <form style={{ padding: "10px" }} onSubmit={this.formSubmit.bind(this)}>

@@ -13,8 +13,12 @@ router.get("/mytasks", verifyToken,verifyRoleOrSelf(1,false), async (req, res) =
   return res.json(tasks);
 });
 
+//active tasks
 router.get("/myActiveTasks", verifyToken,verifyRoleOrSelf(1,false), async (req, res) => {
-  const tasks = await Task.find({ assigneeId: req.userId, status: {$in: ['active', 'review']}})
+  const tasks = await Task.find({
+    $or: [{ assigneeId: req.userId }, { assignorId: req.userId }],
+    status: { $in: ["active", "review"] },
+  });
   return res.json(tasks);
 });
 
@@ -75,7 +79,10 @@ router.get("/:taskId",verifyToken, verifyRoleOrSelf(1, false), async (req, res) 
     const task = await Task.findOne({ _id: taskId });
     if (!task || (task.assigneeId!==req.userId && task.assignorId!==req.userId))
       return sendErrorResponse(req, res, 400, `There is no task with this id`);
-    return res.status(200).send(task);
+    const assignor = await User.findOne({_id: task.assignorId}).select("username").lean()
+    const assignee = await User.findOne({_id: task.assigneeId}).select("username").lean()
+    const subTasks = await Task.find({_id: {$in: task.subTasks}})
+    return res.status(200).send({task,assignee,assignor,subTasks});
   }
 );
 
@@ -210,7 +217,7 @@ router.post("/:taskId/results", verifyToken,verifyRoleOrSelf(1,false), async (re
   }
 });
 
-//active tasks
+
 
 
 
