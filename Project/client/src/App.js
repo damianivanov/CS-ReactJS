@@ -15,6 +15,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { checkJWT, getActiveUser } from "./services/userService";
 import { activeDarkMode } from "./services/darkMode";
 import { CssBaseline } from "@material-ui/core";
+import Footer from './components/Footer/Footer'
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 function App() {
@@ -105,6 +106,8 @@ function App() {
           
           
         </Switch>
+      
+      <Footer />
       </ThemeProvider>
     </Router>
   );

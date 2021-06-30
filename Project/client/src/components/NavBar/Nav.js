@@ -180,7 +180,6 @@ export default function Nav(props) {
           Dashboard
         </Link>
       </Button>
-
       <IconButton
         edge="end"
         aria-label="account of current user"
@@ -189,6 +188,7 @@ export default function Nav(props) {
         onClick={handleProfileMenuOpen}
         color="inherit"
       >
+        <Typography>{props.loggedUser.username}</Typography>
         <AccountCircle />
       </IconButton>
     </React.Fragment>

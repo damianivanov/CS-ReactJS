@@ -1,15 +1,13 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Button from '@material-ui/core/Button';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Box from '@material-ui/core/Box'
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
 import {Redirect} from 'react-router-dom'
 import { getJWT } from "../../services/userService";
 import { getMytasks } from '../../services/taskService';
@@ -61,7 +59,6 @@ export default function CheckboxList({props}) {
       <Box border={1}>
         <ListItem>
        
-          {/* <ListItemIcon /> */}
           <ListItemText
             primary={`Task Label`}
             style={{ maxWidth: "45%" }}
@@ -72,16 +69,7 @@ export default function CheckboxList({props}) {
             style={{  }}
             primaryTypographyProps={{ variant: "h4", style:{textAlign:"center"} }}
           />
-          {/* <ListItemText
-            primary={`Assigned to`}
-            style={{ maxWidth: "12%" }}
-            primaryTypographyProps={{ variant: "h5" }}
-          />
-          <ListItemText
-            primary={`Assigned by`}
-            style={{ maxWidth: "13%" }}
-            primaryTypographyProps={{ variant: "h5" }}
-          /> */}
+
            <ListItemText
           primary={`Mark as complete`}
           primaryTypographyProps={{ variant: "h5", style:{float:"right"} }}
@@ -116,7 +104,7 @@ export default function CheckboxList({props}) {
               />
 
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="comments">
+                <IconButton edge="end" aria-label="complete">
                   <DoneOutlineIcon onClick={handleComplete(task)} />
                 </IconButton>
               </ListItemSecondaryAction>

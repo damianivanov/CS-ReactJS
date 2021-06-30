@@ -7,7 +7,7 @@ import {
   Typography,
   Container,
 } from "@material-ui/core";
-import { Link,Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import { createProject } from "../../services/projectService";
 import { store } from "react-notifications-component";

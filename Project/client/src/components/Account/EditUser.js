@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
 import {
   editUser,
   getActiveUser,
@@ -31,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Account({ props }) {
   const classes = useStyles();
-  let history = useHistory();
   const [fields, setFields] = useState({});
   const [errors, setErrors] = useState({});
   const [error, setError] = useState("");

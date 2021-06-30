@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Box, Avatar, CircularProgress } from "@material-ui/core";
+import { Typography, Box, Avatar, CircularProgress,Dialog,DialogActions,DialogTitle,DialogContent,DialogContentText,TextField,Button } from "@material-ui/core";
 import { getProject } from "../../services/projectService";
 import { getJWT } from "../../services/userService";
-import { Container } from "@material-ui/core";
+import { Container,IconButton } from "@material-ui/core";
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,50 +22,77 @@ const useStyles = makeStyles((theme) => ({
     width: "40px",
     display: "inline-flex",
     verticalAlign: "center",
+    marginRight:"5px"
   },
 }));
 
 const moment = require("moment");
 
 export default function Project(props) {
-  const member = (member) => {
-    return (
-      <div
-        style={{
-          justify: "center",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <Typography variant="h7" style={{ padding: "5px" }}>
-          {member.firstName} {member.lastName} ({member.username})
-        </Typography>
-
-        <Avatar
-          className={classes.avatar}
-          src={member.photo}
-          fontSize="large"
-        />
-      </div>
-    );
-  };
-
   const classes = useStyles();
   const [project, setProject] = useState({});
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [modal, setModal] = useState({});
+  const [form, setForm] = useState({});
 
   useEffect(() => {
     async function fetchProject() {
       if (getJWT()) {
         const project = await getProject(props.props.match.params.projectId);
-        console.log(project);
         setProject(project);
         setLoading(false);
       }
     }
     fetchProject();
-  }, []);
+  }, [props.props.match.params.projectId,open]);
 
+   const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false)
+    setModal({})
+  };
+
+  const handleSubmit = () =>{
+    console.log(form)
+    console.log(modal)
+    const task = {
+      description: form.description,
+      dueDate: form.dueDate,
+      label: form.label,
+      assignorId: project.project.managerId,
+      projectId: project.project.id,
+      assigneeId: modal.id
+    }
+    console.log(task)
+  }
+
+  const member = (member,key) => {
+    return (
+      <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
+        <Avatar className={classes.avatar} src={member.photo} sizes="small" />
+        <span> {member.firstName} {member.lastName} ({member.username}) </span>
+        {(props.loggedUser.role === "admin" ||
+          props.loggedUser.userId === project.project.managerId) && (
+          <IconButton edge="end" aria-label="complete">
+            <PlaylistAddIcon onClick={()=>{setModal(member);handleClickOpen()}} />
+          </IconButton> 
+        )} 
+      </div>
+    );
+  };
+
+ 
   if (!loading) {
     if (!project.isAxiosError)
       return (
@@ -99,27 +127,28 @@ export default function Project(props) {
                   <Typography style={{ marginRight: "5px" }}>
                     Company: {project.project.company}
                   </Typography>
+
                   <div
                     style={{
-                      justify: "center",
+                      display: "flex",
                       alignItems: "center",
                       flexWrap: "wrap",
                     }}
                   >
-                    <Typography variant="h7" style={{ padding: "5px" }}>
-                      {"Manager: "}
-                      {project.manager.firstName} {project.manager.lastName} (
-                      {project.manager.username})
-                      <Avatar
-                        className={classes.avatar}
-                        src={project.manager.photo}
-                        fontSize="large"
-                      />
-                    </Typography>
+                    <span>
+                      Manger: {project.manager.firstName}{" "}
+                      {project.manager.lastName} ({project.manager.username})
+                    </span>
+                    <Avatar
+                      className={classes.avatar}
+                      rc={project.manager.photo}
+                      sizes="small"
+                    />
                   </div>
                 </Box>
               </Typography>
             </Container>
+
             <Container
               style={{
                 width: "50%",
@@ -132,8 +161,69 @@ export default function Project(props) {
                 <Typography align="center" variant="h5">
                   Team:
                 </Typography>
-                {project.team.map((teamMember, key) => member(teamMember))}
+                {project.team.map((teamMember, key) => member(teamMember, key))}
               </Box>
+
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle id="form-dialog-title">Assign Task</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Assign Task To {modal.username}
+                  </DialogContentText>
+
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="label"
+                    name="label"
+                    label="Label"
+                    fullWidth
+                    required
+                    value={form["label"]}
+                    onChange={handleChange}
+                  />
+
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="description"
+                    name="description"
+                    label="Description"
+                    fullWidth
+                    multiline
+                    rows={3}
+                    required
+                    value={form["description"]}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    id="datetime-local"
+                    label="Due date"
+                    name="dueDate"
+                    type="datetime-local"
+                    value={form["dueDate"]}
+                    onChange={handleChange}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose} color="primary">
+                    Cancel
+                  </Button>
+
+                  <Button onClick={handleSubmit.bind(this)} color="primary">
+                    Assign Task
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            
             </Container>
           </Box>
         </Container>

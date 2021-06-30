@@ -11,6 +11,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import {Link} from 'react-router-dom'
 
 
@@ -47,6 +48,15 @@ export default function LeftDrawer({props},setDate,date) {
               <AccountTreeIcon />
             </ListItemIcon>
             <ListItemText primary={"Projects"} />
+          </ListItem>
+        </Link>
+
+        <Link to="/tasks" style={{ color: "white", textDecoration: "none" }}>
+          <ListItem button>
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Tasks"} />
           </ListItem>
         </Link>
 

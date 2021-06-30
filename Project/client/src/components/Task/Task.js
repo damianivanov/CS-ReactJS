@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   Typography,
   Box,
-  Avatar,
   CircularProgress
 } from "@material-ui/core"; 
 import { getTask } from "../../services/taskService";
@@ -33,24 +32,6 @@ const moment = require("moment");
 
 export default function Project(props) {
   
-//   const member = (member) => {
-//     return(
-//       <div style={{
-//       justify:"center",
-//       alignItems: "center",
-//       flexWrap: "wrap"}}>
-//     <Typography
-//       variant="h7"
-//       style={{ padding: "5px" }}
-//       >
-//       {member.role.toUpperCase()} : {member.firstName}{" "}
-//       {member.lastName} ({member.username})
-//     </Typography>
-
-//     <Avatar className={classes.avatar} src={member.photo} fontSize="large"/>
-//   </div>
-//   )
-// }
   
   const classes = useStyles();
   const [task, setTask] = useState({});
@@ -67,7 +48,7 @@ export default function Project(props) {
       }
     }
     fetchProject()
-    },[]);
+    },[props.props.match.params.taskId]);
 
 
     if(!loading)
