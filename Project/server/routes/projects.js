@@ -1,5 +1,6 @@
 const Project = require('../Models/Project');
 const User = require('../Models/User');
+const Task = require('../Models/Task')
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { projectValidation } = require('../validation');
@@ -39,6 +40,20 @@ router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
     }
 })
 
+router.get("/:projectId/tasks", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
+  const { projectId } = req.params;
+    if (!projectId) return sendErrorResponse(req, res, 400, `Missing projectId`);
+
+  const tasks = await Task.find({projectId:projectId}).lean();
+  // var fullTasks = tasks.map((task)=>{
+    
+  //   const fullTask = {
+
+  //   }
+  // })
+  if (!tasks) return sendErrorResponse(req, res, 204, `No Tasks`);
+  return res.status(200).send(tasks);
+});
 router.get("/:projectId",verifyToken, verifyRoleOrSelf(1, false), async (req, res) => {
     const { projectId } = req.params;
     if (!projectId) return sendErrorResponse(req, res, 400, `Missing projectId`);

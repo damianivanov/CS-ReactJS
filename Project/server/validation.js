@@ -74,7 +74,7 @@ const taskValidation = (data) => {
     description: Joi.string().min(3).max(4096),
     status: Joi.string().valid("active","review","done"),
     subTasks: Joi.array().items(Joi.string().min(24).max(24)).optional(),
-    taskResult: Joi.string().optional(),
+    taskResult: Joi.string().allow("", null),
     startDate: Joi.date(),
     dueDate: Joi.date(),
     updatedAt: Joi.date(),

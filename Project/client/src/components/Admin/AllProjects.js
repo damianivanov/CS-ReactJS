@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { getAllProjects,deleteProject, editProject } from "../../services/projectService";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import ProjectCard from "../Helpers/ProjectCard";
 import { store } from "react-notifications-component";
 import {
   Typography,
-  Avatar,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -18,39 +15,21 @@ import {
   NativeSelect,
   InputLabel,
 } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
-  },
-  large: {
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-  },
-  avatar: {
-    height: "40px",
-    width: "40px",
-    display: "inline-flex",
-    verticalAlign: "center",
-    marginRight: "5px",
-  },
-}));
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import TasksModal from "../Helpers/TasksModal";
 
 export default function AllProjects({ props }) {
   const [projects, setProjects] = useState([]);
-  const [open, setOpen] = useState(false); //Dialog
-  const [modal, setModal] = useState({});
-  const [openDelete,setOpenDelete] = useState(false);
-  const [form, setForm] = useState({});
+  const [open, setOpen] = useState(false); //Dialog for edit 
+  const [modal, setModal] = useState({}); // for delete
+  const [openDelete,setOpenDelete] = useState(false); //Dialog for delete
+  const [form, setForm] = useState({}); // for edit
   const [error, setError] = useState("");
-  const [date,setDate] = useState(new Date())
-  const classes = useStyles();
-  
+  const [date,setDate] = useState(new Date()) 
+  const [tasksOpen,setTasksOpen]=useState(false)
+
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchProjects = async () => {
       if (props.signed)
         getAllProjects()
           .then((users) => {
@@ -59,8 +38,9 @@ export default function AllProjects({ props }) {
           })
           .catch((error) => console.log(error));
     };
-    fetchUsers();
+    fetchProjects();
   }, [date,props.signed]);
+
 
   const handleChange = (e) => {
     setForm({
@@ -82,7 +62,7 @@ export default function AllProjects({ props }) {
             setDate(new Date())
             store.addNotification({
               title: "Success!",
-              message: `Deleted ${modal.label}`,
+              message: `Deleted ${modal.name}`,
               type: "success",
               insert: "top",
               container: "top-right",
@@ -103,10 +83,6 @@ export default function AllProjects({ props }) {
           setError(err.response.data);
         });;
     setModal({});
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
   };
 
   const handleClose = () => {
@@ -176,7 +152,6 @@ export default function AllProjects({ props }) {
     }
   };
 
-  
   const projectInfo = (project, key) => {
     return (
       <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
@@ -187,7 +162,7 @@ export default function AllProjects({ props }) {
           <EditIcon
             onClick={() => {
               setForm(project);
-              handleClickOpen();
+              setOpen(true);
             }}
           />
         </IconButton>
@@ -205,9 +180,13 @@ export default function AllProjects({ props }) {
     );
   };
 
+
   return (
     <div>
       {projects && projects.map((project, i) => projectInfo(project, i))}
+
+      {/*Editing tasks*/}
+      {tasksOpen && (<TasksModal setOpen={setTasksOpen} tasksOpen={tasksOpen} project={form} />)}
 
       {/* edit dialog */}
       <Dialog
@@ -215,7 +194,8 @@ export default function AllProjects({ props }) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Edit {form.label}</DialogTitle>
+        <DialogTitle id="form-dialog-title">Edit {form.name} </DialogTitle>
+
         <DialogContent>
           <TextField
             margin="dense"
@@ -265,8 +245,7 @@ export default function AllProjects({ props }) {
             value={form["description"]}
             onChange={handleChange}
           />
-          
-          
+
           {error && (
             <Typography color="secondary" float="left">
               {" "}
@@ -274,7 +253,18 @@ export default function AllProjects({ props }) {
             </Typography>
           )}
         </DialogContent>
-
+        
+        <IconButton
+          edge="end"
+          aria-label="complete"
+          style={{ float: "left", maxWidth: "50%" }}
+          onClick={() => {
+            setTasksOpen(true);
+          }}
+          >
+          Tasks
+          <AssignmentIcon/>
+        </IconButton>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel

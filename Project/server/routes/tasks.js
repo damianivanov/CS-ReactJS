@@ -103,7 +103,7 @@ router.put("/:taskId", verifyToken,verifyRoleOrSelf(2,false), async (req, res) =
     const updated = await Task.findOneAndUpdate({ _id: taskId }, task, {
       new: true,
     });
-    return res.json(updated);
+    return res.status(200).send(updated);
   } catch (error) {
     return sendErrorResponse(req, res, 400, `Error while saving the task.`);
   }
@@ -123,6 +123,7 @@ router.delete("/:taskId", verifyToken, verifyRoleOrSelf(2, false), async (req, r
   if (task.deleted)
     return sendErrorResponse(req, res, 400, `Task is already deleted.`);
 
+    task.status="done"
   task.deleted = true;
   await task.save();
   return res.status(200).send({ message: `Task - ${task.label} was deleted` });

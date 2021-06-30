@@ -16,6 +16,7 @@ import {
   IconButton,
   NativeSelect,
   InputLabel,
+  CircularProgress
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +47,7 @@ export default function AllUsers({ props }) {
   const [form, setForm] = useState({});
   const [error, setError] = useState("");
   const [date,setDate] = useState(new Date())
+  const [loading,setLoading] = useState(true)
   const classes = useStyles();
   
   useEffect(() => {
@@ -55,6 +57,7 @@ export default function AllUsers({ props }) {
           .then((users) => {
             console.log(users);
             setUsers(users);
+            setLoading(false)
           })
           .catch((error) => console.log(error));
     };
@@ -224,6 +227,7 @@ export default function AllUsers({ props }) {
     );
   };
 
+  if(!loading){
   return (
     <div>
       {users && users.map((user, i) => member(user, i))}
@@ -348,6 +352,13 @@ export default function AllUsers({ props }) {
           </Button>
         </DialogActions>
       </Dialog>
+    </div>
+  );
+}
+
+  return (
+    <div className={classes.root}>
+      <CircularProgress color="secondary" style={{ height: "100hv" }} />
     </div>
   );
 }
