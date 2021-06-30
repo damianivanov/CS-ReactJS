@@ -6,9 +6,12 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+
 import EditUser from './EditUser'
 import MyTasks from './MyTasks'
+import Admin from '../Admin/Admin'
 import MyProjects from './MyProjects'
+import { getRole } from '../../services/userService'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -79,8 +82,10 @@ export default function NavTabs(props) {
           <LinkTab label="Edit Profile" href="/edit" {...a11yProps(0)} />
           <LinkTab label="My Tasks" href="/tasks" {...a11yProps(1)} />
           <LinkTab label="My Projects" href="/projects" {...a11yProps(2)} />
+          {getRole() === "admin" &&<LinkTab label="Admin Panel" href="/admin" {...a11yProps(3)} />}
         </Tabs>
       </AppBar>
+
       <TabPanel value={value} index={0}>
         <EditUser props={props}></EditUser>
       </TabPanel>
@@ -91,6 +96,11 @@ export default function NavTabs(props) {
         <MyProjects signed={props.signed}
               loggedUser={props.loggedUser}
               setLoggedUser={props.setLoggedUser}></MyProjects>
+      </TabPanel>
+    <TabPanel value={value} index={3}>
+        <Admin signed={props.signed}
+              loggedUser={props.loggedUser}
+              setLoggedUser={props.setLoggedUser}></Admin>
       </TabPanel>
     </div>
   );

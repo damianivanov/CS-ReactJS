@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Box, Avatar, CircularProgress,Dialog,DialogActions,DialogTitle,DialogContent,DialogContentText,TextField,Button } from "@material-ui/core";
+import {
+  Typography,
+  Box,
+  Avatar,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  Button,
+  Container,
+  IconButton,
+} from "@material-ui/core";
 import { getProject } from "../../services/projectService";
-import { getJWT } from "../../services/userService";
-import { Container,IconButton } from "@material-ui/core";
+import { assignTask } from "../../services/taskService";
+import { store } from "react-notifications-component";
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -32,20 +45,21 @@ export default function Project(props) {
   const classes = useStyles();
   const [project, setProject] = useState({});
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [modal, setModal] = useState({});
+  const [open, setOpen] = useState(false); //Dialog
+  const [modal, setModal] = useState({}); 
   const [form, setForm] = useState({});
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function fetchProject() {
-      if (getJWT()) {
+      if (props.signed) {
         const project = await getProject(props.props.match.params.projectId);
         setProject(project);
         setLoading(false);
       }
     }
     fetchProject();
-  }, [props.props.match.params.projectId,open]);
+  }, [open,props]);
 
    const handleChange = (e) => {
     setForm({
@@ -61,20 +75,83 @@ export default function Project(props) {
   const handleClose = () => {
     setOpen(false)
     setModal({})
+    setForm({})
   };
 
+  const handleValidation = (task) =>{
+    let errors = {};
+    let formIsValid = true
+    //label
+  
+    if (
+      typeof task["label"] === "undefined" ||
+      typeof task["description"] === "undefined" ||
+      typeof task["startDate"] === "undefined" ||
+      typeof task["dueDate"] === "undefined"
+    )
+    {
+      formIsValid = false;
+      setError("All fields are required");
+    }
+    else setError("")
+
+      if (typeof task["label"] !== "undefined") {
+        if (task["label"].length < 3 && task["description"].length > 256) {
+          formIsValid = false;
+          errors["label"] = "Atleast 3 symbols and max 256";
+        }
+      }
+
+    //description
+    if (typeof task["description"] !== "undefined") {
+      if (task["description"].length<3 && task["description"].length>4096 ) {
+        formIsValid = false;
+        errors["description"] = "Atleast 3 symbols and max 4096";
+      }
+    }
+    setError(errors && errors[0]); //?
+    return formIsValid;
+  }
+
   const handleSubmit = () =>{
-    console.log(form)
-    console.log(modal)
     const task = {
       description: form.description,
       dueDate: form.dueDate,
+      startDate: form.startDate,
       label: form.label,
       assignorId: project.project.managerId,
       projectId: project.project.id,
       assigneeId: modal.id
     }
     console.log(task)
+
+    if (handleValidation(task)) {
+      assignTask(task)
+        .then((res) => {
+          if (res.status === 201) {
+            store.addNotification({
+              title: "Success!",
+              message: "Assigned task",
+              type: "success",
+              insert: "top",
+              container: "top-right",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 3000,
+                onScreen: true,
+                pauseOnHover: true,
+                showIcon: true,
+              },
+            });
+          } else {
+            setError(res.data.message);
+          }
+        })
+        .catch((err) => {
+          setError(err.response.data);
+        });
+    }
   }
 
   const member = (member,key) => {
@@ -148,7 +225,6 @@ export default function Project(props) {
                 </Box>
               </Typography>
             </Container>
-
             <Container
               style={{
                 width: "50%",
@@ -172,23 +248,20 @@ export default function Project(props) {
                 <DialogTitle id="form-dialog-title">Assign Task</DialogTitle>
                 <DialogContent>
                   <DialogContentText>
-                    Assign Task To {modal.username}
+                    Assign task to {modal.username}
                   </DialogContentText>
 
                   <TextField
-                    autoFocus
                     margin="dense"
                     id="label"
                     name="label"
                     label="Label"
                     fullWidth
-                    required
                     value={form["label"]}
                     onChange={handleChange}
                   />
 
                   <TextField
-                    autoFocus
                     margin="dense"
                     id="description"
                     name="description"
@@ -196,9 +269,19 @@ export default function Project(props) {
                     fullWidth
                     multiline
                     rows={3}
-                    required
                     value={form["description"]}
                     onChange={handleChange}
+                  />
+                  <TextField
+                    id="datetime-local"
+                    label="Start date"
+                    name="startDate"
+                    type="datetime-local"
+                    value={form["startDate"]}
+                    onChange={handleChange}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                   />
                   <TextField
                     id="datetime-local"
@@ -210,10 +293,17 @@ export default function Project(props) {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    style={{ marginLeft: "10px" }}
                   />
-
+                   {error && (
+                    <Typography color="secondary" float="left">
+                      {" "}
+                      {error}{" "}
+                    </Typography>
+                  )}
                 </DialogContent>
                 <DialogActions>
+                 
                   <Button onClick={handleClose} color="primary">
                     Cancel
                   </Button>

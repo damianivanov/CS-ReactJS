@@ -1,72 +1,9 @@
 import http from "./http-client";
 var jwt = require('jsonwebtoken');
+
 const headers= {
   "auth-token":getJWT()
 }
-// export async function insertUser(data) {
-//   let users = getAllUser();
-//   var salt = bcrypt.genSaltSync(10);
-//   let hashedPassword = data.password;
-//   if (!hashedPassword.match(/^\$2[ayb]\$/)) {
-//     hashedPassword = bcrypt.hashSync(data.password, salt);
-//   }
-//   const user = new User(
-//     data.id,
-//     data.fullname,
-//     data.username,
-//     hashedPassword,
-//     data.gender,
-//     data.role,
-//     data.photo,
-//     data.bio,
-//     data.status,
-//     data.shareDate,
-//     data.lastModified
-//   );
-//   users.push(user);
-//   localStorage.setItem("users", JSON.stringify(users));
-// }
-
-// export function getAllUser() {
-//   if (localStorage.getItem("users") === null)
-//     localStorage.setItem("users", JSON.stringify([]));
-//   return JSON.parse(localStorage.getItem("users"));
-// }
-
-// export function checkUser(data) {
-//   let users = getAllUser();
-//   let currentUser = null;
-//   users.forEach((user) => {
-//     if (
-//       user.username === data.username &&
-//       bcrypt.compareSync(data.password, user.password)
-//     ) {
-//       currentUser = user;
-//     }
-//   });
-//   return currentUser;
-// }
-
-// export function login(user) {
-//   if (localStorage.getItem("user") == null)
-//     localStorage.setItem("user", JSON.stringify(user));
-// }
-// export function deleteUser(id) {
-//   let users = getAllUser();
-//   users = users.filter((user) => user.id !== id);
-//   localStorage.setItem("users", JSON.stringify(users));
-// }
-
-// export function editUser(data) {
-//   deleteUser(data.id);
-//   data.lastModified = Date.now();
-//   insertUser(data);
-//   if (getActiveUser().id === data.id) {
-//     localStorage.setItem("user", JSON.stringify(data));
-//   }
-// }
-
-//---------------------------------------
 
 export function getActiveUser() {
   return JSON.parse(localStorage.getItem("profile"));
@@ -75,6 +12,10 @@ export function getActiveUser() {
 function setActiveUser(){
   var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
   localStorage.setItem("profile", JSON.stringify(decoded));
+}
+export function getRole(){
+  var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
+  return decoded.role
 }
 export function updateActiveUser(data){
   const current = getActiveUser()
@@ -120,6 +61,18 @@ export async function getFullAccount(){
     return error
   }
 }
+export async function getAllUsers(){
+  try {
+    const users = await http.get(`/users`,{
+      headers:headers
+    })
+    return users.data
+  } catch (error) {
+    console.log(error.response.data.message);
+    return error.response
+  }
+}
+
 
 export async function login(user) {
   try {
@@ -149,6 +102,16 @@ export async function editUser(user){
     const updated = await http.put(`/users/${user.id}`, user,{
       headers:headers})
     return updated
+  } catch (error) {
+    return error.response
+  }
+}
+
+export async function deleteUser(id){
+  try {
+    const deleted = await http.delete(`/users/${id}`,{
+      headers:headers})
+    return deleted
   } catch (error) {
     return error.response
   }

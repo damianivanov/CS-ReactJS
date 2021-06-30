@@ -70,7 +70,6 @@ const taskValidation = (data) => {
     projectId: Joi.string().min(24).max(24),
     assignorId: Joi.string().min(24).max(24),
     assigneeId: Joi.string().min(24).max(24),
-
     label: Joi.string().min(3).max(256).required(),
     description: Joi.string().min(3).max(4096),
     status: Joi.string().valid("active","review","done"),

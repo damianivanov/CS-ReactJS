@@ -65,14 +65,9 @@ class Register extends React.Component {
 
     //password
     if (typeof fields["password"] !== "undefined") {
-      if (
-        !fields["password"].match(
-          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
-        )
-      ) {
+      if (!fields["password"].match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)) {
         formIsValid = false;
-        errors["password"] =
-          "Minimum 8 characters, at least 1 letter, 1 number and 1 special character: ";
+        errors["password"] ="Minimum 8 characters, at least 1 letter, 1 number and 1 special character: ";
       }
     }
 

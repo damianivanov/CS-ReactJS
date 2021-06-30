@@ -188,7 +188,7 @@ export default function Nav(props) {
         onClick={handleProfileMenuOpen}
         color="inherit"
       >
-        <Typography>{props.loggedUser.username}</Typography>
+        <Typography>{props.loggedUser && props.loggedUser.username}</Typography>
         <AccountCircle />
       </IconButton>
     </React.Fragment>

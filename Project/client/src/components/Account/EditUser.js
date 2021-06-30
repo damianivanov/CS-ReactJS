@@ -38,7 +38,7 @@ export default function Account({ props }) {
     if (getJWT()) {
       getFullAccount().then((res) => {
         setFields(res);
-      });
+      }).catch((error)=>console.log(error))
     }
   }, []);
 

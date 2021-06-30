@@ -63,7 +63,7 @@ router.put("/:userId", verifyToken,verifyRoleOrSelf(3,true), async (req, res) =>
   if (user.id !== userId) {
     return sendErrorResponse(req, res, 400, `Invalid user data - id in url doesn't match: ${user}`);
 }
-if(req.user.role !== 3 && user.role !== req.user.role) {
+if(req.user.role !== "admin" && user.role !== req.user.role) {
   return sendErrorResponse(req, res, 400, `Invalid user data - role can not be changed.`);
 }
 
@@ -79,7 +79,6 @@ try {
   return sendErrorResponse(req, res, 400, `Error while saving the user.`);  
 }
 });
-
 router.delete( "/:userId", verifyToken, verifyRoleOrSelf(3, false), async (req, res) => {
     const { userId } = req.params;
     if (!userId) return sendErrorResponse(req, res, 400, `Missing userId`);

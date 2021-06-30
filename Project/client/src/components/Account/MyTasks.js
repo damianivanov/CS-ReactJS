@@ -47,7 +47,7 @@ export default function CheckboxList({props}) {
       getMytasks().then((tasks) => {
         console.log(tasks);
         setTasks(tasks);
-      });
+      }).catch((error)=>console.log(error));
     }
     fetchTasks()
   }, [])
@@ -78,7 +78,7 @@ export default function CheckboxList({props}) {
       </Box>
 
       <List className={classes.root}>
-        {tasks.map((task) => {
+        {tasks && tasks.map((task) => {
           const labelId = `checkbox-list-label-${task.label}`;
 
           return (

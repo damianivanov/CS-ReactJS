@@ -28,14 +28,7 @@ export default function Footer() {
           justify="space-around"
           alignItems="center"
         >
-          <Typography align="center">
-            &copy; {new Date().getFullYear()} Copyright:{" "}
-            <Link href="https://github.com/damianivanov">
-              {" "}
-              Project Manager Tool
-            </Link>
-          </Typography>
-
+        
           <div>
             <IconButton
               edge="end"
@@ -83,6 +76,15 @@ export default function Footer() {
               <TwitterIcon fontSize="large" />
             </IconButton>
           </div>
+        
+          <Typography align="center">
+            &copy; {new Date().getFullYear()} Copyright:{" "}
+            <Link href="https://github.com/damianivanov">
+              {" "}
+              Project Manager Tool
+            </Link>
+          </Typography>
+
         </Grid>
       </Paper>
     </div>

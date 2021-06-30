@@ -14,7 +14,6 @@ router.get("/",verifyToken, verifyRoleOrSelf(3,false), async (req, res) => {
     if (!projects) return sendErrorResponse(req, res, 204, `No Projects`);
     return res.status(200).send(projects)
 })
-
 router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
 
     const { error } = await projectValidation(req.body);
@@ -39,8 +38,6 @@ router.post("/",verifyToken, verifyRoleOrSelf(2,false), async (req, res) => {
       return sendErrorResponse(req, res, 500, `Server error: ${error}`, error);
     }
 })
-
-
 
 router.get("/:projectId",verifyToken, verifyRoleOrSelf(1, false), async (req, res) => {
     const { projectId } = req.params;
@@ -114,7 +111,6 @@ router.get( "/myprojects/:userId",verifyToken, verifyRoleOrSelf(3, true), async 
   const projects = await Project.find({ 
     $or: [{ team: userId }, { managerId: userId }], deleted:false });
   if (!projects) return sendErrorResponse(req, res, 400, `There is no projects with this user`);
-  
     return res.status(200).send(projects);
 });
 

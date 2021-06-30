@@ -35,7 +35,7 @@ export default function MyProjects(props) {
       getMyProjects().then((projects) => {
         console.log(projects);
         setProjects(projects);
-      });
+      }).catch((error)=>console.log(error));
     }
     fetchProjects()
     }, [date]);
@@ -54,7 +54,7 @@ export default function MyProjects(props) {
       )}
 
       <GridList className={classes.gridList} cols={2.5}>
-        {projects.map((project, i) => (
+        {projects && projects.map((project, i) => (
           <ProjectCard project={project} setDate={setDate}></ProjectCard>
         ))}
       </GridList>

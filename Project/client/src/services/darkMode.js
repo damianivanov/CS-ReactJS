@@ -1,5 +1,6 @@
 export function activeDarkMode() {
-  return JSON.parse(localStorage.getItem("darkMode"));
+const mode = JSON.parse(localStorage.getItem("darkMode"))
+  return mode ? mode : false ;
 }
 
 export function deactivateDarkMode() {
