@@ -1,12 +1,15 @@
 import http from "./http-client";
 
-import {getJWT} from './userService'
+import { getJWT } from "./userService";
 
-const headers= {
-  "auth-token":getJWT()
-}
+const headers = {
+  "auth-token": getJWT(),
+};
 
 export async function getMytasks() {
+  const headers = {
+    "auth-token": getJWT(),
+  };
   try {
     const myTasks = await http.get(`/tasks/myActiveTasks`, {
       headers: headers,
@@ -30,13 +33,14 @@ export async function getTask(id) {
   }
 }
 
-export async function assignTask(task){
+export async function assignTask(task) {
   try {
-    const result = await http.post(`/tasks/`, task,{
-      headers:headers})
-    return result
+    const result = await http.post(`/tasks/`, task, {
+      headers: headers,
+    });
+    return result;
   } catch (error) {
-    return error.response
+    return error.response;
   }
 }
 
@@ -52,21 +56,35 @@ export async function getTaskForProject(id) {
   }
 }
 
-export async function deleteTask(id){
+export async function deleteTask(id) {
   try {
-    const result = await http.delete(`/tasks/${id}`,{
-      headers:headers})
-    return result
+    const result = await http.delete(`/tasks/${id}`, {
+      headers: headers,
+    });
+    return result;
   } catch (error) {
-    return error.response
+    return error.response;
   }
 }
+
 export async function editTask(task) {
-  task.id=task._id
-  delete(task._id)
-  delete(task.__v)
+  task.id = task._id;
+  delete task._id;
+  delete task.__v;
   try {
-    const updated = await http.put(`/tasks/${task.id}`,task, {
+    const updated = await http.put(`/tasks/${task.id}`, task, {
+      headers: headers,
+    });
+    return updated;
+  } catch (error) {
+    console.log(error.response.data.message);
+    return error.response;
+  }
+}
+
+export async function completeTask(task) {
+  try {
+    const updated = await http.post(`/tasks/${task.id}/results`, task, {
       headers: headers,
     });
     return updated;

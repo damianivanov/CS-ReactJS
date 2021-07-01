@@ -18,8 +18,9 @@ import {
   getExpDate,
   logOut,
   getJWT,
+  getActiveUser,
 } from "../../services/userService";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {
   deactivateDarkMode,
@@ -36,7 +37,6 @@ import LeftDrawer from './LeftDrawer'
 export default function Nav(props) {
   const classes = useStyles();
   let history = useHistory();
-  let location = useLocation();
   const [linkColor, setColor] = useState(
     activeDarkMode ? "white" : "black"
   );
@@ -105,12 +105,11 @@ export default function Nav(props) {
   };
 
   const onLogOut = () => {
-    props.setSigned(false);
-    logOut();
-    let { from } = location.state || { from: { pathname: "/" } };
-    history.replace(from);
-    history.push("/login");
     handleMenuClose()
+    props.setSigned(false);
+    props.setLoggedUser({})
+    logOut();
+    history.push("/login");
   };
 
   function onProfile() {
@@ -121,6 +120,7 @@ export default function Nav(props) {
   useEffect(() => {
     if (getJWT()) {
       if (getExpDate() * 1000 < new Date().getTime()) onLogOut();
+      props.setLoggedUser(getActiveUser)
     }
   }, []);
 
@@ -259,7 +259,7 @@ export default function Nav(props) {
       <div className={classes.grow}>
         <AppBar position="static" className={classes.appbar}>
           <Toolbar>
-              <LeftDrawer props={props} />
+              <LeftDrawer props={props} linkColor={linkColor} />
             <IconButton style={{ borderRadius: "2%" }}>
               <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 <div

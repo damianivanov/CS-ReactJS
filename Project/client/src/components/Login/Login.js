@@ -25,10 +25,12 @@ export default function Login(props) {
     if (!user) {
       login({username,password}).then((res) => {
         if (res.status === 200) {
-          console.log("Logged In")
+          console.log("Logged In as")
           props.setSigned(true);
-          props.setLoggedUser(getActiveUser())
-          history.replace("/");
+          const active = getActiveUser()
+          console.log(active)
+          props.setLoggedUser(active)
+          return <Redirect to="/"/>
         } else {
           // console.log(res.data)
           // setError(res.data.message);
@@ -44,8 +46,7 @@ export default function Login(props) {
     }
   }
   
-  if(props.signed)
-  return <Redirect to="/" />
+  if(props.signed) return <Redirect to="/" />
 
   return (
     <Container component="main" maxWidth="xs">

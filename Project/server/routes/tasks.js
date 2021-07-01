@@ -212,7 +212,7 @@ router.post("/:taskId/results", verifyToken,verifyRoleOrSelf(1,false), async (re
     const updated = await Task.findOneAndUpdate({ _id: taskId }, taskResult, {
       new: true,
     });
-    return res.json(updated);
+    return res.status(200).send(updated);
   } catch (error) {
     return sendErrorResponse(req, res, 400, `Error while saving the task.`);
   }

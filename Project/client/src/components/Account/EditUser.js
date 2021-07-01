@@ -40,7 +40,7 @@ export default function Account({ props }) {
         setFields(res);
       }).catch((error)=>console.log(error))
     }
-  }, []);
+  }, [props.loggeUser]);
 
   function handleValidation() {
     let errors = {};

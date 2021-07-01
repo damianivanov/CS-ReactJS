@@ -9,14 +9,15 @@ export function getActiveUser() {
   return JSON.parse(localStorage.getItem("profile"));
 }
 
-function setActiveUser(){
-  var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
+function setActiveUser(token){
+  var decoded = jwt.verify(token,process.env.REACT_APP_SECRET)
   localStorage.setItem("profile", JSON.stringify(decoded));
 }
 export function getRole(){
   var decoded = jwt.verify(getJWT(),process.env.REACT_APP_SECRET)
   return decoded.role
 }
+
 export function updateActiveUser(data){
   const current = getActiveUser()
   current.userId=data.id;
@@ -35,7 +36,7 @@ export function getJWT() {
 }
 
 function setJWT(token) {
-  if (!checkJWT()) localStorage.setItem("userInfo", token);
+  localStorage.setItem("userInfo", token);
 }
 
 export function getExpDate(){
@@ -50,9 +51,12 @@ export function getExpDate(){
 
 // ---------API--------
 export async function getFullAccount(){
-  const id = getActiveUser().userId
+  const user = getActiveUser()
+  const headers = {
+    "auth-token": getJWT()
+  }
   try {
-    const signed = await http.get(`/users/${id}`,{
+    const signed = await http.get(`/users/${user.userId}`,{
       headers:headers
     })
     return signed.data
@@ -78,7 +82,7 @@ export async function login(user) {
   try {
     const signed = await http.post(`/login`, user)
     setJWT(signed.data.token);
-    setActiveUser();
+    setActiveUser(signed.data.token);
     return signed
   } catch (error) {
     console.log(error.response);

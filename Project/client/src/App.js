@@ -11,17 +11,18 @@ import JoinProject from "./components/Helpers/JoinProject";
 import Project from "./components/Project/Project";
 import Task from './components/Task/Task'
 import CreateProject from './components/CreateProject/CreateProject'
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route,Redirect  } from "react-router-dom";
 import { checkJWT, getActiveUser } from "./services/userService";
 import { activeDarkMode } from "./services/darkMode";
 import { CssBaseline } from "@material-ui/core";
 import Footer from './components/Footer/Footer'
+import Dashboard from './components/Dashboard/Dashboard'
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 function App() {
   const [signed, setSigned] = useState(checkJWT);
   const [darkMode, setDarkMode] = useState(activeDarkMode);
-  const [loggedUser, setLoggedUser] = useState(getActiveUser());
+  const [loggedUser, setLoggedUser] = useState(getActiveUser);
 
   const theme = createMuiTheme({
     palette: {
@@ -45,8 +46,11 @@ function App() {
         <ReactNotification />
         <CssBaseline />
         <Switch>
+        <Route path="/dashboard">
+            <Dashboard signed={signed} setSigned={setSigned} setLoggedUser={setLoggedUser}/>
+          </Route>
           <Route path="/login">
-            <Login signed={signed} setSigned={setSigned} setLoggedUser={setLoggedUser}/>
+            <Login signed={signed} setSigned={setSigned} setLoggedUser={setLoggedUser} loggedUser={loggedUser}/>
           </Route>
 
           <Route path="/register">
@@ -103,7 +107,9 @@ function App() {
               setLoggedUser={setLoggedUser}
             />
           </Route>
-          
+          <Route path="/" exact component={() => <Redirect to="/account" />}>
+            
+          </Route>
           
         </Switch>
       

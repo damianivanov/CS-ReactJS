@@ -6,8 +6,6 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined';
@@ -17,16 +15,16 @@ import {Link} from 'react-router-dom'
 
 
 
-export default function LeftDrawer({props},setDate,date) {
+export default function LeftDrawer(props,linkColor) {
 
 
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     return () => {
-      console.log(date)
+      console.log(props.date)
     }
-  }, [date])
+  }, [props.date])
 
   const toggleDrawer = (value) => (event) => {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -42,7 +40,7 @@ export default function LeftDrawer({props},setDate,date) {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        <Link to="/projects" style={{ color: "white", textDecoration: "none" }}>
+        <Link to="/projects" style={{ color: props.linkColor, textDecoration: "none" }}>
           <ListItem button>
             <ListItemIcon>
               <AccountTreeIcon />
@@ -51,7 +49,7 @@ export default function LeftDrawer({props},setDate,date) {
           </ListItem>
         </Link>
 
-        <Link to="/tasks" style={{ color: "white", textDecoration: "none" }}>
+        <Link to="/tasks" style={{ color: props.linkColor, textDecoration: "none" }}>
           <ListItem button>
             <ListItemIcon>
               <AssignmentIcon />
@@ -60,7 +58,7 @@ export default function LeftDrawer({props},setDate,date) {
           </ListItem>
         </Link>
 
-        <Link to="/join" style={{ color: "white", textDecoration: "none" }}>
+        <Link to="/join" style={{ color: props.linkColor, textDecoration: "none" }}>
           <ListItem button>
             <ListItemIcon>
               <LibraryAddOutlinedIcon />
@@ -69,9 +67,9 @@ export default function LeftDrawer({props},setDate,date) {
           </ListItem>
         </Link>
 
-        {props.loggedUser && (props.loggedUser.role === "admin" ||
-          props.loggedUser.role === "manager") && (
-          <Link to="/create" style={{ color: "white", textDecoration: "none" }}>
+        {props.props.loggedUser && (props.props.loggedUser.role === "admin" ||
+          props.props.loggedUser.role === "manager") && (
+          <Link to="/create" style={{ color: props.linkColor, textDecoration: "none" }}>
             <ListItem button>
               <ListItemIcon>
                 <LibraryAddOutlinedIcon />
@@ -82,16 +80,7 @@ export default function LeftDrawer({props},setDate,date) {
         )}
       </List>
       <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      
     </div>
   );
 

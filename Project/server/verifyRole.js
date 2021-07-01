@@ -18,7 +18,7 @@ const verifyRoleOrSelf = (role, allowIfSelf) => {
         else if (!user) next({ status: 404, message: `User not found.` });
         //Error
         else {
-          if (ROLES.ROLES[user.role] < role &&(!allowIfSelf || userId !== paramUserId))
+          if (ROLES.ROLES[user.role] < role && (!allowIfSelf || userId !== paramUserId))
             next({ status: 403, message: `Not enough privilegies.` });
           //Error
           else {

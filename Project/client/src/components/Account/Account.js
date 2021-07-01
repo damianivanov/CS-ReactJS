@@ -64,7 +64,7 @@ export default function NavTabs(props) {
   
   const [value, setValue] = React.useState(0);
   
-  if(!props.signed) return <Redirect to="/login" />
+  if(!props.signed) return <Redirect to="/dashboard" />
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -54,7 +54,7 @@ export default function MyProjects(props) {
       )}
 
       <GridList className={classes.gridList} cols={2.5}>
-        {projects && projects.map((project, i) => (
+        {projects && projects.lenght!==0  && projects.map((project, i) => (
           <ProjectCard project={project} setDate={setDate}></ProjectCard>
         ))}
       </GridList>

@@ -240,6 +240,15 @@ export default function Project(props) {
                 {project.team.map((teamMember, key) => member(teamMember, key))}
               </Box>
 
+              <Box border={1}>
+                <Typography align="center" variant="h5">
+                  Tasks:
+                </Typography>
+                {project.project.tasksId.map((subTask, key) => (
+                  <h5>Task ID: {subTask}</h5>
+                ))}
+              </Box>
+
               <Dialog
                 open={open}
                 onClose={handleClose}

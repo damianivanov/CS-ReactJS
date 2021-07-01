@@ -18,6 +18,9 @@ export async function getProject(id) {
 }
 export async function getMyProjects() {
   const id = getActiveUser().userId;
+  const headers = {
+    "auth-token": getJWT()
+  }
   try {
     const myProjects = await http.get(`/projects/myprojects/${id}`, {
       headers: headers,
