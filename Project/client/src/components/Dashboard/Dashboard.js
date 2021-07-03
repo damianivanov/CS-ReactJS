@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from "react-router-dom";
@@ -47,7 +46,7 @@ export default function Dashboard(props) {
  if(!props.signed) 
   return (
     <React.Fragment>
-      <Paper><br></br></Paper>
+      <CssBaseline/>
       <div
         className={classes.mainFeaturedPost}
         style={{ backgroundImage: `url("Teamwork.jpg")` }}

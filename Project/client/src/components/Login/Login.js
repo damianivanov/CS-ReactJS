@@ -10,11 +10,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import { checkJWT, login } from "../../services/userService";
-import { Redirect, useHistory, Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { getActiveUser } from "../../services/userService";
 export default function Login(props) {
   const classes = useStyles();
-  let history = useHistory();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
