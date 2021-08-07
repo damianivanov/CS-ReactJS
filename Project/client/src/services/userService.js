@@ -52,12 +52,11 @@ export function getExpDate(){
 // ---------API--------
 export async function getFullAccount(){
   const user = getActiveUser()
-  const headers = {
-    "auth-token": getJWT()
-  }
   try {
     const signed = await http.get(`/users/${user.userId}`,{
-      headers:headers
+      headers:{
+        "auth-token":getJWT()
+      }
     })
     return signed.data
   } catch (error) {
@@ -68,7 +67,9 @@ export async function getFullAccount(){
 export async function getAllUsers(){
   try {
     const users = await http.get(`/users`,{
-      headers:headers
+      headers:{
+        "auth-token":getJWT()
+      }
     })
     return users.data
   } catch (error) {
@@ -104,7 +105,9 @@ export async function registerUser(user){
 export async function editUser(user){
   try {
     const updated = await http.put(`/users/${user.id}`, user,{
-      headers:headers})
+      headers:{
+        "auth-token":getJWT()
+      }})
     return updated
   } catch (error) {
     return error.response
@@ -114,7 +117,9 @@ export async function editUser(user){
 export async function deleteUser(id){
   try {
     const deleted = await http.delete(`/users/${id}`,{
-      headers:headers})
+      headers:{
+        "auth-token":getJWT()
+      }})
     return deleted
   } catch (error) {
     return error.response
@@ -129,4 +134,8 @@ export function logOut() {
 
 
 
-//Refactor
+///KNOWN BUG:
+//FIRST LOG IN - ACCOUNT WITH basic or manager permissions, refresh with f5
+//SECOND LOG IN - ACCOUNT WITH admin (ONLY) permissions
+//req.userId is from the basic acc
+//RESOLVED --- but overall wrong use of headers objects, because its not updated if logout
