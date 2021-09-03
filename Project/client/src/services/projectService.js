@@ -1,11 +1,14 @@
 import http from "./http-client";
 import { getJWT, getActiveUser } from "./userService";
 
-const headers = {
-  "auth-token": getJWT(),
-};
+// const headers = {
+//   "auth-token": getJWT(),
+// };
 
 export async function getProject(id) {
+  const headers = {
+  "auth-token": getJWT(),
+};
   try {
     const project = await http.get(`/projects/${id}`, {
       headers: headers,
@@ -34,6 +37,9 @@ export async function getMyProjects() {
 
 export async function createProject(project, userId) {
   project = { ...project, managerId: userId };
+  const headers = {
+    "auth-token": getJWT(),
+  };
   try {
     const createdProject = await http.post(`/projects`, project, {
       headers: headers,
@@ -44,6 +50,9 @@ export async function createProject(project, userId) {
   }
 }
 export async function joinProject(code) {
+  const headers = {
+    "auth-token": getJWT(),
+  };
   try {
     const project = await http.post(
       `/projects/join/${code}`,
@@ -59,6 +68,9 @@ export async function joinProject(code) {
   }
 }
 export async function leaveProject(id) {
+  const headers = {
+    "auth-token": getJWT(),
+  };
   try {
     const project = await http.post(
       `/projects/leave/${id}`,
@@ -75,6 +87,9 @@ export async function leaveProject(id) {
 }
 
 export async function getAllProjects() {
+  const headers = {
+    "auth-token": getJWT(),
+  };
   try {
     const project = await http.get(`/projects`, {
       headers: headers,
@@ -86,6 +101,9 @@ export async function getAllProjects() {
   }
 }
 export async function editProject(project) {
+  const headers = {
+    "auth-token": getJWT(),
+  };
   try {
     const updated = await http.put(`/projects/${project.id}`,project, {
       headers: headers,
@@ -97,6 +115,9 @@ export async function editProject(project) {
   }
 }
 export async function deleteProject(id) {
+  const headers = {
+    "auth-token": getJWT(),
+  };
   try {
     const deleted = await http.delete(`/projects/${id}`, {
       headers: headers,

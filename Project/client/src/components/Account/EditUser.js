@@ -137,6 +137,7 @@ export default function Account({ props }) {
             <Grid container item xs={12} justify="center">
               <Avatar className={classes.large} src={fields["photo"]} />
             </Grid>
+            
             <Grid item xs={12} p={2}>
               <TextField
                 fullWidth

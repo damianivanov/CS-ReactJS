@@ -1,9 +1,10 @@
 import http from "./http-client";
 var jwt = require('jsonwebtoken');
 
-const headers= {
-  "auth-token":getJWT()
-}
+// change all auth-tokens
+// let headers= {
+//   "auth-token":getJWT()
+// }
 
 export function getActiveUser() {
   return JSON.parse(localStorage.getItem("profile"));
@@ -117,7 +118,7 @@ export async function editUser(user){
 export async function deleteUser(id){
   try {
     const deleted = await http.delete(`/users/${id}`,{
-      headers:{
+      headers:{ 
         "auth-token":getJWT()
       }})
     return deleted

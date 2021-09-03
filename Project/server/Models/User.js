@@ -93,6 +93,7 @@ userSchema.methods.isValidPassword = async function (password) {
   }
 }
 userSchema.set('autoIndex', true)
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
